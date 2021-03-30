@@ -21,6 +21,7 @@ public class ChessComponent extends JComponent
     private int width;
     private int height;
     private final static int SQUARE_SIZE = 80;
+    private final static Color ODD_COLOR = Color.WHITE, EVEN_COLOR = Color.DARK_GRAY; // When starting at 1, not 0
 
     public ChessComponent(final Board board) {
 	this.board = board;
@@ -38,10 +39,13 @@ public class ChessComponent extends JComponent
 
 	for (int col = 0; col < board.getWidth(); col++) {
 	    for (int row = 0; row < board.getHeight(); row++) {
+		Color color = EVEN_COLOR;
 		if ((col + row) % 2 == 0) {
-		    g2d.setColor(Color.BLACK);
-		    g2d.fillRect(col * (SQUARE_SIZE), row * (SQUARE_SIZE), SQUARE_SIZE, SQUARE_SIZE);
+		    color = ODD_COLOR;
 		}
+
+		g2d.setColor(color);
+		g2d.fillRect(col * SQUARE_SIZE, row * SQUARE_SIZE, SQUARE_SIZE, SQUARE_SIZE);
 	    }
 	}
     }

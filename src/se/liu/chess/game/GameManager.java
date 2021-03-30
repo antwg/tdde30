@@ -12,6 +12,12 @@ public class GameManager
 {
     private Board board;
 
+    public GameManager() {
+        this.board = new Board(8, 8);
+    }
+
+    // ----------------------------------------------------- Public Methods ----------------------------------------------------------------
+
     public void createNewGame() {
         this.board = new Board(8, 8);
     }

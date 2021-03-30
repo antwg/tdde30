@@ -3,6 +3,7 @@ package se.liu.chess.gui;
 import se.liu.chess.game.Board;
 
 import javax.swing.*;
+import javax.swing.border.LineBorder;
 import java.awt.*;
 
 /**
@@ -24,6 +25,8 @@ public class BoardViewer
 	this.frame = new JFrame("Chess");
 	this.chessComponent = new ChessComponent(board);
     }
+
+    // ----------------------------------------------------- Public Methods ----------------------------------------------------------------
 
     public void show(){
 	frame.setLayout(new BorderLayout());
