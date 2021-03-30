@@ -20,12 +20,12 @@ public class ChessComponent extends JComponent
     private Board board;
     private int width;
     private int height;
-    private final static int SQUARESIZE = 80;
+    private final static int SQUARE_SIZE = 80;
 
     public ChessComponent(final Board board) {
 	this.board = board;
-	this.width = SQUARESIZE * board.getWidth();
-	this.height = SQUARESIZE * board.getHeight();
+	this.width = SQUARE_SIZE * board.getWidth();
+	this.height = SQUARE_SIZE * board.getHeight();
     }
 
     @Override public Dimension getPreferredSize() {
@@ -40,7 +40,7 @@ public class ChessComponent extends JComponent
 	    for (int row = 0; row < board.getHeight(); row++) {
 		if ((col + row) % 2 == 0) {
 		    g2d.setColor(Color.BLACK);
-		    g2d.fillRect(col * (SQUARESIZE), row * (SQUARESIZE), SQUARESIZE, SQUARESIZE);
+		    g2d.fillRect(col * (SQUARE_SIZE), row * (SQUARE_SIZE), SQUARE_SIZE, SQUARE_SIZE);
 		}
 	    }
 	}

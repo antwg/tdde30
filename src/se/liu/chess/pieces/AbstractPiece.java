@@ -8,6 +8,7 @@ import java.awt.*;
 /**
  *
  */
+
 public abstract class AbstractPiece implements Piece
 {
     private Player owner;
@@ -21,7 +22,7 @@ public abstract class AbstractPiece implements Piece
         this.owner = null;
     }
 
-    protected boolean IsLegalCoordinate(Point coordinate, Board board) {
+    protected boolean isLegalCoordinate(Point coordinate, Board board) {
         return true;
     }
 }
