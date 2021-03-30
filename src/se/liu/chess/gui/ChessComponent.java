@@ -6,6 +6,15 @@ import se.liu.chess.game.Board;
 import javax.swing.*;
 import java.awt.*;
 
+/**
+ * Class for painting the board.
+ *
+ * @param board The board handles the game state.
+ * @param witdh The width of the component.
+ * @param height The height of the component.
+ * @param SQUARESIZE The size of a square(on the board).
+ */
+
 public class ChessComponent extends JComponent
 {
     private Board board;

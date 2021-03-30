@@ -2,11 +2,19 @@ package se.liu.chess.game;
 
 import se.liu.chess.pieces.Piece;
 
+/**
+ * Creates a board which handles all game logic and saves the position of pieces. Has methods for moving pieces.
+ *
+ * @param squares The board itself, saves the location of all pieces.
+ * @param width The width of the board.
+ * @param height The height of the board.
+ */
+
 public class Board
 {
-    Square[][] squares;
-    int width;
-    int height;
+    private Square[][] squares;
+    private int width;
+    private int height;
 
     public Board(final int width, final int height) {
 	this.width = width;
@@ -63,6 +71,8 @@ public class Board
      * https://en.wikipedia.org/wiki/Forsyth%E2%80%93Edwards_Notation
      * @return
      */
+
+    /*
     public String boardStateToFEN() {
 	StringBuilder builder = new StringBuilder();
 
@@ -93,7 +103,7 @@ public class Board
 	builder.append(" ");
 
 	return
-    }
+    } */
 
     public static void main(String[] args) {
         Board board = new Board(8, 8);

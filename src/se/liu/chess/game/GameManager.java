@@ -2,6 +2,12 @@ package se.liu.chess.game;
 
 import se.liu.chess.gui.BoardViewer;
 
+/**
+ * Manages a game of Chess. It creates all needed objects and runs the game.
+ *
+ * @param board The board handles the game state.
+ */
+
 public class GameManager
 {
     private Board board;

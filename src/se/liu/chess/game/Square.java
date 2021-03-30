@@ -2,9 +2,13 @@ package se.liu.chess.game;
 
 import se.liu.chess.pieces.Piece;
 
+/**
+ *
+ */
+
 public class Square
 {
-    Piece piece;
+    private Piece piece;
 
     public Square(int x, int y) {
 	this.piece = null;

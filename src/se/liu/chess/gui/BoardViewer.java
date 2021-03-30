@@ -5,6 +5,14 @@ import se.liu.chess.game.Board;
 import javax.swing.*;
 import java.awt.*;
 
+/**
+ * Creates a window and paints ChessComponent.
+ *
+ * @param frame The frame in which everything else i placed in.
+ * @param chessComponent Displays the board and pieces.
+ * @param board The board handles the game state.
+ */
+
 public class BoardViewer
 {
     private JFrame frame;
