@@ -20,6 +20,8 @@ public class Board
 	}
     }
 
+    // ---------------------------------------------------- Getters/Setters ----------------------------------------------------------------
+
     public int getWidth() {
 	return width;
     }
@@ -39,6 +41,9 @@ public class Board
     public void setPiece(int x, int y, Piece piece) {
 	getSquare(x, y).setPiece(piece);
     }
+
+    // ----------------------------------------------------- Public Methods ----------------------------------------------------------------
+
 
     public void movePiece(int x1, int y1, int x2, int y2) {
 	getSquare(x2, y2).setPiece(getPiece(x1, y1));

@@ -1,11 +1,13 @@
 package se.liu.chess.game;
 
+import se.liu.chess.gui.BoardViewer;
+
 public class GameManager
 {
-    Board board = null;
+    private Board board;
 
     public void createNewGame() {
-        board = new Board(8, 8);
+        this.board = new Board(8, 8);
     }
 
     public static void main(String[] args) {
@@ -13,6 +15,9 @@ public class GameManager
 
         GameManager gm = new GameManager();
         gm.createNewGame();
+
+        BoardViewer boardViewer = new BoardViewer(gm.board);
+        boardViewer.show();
 
     }
 }
