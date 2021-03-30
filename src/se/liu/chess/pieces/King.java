@@ -1,12 +1,16 @@
 package se.liu.chess.pieces;
 
+import se.liu.chess.game.Board;
 import se.liu.chess.game.Square;
 
 import java.util.List;
 
+/**
+ *
+ */
 public class King extends AbstractPiece
 {
-    @Override public List<Square> getMoves() {
+    @Override public List<Square> getMoves(Board board) {
 	return null;
     }
 }

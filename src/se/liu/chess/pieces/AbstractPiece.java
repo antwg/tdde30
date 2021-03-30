@@ -1,17 +1,27 @@
 package se.liu.chess.pieces;
 
+import se.liu.chess.game.Board;
 import se.liu.chess.game.Player;
 
+import java.awt.*;
+
+/**
+ *
+ */
 public abstract class AbstractPiece implements Piece
 {
-    Player owner;
-    boolean hasMoved = false;
+    private Player owner;
+    private boolean hasMoved = false;
 
     protected AbstractPiece(final Player owner) {
 	this.owner = owner;
     }
 
-    protected  AbstractPiece() {
+    protected AbstractPiece() {
         this.owner = null;
+    }
+
+    protected boolean IsLegalCoordinate(Point coordinate, Board board) {
+        return true;
     }
 }
