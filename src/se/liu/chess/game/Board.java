@@ -2,6 +2,8 @@ package se.liu.chess.game;
 
 import se.liu.chess.pieces.Piece;
 
+import java.awt.*;
+
 /**
  * Creates a board which handles all game logic and saves the position of pieces. Has methods for moving pieces.
  *
@@ -42,20 +44,32 @@ public class Board
 	return squares[y][x];
     }
 
+    public Square getSquare(Point coordinate) {
+	return getSquare(coordinate.x, coordinate.y);
+    }
+
     public Piece getPiece(int x, int y) {
         return getSquare(x, y).getPiece();
+    }
+
+    public Piece getPiece(Point coordinate) {
+	return getPiece(coordinate.x, coordinate.y);
     }
 
     public void setPiece(int x, int y, Piece piece) {
 	getSquare(x, y).setPiece(piece);
     }
 
+    public void setPiece(Point coordinate, Piece piece) {
+	setPiece(coordinate.x, coordinate.y, piece);
+    }
+
     // ----------------------------------------------------- Public Methods ----------------------------------------------------------------
 
 
-    public void movePiece(int x1, int y1, int x2, int y2) {
-	getSquare(x2, y2).setPiece(getPiece(x1, y1));
-	getSquare(x1, y1).setPiece(null);
+    public void movePiece(Point p1, Point p2) {
+	getSquare(p2.x, p2.y).setPiece(getPiece(p1.x, p1.y));
+	getSquare(p1.x, p1.y).setPiece(null);
     }
 
     public void printBoard() {
@@ -81,7 +95,7 @@ public class Board
 	    int emptySquaresInARow = 0;
 
 	    for (int x = 0; x < width; x++) {
-		switch (getPiece(x, y)) {
+		switch (getPiece(x, y).getColor()) {
 		    case :
 
 		    default:
