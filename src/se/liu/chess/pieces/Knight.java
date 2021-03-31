@@ -14,6 +14,10 @@ public class Knight extends AbstractPiece
 	super(color);
     }
 
+    @Override public PieceType getType() {
+	return PieceType.KNIGHT;
+    }
+
     @Override public List<Piece> getMoves(Board board) {
 	return null;
     }

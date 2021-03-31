@@ -14,6 +14,10 @@ public class King extends AbstractPiece
 	super(color);
     }
 
+    @Override public PieceType getType() {
+	return PieceType.KING;
+    }
+
     @Override public List<Piece> getMoves(Board board) {
 	return null;
     }
