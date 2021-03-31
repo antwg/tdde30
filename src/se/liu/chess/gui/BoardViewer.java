@@ -31,6 +31,7 @@ public class BoardViewer
     public void show(){
 	frame.setLayout(new BorderLayout());
 	frame.add(chessComponent, BorderLayout.CENTER);
+	frame.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 	frame.pack();
 	frame.setVisible(true);
     }

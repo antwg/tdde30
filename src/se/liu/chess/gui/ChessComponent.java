@@ -10,9 +10,7 @@ import java.awt.*;
  * Class for painting the board.
  *
  * @param board The board handles the game state.
- * @param witdh The width of the component.
- * @param height The height of the component.
- * @param SQUARESIZE The size of a square(on the board).
+ *
  */
 
 public class ChessComponent extends JComponent
@@ -21,7 +19,7 @@ public class ChessComponent extends JComponent
     private int width;
     private int height;
     private final static int SQUARE_SIZE = 80;
-    private final static Color ODD_COLOR = Color.WHITE, EVEN_COLOR = Color.DARK_GRAY; // When starting at 1, not 0
+    private final static Color ODD_COLOR = Color.DARK_GRAY, EVEN_COLOR = Color.WHITE; // When starting at 0
 
     public ChessComponent(final Board board) {
 	this.board = board;
@@ -39,15 +37,15 @@ public class ChessComponent extends JComponent
 
 	for (int col = 0; col < board.getWidth(); col++) {
 	    for (int row = 0; row < board.getHeight(); row++) {
-		Color color = EVEN_COLOR;
+		// Determine color of square
+	        Color color = ODD_COLOR;
 		if ((col + row) % 2 == 0) {
-		    color = ODD_COLOR;
+		    color = EVEN_COLOR;
 		}
-
+		// Set color
 		g2d.setColor(color);
 		g2d.fillRect(col * SQUARE_SIZE, row * SQUARE_SIZE, SQUARE_SIZE, SQUARE_SIZE);
 	    }
 	}
     }
-
 }

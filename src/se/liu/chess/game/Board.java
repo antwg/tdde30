@@ -1,5 +1,7 @@
 package se.liu.chess.game;
 
+import se.liu.chess.pieces.Piece;
+
 import java.awt.*;
 import se.liu.chess.pieces.Piece;
 
