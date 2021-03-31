@@ -17,8 +17,6 @@ public class Bishop extends AbstractPiece
 	super(color);
     }
 
-
-
     @Override public List<Piece> getMoves(Board board) {
 	return null;
     }

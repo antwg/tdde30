@@ -114,7 +114,7 @@ public class Board
 	}
     }
 
-    public void resetBoard() {
+    public void resetBoard() { // TODO Sätt alla andra till null?
         //White
 	setPiece(0, 0, new Rook(TeamColor.WHITE));
 	setPiece(1, 0, new Knight(TeamColor.WHITE));
