@@ -139,50 +139,50 @@ public class Board
     }
 
     public void resetBoard() { // TODO Sätt alla andra till null?
-        //White
-	setPiece(0, 0, new Rook(TeamColor.WHITE));
-	setPiece(1, 0, new Knight(TeamColor.WHITE));
-	setPiece(2, 0, new Bishop(TeamColor.WHITE));
-	setPiece(3, 0, new King(TeamColor.WHITE));
-	setPiece(4, 0, new Queen(TeamColor.WHITE));
-	setPiece(5, 0, new Bishop(TeamColor.WHITE));
-	setPiece(6, 0, new Knight(TeamColor.WHITE));
-	setPiece(7, 0, new Rook(TeamColor.WHITE));
+        boardFromFEN("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR ");
 
-	setPiece(0, 1, new Pawn(TeamColor.WHITE));
-	setPiece(1, 1, new Pawn(TeamColor.WHITE));
-	setPiece(2, 1, new Pawn(TeamColor.WHITE));
-	setPiece(3, 1, new Pawn(TeamColor.WHITE));
-	setPiece(4, 1, new Pawn(TeamColor.WHITE));
-	setPiece(5, 1, new Pawn(TeamColor.WHITE));
-	setPiece(6, 1, new Pawn(TeamColor.WHITE));
-	setPiece(7, 1, new Pawn(TeamColor.WHITE));
-
-	//Black
-	setPiece(0, 7, new Rook(TeamColor.BLACK));
-	setPiece(1, 7, new Knight(TeamColor.BLACK));
-	setPiece(2, 7, new Bishop(TeamColor.BLACK));
-	setPiece(3, 7, new King(TeamColor.BLACK));
-	setPiece(4, 7, new Queen(TeamColor.BLACK));
-	setPiece(5, 7, new Bishop(TeamColor.BLACK));
-	setPiece(6, 7, new Knight(TeamColor.BLACK));
-	setPiece(7, 7, new Rook(TeamColor.BLACK));
-
-	setPiece(0, 6, new Pawn(TeamColor.BLACK));
-	setPiece(1, 6, new Pawn(TeamColor.BLACK));
-	setPiece(2, 6, new Pawn(TeamColor.BLACK));
-	setPiece(3, 6, new Pawn(TeamColor.BLACK));
-	setPiece(4, 6, new Pawn(TeamColor.BLACK));
-	setPiece(5, 6, new Pawn(TeamColor.BLACK));
-	setPiece(6, 6, new Pawn(TeamColor.BLACK));
-	setPiece(7, 6, new Pawn(TeamColor.BLACK));
+//	setPiece(0, 0, new Rook(TeamColor.WHITE));
+//	setPiece(1, 0, new Knight(TeamColor.WHITE));
+//	setPiece(2, 0, new Bishop(TeamColor.WHITE));
+//	setPiece(3, 0, new King(TeamColor.WHITE));
+//	setPiece(4, 0, new Queen(TeamColor.WHITE));
+//	setPiece(5, 0, new Bishop(TeamColor.WHITE));
+//	setPiece(6, 0, new Knight(TeamColor.WHITE));
+//	setPiece(7, 0, new Rook(TeamColor.WHITE));
+//
+//	setPiece(0, 1, new Pawn(TeamColor.WHITE));
+//	setPiece(1, 1, new Pawn(TeamColor.WHITE));
+//	setPiece(2, 1, new Pawn(TeamColor.WHITE));
+//	setPiece(3, 1, new Pawn(TeamColor.WHITE));
+//	setPiece(4, 1, new Pawn(TeamColor.WHITE));
+//	setPiece(5, 1, new Pawn(TeamColor.WHITE));
+//	setPiece(6, 1, new Pawn(TeamColor.WHITE));
+//	setPiece(7, 1, new Pawn(TeamColor.WHITE));
+//
+//	setPiece(0, 7, new Rook(TeamColor.BLACK));
+//	setPiece(1, 7, new Knight(TeamColor.BLACK));
+//	setPiece(2, 7, new Bishop(TeamColor.BLACK));
+//	setPiece(3, 7, new King(TeamColor.BLACK));
+//	setPiece(4, 7, new Queen(TeamColor.BLACK));
+//	setPiece(5, 7, new Bishop(TeamColor.BLACK));
+//	setPiece(6, 7, new Knight(TeamColor.BLACK));
+//	setPiece(7, 7, new Rook(TeamColor.BLACK));
+//
+//	setPiece(0, 6, new Pawn(TeamColor.BLACK));
+//	setPiece(1, 6, new Pawn(TeamColor.BLACK));
+//	setPiece(2, 6, new Pawn(TeamColor.BLACK));
+//	setPiece(3, 6, new Pawn(TeamColor.BLACK));
+//	setPiece(4, 6, new Pawn(TeamColor.BLACK));
+//	setPiece(5, 6, new Pawn(TeamColor.BLACK));
+//	setPiece(6, 6, new Pawn(TeamColor.BLACK));
+//	setPiece(7, 6, new Pawn(TeamColor.BLACK));
     }
 
     /**
      * https://en.wikipedia.org/wiki/Forsyth%E2%80%93Edwards_Notation
      * @return
      */
-    public String boardStateToFEN() {
+    public String boardToFEN() {
 	StringBuilder builder = new StringBuilder();
 
 	// 1. Piece placement
@@ -234,6 +234,74 @@ public class Board
 	builder.append(" ");
 
 	return builder.toString();
+    }
+
+    public void boardFromFEN(String fen) {
+        int x = 0;
+        int y = 0;
+	for (int i = 0; i < fen.length(); i++) {
+	    char curr = fen.charAt(i);
+
+	    //TODO replace with piece construction method
+	    switch (curr) {
+		case ' ':
+		    return;
+		case '/':
+		    y++;
+		    x = 0;
+		    break;
+		case 'r':
+		    setPiece(x, y, new Rook(TeamColor.WHITE));
+		    x++;
+		    break;
+		case 'R':
+		    setPiece(x, y, new Rook(TeamColor.BLACK));
+		    x++;
+		    break;
+		case 'n':
+		    setPiece(x, y, new Knight(TeamColor.WHITE));
+		    x++;
+		    break;
+		case 'N':
+		    setPiece(x, y, new Knight(TeamColor.BLACK));
+		    x++;
+		    break;
+		case 'b':
+		    setPiece(x, y, new Bishop(TeamColor.WHITE));
+		    x++;
+		    break;
+		case 'B':
+		    setPiece(x, y, new Bishop(TeamColor.BLACK));
+		    x++;
+		    break;
+		case 'k':
+		    setPiece(x, y, new King(TeamColor.WHITE));
+		    x++;
+		    break;
+		case 'K':
+		    setPiece(x, y, new King(TeamColor.BLACK));
+		    x++;
+		    break;
+		case 'q':
+		    setPiece(x, y, new Queen(TeamColor.WHITE));
+		    x++;
+		    break;
+		case 'Q':
+		    setPiece(x, y, new Queen(TeamColor.BLACK));
+		    x++;
+		    break;
+		case 'p':
+		    setPiece(x, y, new Pawn(TeamColor.WHITE));
+		    x++;
+		    break;
+		case 'P':
+		    setPiece(x, y, new Pawn(TeamColor.BLACK));
+		    x++;
+		    break;
+		default:
+		    x += Character.getNumericValue(curr);
+	    }
+	}
     }
 
     public static void main(String[] args) {

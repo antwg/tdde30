@@ -30,7 +30,7 @@ public class GameManager
 
         gm.board.resetBoard();
         gm.board.printBoard();
-        System.out.println(gm.board.boardStateToFEN());
+        System.out.println(gm.board.boardToFEN());
 
         BoardViewer boardViewer = new BoardViewer(gm.board);
         boardViewer.show();
