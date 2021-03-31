@@ -13,10 +13,6 @@ import se.liu.chess.pieces.Pawn;
 
 /**
  * Creates a board which handles all game logic and saves the position of pieces. Has methods for moving pieces.
- *
- * @param squares The board itself, saves the location of all pieces.
- * @param width The width of the board.
- * @param height The height of the board.
  */
 
 public class Board

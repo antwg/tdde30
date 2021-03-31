@@ -1,28 +1,21 @@
 package se.liu.chess.gui;
 
-import se.liu.chess.game.Board;
-
 import javax.swing.*;
 import java.awt.*;
 
 /**
- * Creates a window and paints ChessComponent.
- *
- * @param frame The frame in which everything else i placed in.
- * @param chessComponent Displays the board and pieces.
- * @param board The board handles the game state.
+ * BoardViewer creates a JFrame and adds a given ChessComponent to said JFrame.
+ * It also handles all needed settings for the JFrame.
  */
 
 public class BoardViewer
 {
     private JFrame frame;
     private ChessComponent chessComponent;
-    private Board board;
 
-    public BoardViewer(Board board) {
-        this.board = board;
+    public BoardViewer(ChessComponent chessComponent) {
 	this.frame = new JFrame("Chess");
-	this.chessComponent = new ChessComponent(board);
+	this.chessComponent = chessComponent;
     }
 
     // ----------------------------------------------------- Public Methods ----------------------------------------------------------------
@@ -30,7 +23,7 @@ public class BoardViewer
     public void show(){
 	frame.setLayout(new BorderLayout());
 	frame.add(chessComponent, BorderLayout.CENTER);
-	frame.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+	frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 	frame.pack();
 	frame.setVisible(true);
     }

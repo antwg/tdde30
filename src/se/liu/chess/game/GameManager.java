@@ -1,11 +1,10 @@
 package se.liu.chess.game;
 
 import se.liu.chess.gui.BoardViewer;
+import se.liu.chess.gui.ChessComponent;
 
 /**
  * Manages a game of Chess. It creates all needed objects and runs the game.
- *
- * @param board The board handles the game state.
  */
 
 public class GameManager
@@ -32,7 +31,7 @@ public class GameManager
         gm.board.printBoard();
         System.out.println(gm.board.boardToFEN());
 
-        BoardViewer boardViewer = new BoardViewer(gm.board);
+        BoardViewer boardViewer = new BoardViewer(new ChessComponent(gm.board));
         boardViewer.show();
 
     }

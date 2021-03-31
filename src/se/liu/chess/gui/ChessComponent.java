@@ -9,10 +9,10 @@ import javax.swing.*;
 import java.awt.*;
 
 /**
- * Class for painting the board.
- *
- * @param board The board handles the game state.
- *
+ * An extension of JComponent. Given a Board object, ChessComponent will be able to paint the board itself as well as the pieces on the board.
+ * ChessComponent will loop over all all points in board and paint relevant data.
+ * The graphics for the pieces are saved in resources.
+ * The board argument will take any Board object and paint it.
  */
 
 public class ChessComponent extends JComponent
