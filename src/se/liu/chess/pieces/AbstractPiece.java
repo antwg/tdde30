@@ -3,6 +3,7 @@ package se.liu.chess.pieces;
 import se.liu.chess.game.Board;
 import se.liu.chess.game.TeamColor;
 
+import javax.swing.*;
 import java.awt.*;
 
 /**
