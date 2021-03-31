@@ -38,27 +38,19 @@ public class Board
 	return height;
     }
 
-    public Piece getSquare(int x, int y) {
-	return pieces[y][x];
+    public Piece getPiece(int x, int y) {
+        return pieces[y][x];
     }
 
-    public Piece getSquare(Point coordinate) {
-	return getSquare(coordinate.x, coordinate.y);
-    }
-
-    public se.liu.chess.pieces.Piece getPiece(int x, int y) {
-        return getSquare(x, y).getPiece();
-    }
-
-    public se.liu.chess.pieces.Piece getPiece(Point coordinate) {
+    public Piece getPiece(Point coordinate) {
 	return getPiece(coordinate.x, coordinate.y);
     }
 
-    public void setPiece(int x, int y, se.liu.chess.pieces.Piece piece) {
-	getSquare(x, y).setPiece(piece);
+    public void setPiece(int x, int y, Piece piece) {
+	pieces[y][x] = piece;
     }
 
-    public void setPiece(Point coordinate, se.liu.chess.pieces.Piece piece) {
+    public void setPiece(Point coordinate, Piece piece) {
 	setPiece(coordinate.x, coordinate.y, piece);
     }
 
@@ -66,8 +58,8 @@ public class Board
 
 
     public void movePiece(Point p1, Point p2) {
-	getSquare(p2.x, p2.y).setPiece(getPiece(p1.x, p1.y));
-	getSquare(p1.x, p1.y).setPiece(null);
+	setPiece(p2, getPiece(p1));
+	setPiece(p1, null);
     }
 
     public void printBoard() {
