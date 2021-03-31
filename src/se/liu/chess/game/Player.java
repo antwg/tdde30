@@ -10,13 +10,27 @@ public class Player
     private double timeLeft;
     private int score = 0;
 
+    private boolean kingsideCastleAvailable;
+    private boolean queensideCastleAvailable;
+
     public Player(final TeamColor color, final double timeLeft) {
 	this.color = color;
 	this.timeLeft = timeLeft;
+
+	this.kingsideCastleAvailable = true;
+	this.queensideCastleAvailable = true;
     }
 
     public TeamColor getColor() {
 	return color;
+    }
+
+    public boolean canCastleKingside() {
+	return kingsideCastleAvailable;
+    }
+
+    public boolean canCastleQueenside() {
+	return queensideCastleAvailable;
     }
 
     public double getTimeLeft() {

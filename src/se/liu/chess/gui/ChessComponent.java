@@ -23,10 +23,12 @@ public class ChessComponent extends JComponent
 
     private final static int SQUARE_SIZE = 64;
     private final static Color ODD_COLOR = Color.DARK_GRAY, EVEN_COLOR = Color.WHITE; // When starting at 0
-    private ImageIcon pieceB = loadIcon("BishopBlack"), pieceb = loadIcon("BishopWhite"), pieceK = loadIcon("KingBlack"),
-	    	      piecek = loadIcon("KingWhite"), pieceN = loadIcon("KnightBlack"), piecen = loadIcon("KnightWhite"),
-		      pieceP = loadIcon("PawnBlack"), piecep = loadIcon("PawnWhite"), pieceQ = loadIcon("QueenBlack"),
-		      pieceq = loadIcon("QueenWhite"), pieceR = loadIcon("RookBlack"), piecer = loadIcon("RookWhite");
+    private ImageIcon pieceB = loadIcon("BishopWhite"), pieceb = loadIcon("BishopBlack"),
+	    	      pieceK = loadIcon("KingWhite"), piecek = loadIcon("KingBlack"),
+	    	      pieceN = loadIcon("KnightWhite"), piecen = loadIcon("KnightBlack"),
+		      pieceP = loadIcon("PawnWhite"), piecep = loadIcon("PawnBlack"),
+	    	      pieceQ = loadIcon("QueenWhite"), pieceq = loadIcon("QueenBlack"),
+	    	      pieceR = loadIcon("RookWhite"), piecer = loadIcon("RookBlack");
 
     public ChessComponent(final Board board) {
 	this.board = board;

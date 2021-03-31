@@ -25,7 +25,7 @@ public class Bishop extends AbstractPiece
     }
 
     @Override public String toString() {
-	if (getColor() == TeamColor.BLACK) {
+	if (getColor() == TeamColor.WHITE) {
 	    return "B";
 	}
 	return "b";

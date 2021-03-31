@@ -23,7 +23,7 @@ public class Queen extends AbstractPiece
     }
 
     @Override public String toString() {
-	if (getColor() == TeamColor.BLACK) {
+	if (getColor() == TeamColor.WHITE) {
 	    return "Q";
 	}
 	return "q";

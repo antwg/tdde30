@@ -23,7 +23,7 @@ public class Rook extends AbstractPiece
     }
 
     @Override public String toString() {
-	if (getColor() == TeamColor.BLACK) {
+	if (getColor() == TeamColor.WHITE) {
 	    return "R";
 	}
 	return "r";

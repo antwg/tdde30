@@ -23,7 +23,7 @@ public class Pawn extends AbstractPiece
     }
 
     @Override public String toString() {
-	if (getColor() == TeamColor.BLACK) {
+	if (getColor() == TeamColor.WHITE) {
 	    return "P";
 	}
 	return "p";

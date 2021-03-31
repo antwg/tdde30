@@ -25,14 +25,14 @@ public class Board
     private int width;
     private int height;
 
-    private Player[] players = new Player[2];
+    private Player whitePlayer;
+    private Player blackPlayer;
 
     private int activePlayerIndex = 0;
 
-    //TODO add castlingAvailability
+    private Point enPassantTarget = null;
 
-    //TODO add enPassantTargets
-
+    //TODO implement halfmoveClock
     private int halfmoveClock = 0;	// Used for 50 move rule
     private int fullmoveNumber = 1;
 
@@ -47,8 +47,8 @@ public class Board
 	    }
 	}
 
-	this.players[0] = new Player(TeamColor.WHITE, 300);
-	this.players[1] = new Player(TeamColor.BLACK, 300);
+	this.whitePlayer = new Player(TeamColor.WHITE, 300);
+	this.blackPlayer = new Player(TeamColor.BLACK, 300);
     }
 
     // ---------------------------------------------------- Getters/Setters ----------------------------------------------------------------
@@ -86,7 +86,11 @@ public class Board
     }
 
     public Player getActivePlayer() {
-	return players[activePlayerIndex];
+	if (activePlayerIndex == 0) {
+	    return whitePlayer;
+	} else {
+	    return blackPlayer;
+	}
     }
 
     public int getHalfmoveClock() {
@@ -108,14 +112,19 @@ public class Board
     public void printBoard() {
 	for (int y = 0; y < getWidth(); y++) {
 	    for (int x = 0; x < getHeight(); x++) {
-		System.out.print(getPiece(x, y) + " ");
+	        Piece piece = getPiece(x, y);
+		if (piece == null) {
+		    System.out.print("- ");
+		} else {
+		    System.out.print(piece + " ");
+		}
 	    }
-	    System.out.println("");
+	    System.out.print("\n");
 	}
     }
 
     //TODO implement function
-    public boolean isChecked(Player player) {
+    public boolean isInCheck(Player player) {
 	return false;
     }
 
@@ -126,7 +135,7 @@ public class Board
 
     public boolean isGameOver(Player player) {
 	if (!hasLegalMoves(player)) {
-	    if (isChecked(player)) {
+	    if (isInCheck(player)) {
 	        // Checkmate detected
 		System.out.println("Checkmate!");
 	    } else {
@@ -139,43 +148,7 @@ public class Board
     }
 
     public void resetBoard() { // TODO Sätt alla andra till null?
-        boardFromFEN("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR ");
-
-//	setPiece(0, 0, new Rook(TeamColor.WHITE));
-//	setPiece(1, 0, new Knight(TeamColor.WHITE));
-//	setPiece(2, 0, new Bishop(TeamColor.WHITE));
-//	setPiece(3, 0, new King(TeamColor.WHITE));
-//	setPiece(4, 0, new Queen(TeamColor.WHITE));
-//	setPiece(5, 0, new Bishop(TeamColor.WHITE));
-//	setPiece(6, 0, new Knight(TeamColor.WHITE));
-//	setPiece(7, 0, new Rook(TeamColor.WHITE));
-//
-//	setPiece(0, 1, new Pawn(TeamColor.WHITE));
-//	setPiece(1, 1, new Pawn(TeamColor.WHITE));
-//	setPiece(2, 1, new Pawn(TeamColor.WHITE));
-//	setPiece(3, 1, new Pawn(TeamColor.WHITE));
-//	setPiece(4, 1, new Pawn(TeamColor.WHITE));
-//	setPiece(5, 1, new Pawn(TeamColor.WHITE));
-//	setPiece(6, 1, new Pawn(TeamColor.WHITE));
-//	setPiece(7, 1, new Pawn(TeamColor.WHITE));
-//
-//	setPiece(0, 7, new Rook(TeamColor.BLACK));
-//	setPiece(1, 7, new Knight(TeamColor.BLACK));
-//	setPiece(2, 7, new Bishop(TeamColor.BLACK));
-//	setPiece(3, 7, new King(TeamColor.BLACK));
-//	setPiece(4, 7, new Queen(TeamColor.BLACK));
-//	setPiece(5, 7, new Bishop(TeamColor.BLACK));
-//	setPiece(6, 7, new Knight(TeamColor.BLACK));
-//	setPiece(7, 7, new Rook(TeamColor.BLACK));
-//
-//	setPiece(0, 6, new Pawn(TeamColor.BLACK));
-//	setPiece(1, 6, new Pawn(TeamColor.BLACK));
-//	setPiece(2, 6, new Pawn(TeamColor.BLACK));
-//	setPiece(3, 6, new Pawn(TeamColor.BLACK));
-//	setPiece(4, 6, new Pawn(TeamColor.BLACK));
-//	setPiece(5, 6, new Pawn(TeamColor.BLACK));
-//	setPiece(6, 6, new Pawn(TeamColor.BLACK));
-//	setPiece(7, 6, new Pawn(TeamColor.BLACK));
+        boardFromFEN("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1");
     }
 
     /**
@@ -183,7 +156,7 @@ public class Board
      * @return
      */
     public String boardToFEN() {
-	StringBuilder builder = new StringBuilder();
+	final StringBuilder builder = new StringBuilder();
 
 	// 1. Piece placement
 	for (int y = 0; y < height; y++) {
@@ -217,12 +190,26 @@ public class Board
 
 	// 3. Castling availability
 	//TODO add castling availability
-	builder.append("?");
+	if (whitePlayer.canCastleKingside()) {
+	    builder.append("K");
+	}
+	if (whitePlayer.canCastleQueenside()) {
+	    builder.append("Q");
+	}
+	if (blackPlayer.canCastleKingside()) {
+	    builder.append("k");
+	}
+	if (blackPlayer.canCastleQueenside()) {
+	    builder.append("q");
+	}
 	builder.append(" ");
 
 	// 4. En passant availability
-	//TODO add en passant availability
-	builder.append("?");
+	if (enPassantTarget == null) {
+	    builder.append("-");
+	} else {
+	    builder.append(positionToNotation(enPassantTarget));
+	}
 	builder.append(" ");
 
 	// 5. Halfmove clock
@@ -236,7 +223,12 @@ public class Board
 	return builder.toString();
     }
 
-    public void boardFromFEN(String fen) {
+    private String positionToNotation(final Point p) {
+	final String alphas = "abcdefghijklmnopqrstuvwxyz?";
+	return alphas.substring(p.x, p.x + 1) + (p.y + 1);
+    }
+
+    public void boardFromFEN(final String fen) {
         int x = 0;
         int y = 0;
 	for (int i = 0; i < fen.length(); i++) {
@@ -251,62 +243,56 @@ public class Board
 		    x = 0;
 		    break;
 		case 'r':
-		    setPiece(x, y, new Rook(TeamColor.WHITE));
-		    x++;
-		    break;
-		case 'R':
 		    setPiece(x, y, new Rook(TeamColor.BLACK));
 		    x++;
 		    break;
-		case 'n':
-		    setPiece(x, y, new Knight(TeamColor.WHITE));
+		case 'R':
+		    setPiece(x, y, new Rook(TeamColor.WHITE));
 		    x++;
 		    break;
-		case 'N':
+		case 'n':
 		    setPiece(x, y, new Knight(TeamColor.BLACK));
 		    x++;
 		    break;
-		case 'b':
-		    setPiece(x, y, new Bishop(TeamColor.WHITE));
+		case 'N':
+		    setPiece(x, y, new Knight(TeamColor.WHITE));
 		    x++;
 		    break;
-		case 'B':
+		case 'b':
 		    setPiece(x, y, new Bishop(TeamColor.BLACK));
 		    x++;
 		    break;
-		case 'k':
-		    setPiece(x, y, new King(TeamColor.WHITE));
+		case 'B':
+		    setPiece(x, y, new Bishop(TeamColor.WHITE));
 		    x++;
 		    break;
-		case 'K':
+		case 'k':
 		    setPiece(x, y, new King(TeamColor.BLACK));
 		    x++;
 		    break;
-		case 'q':
-		    setPiece(x, y, new Queen(TeamColor.WHITE));
+		case 'K':
+		    setPiece(x, y, new King(TeamColor.WHITE));
 		    x++;
 		    break;
-		case 'Q':
+		case 'q':
 		    setPiece(x, y, new Queen(TeamColor.BLACK));
 		    x++;
 		    break;
+		case 'Q':
+		    setPiece(x, y, new Queen(TeamColor.WHITE));
+		    x++;
+		    break;
 		case 'p':
-		    setPiece(x, y, new Pawn(TeamColor.WHITE));
+		    setPiece(x, y, new Pawn(TeamColor.BLACK));
 		    x++;
 		    break;
 		case 'P':
-		    setPiece(x, y, new Pawn(TeamColor.BLACK));
+		    setPiece(x, y, new Pawn(TeamColor.WHITE));
 		    x++;
 		    break;
 		default:
 		    x += Character.getNumericValue(curr);
 	    }
 	}
-    }
-
-    public static void main(String[] args) {
-        Board board = new Board(8, 8);
-
-	board.printBoard();
     }
 }
