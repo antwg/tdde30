@@ -10,7 +10,7 @@ import java.util.List;
  */
 public class King extends AbstractPiece
 {
-    protected King(final TeamColor color) {
+    public King(final TeamColor color) {
 	super(color);
     }
 

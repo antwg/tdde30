@@ -10,7 +10,7 @@ import java.util.List;
  */
 public class Pawn extends AbstractPiece
 {
-    protected Pawn(final TeamColor color) {
+    public Pawn(final TeamColor color) {
 	super(color);
     }
 

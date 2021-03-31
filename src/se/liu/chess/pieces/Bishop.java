@@ -10,7 +10,7 @@ import java.util.List;
  */
 public class Bishop extends AbstractPiece
 {
-    protected Bishop(final TeamColor color) {
+    public Bishop(final TeamColor color) {
 	super(color);
     }
 

@@ -3,7 +3,14 @@ package se.liu.chess.game;
 import se.liu.chess.pieces.Piece;
 
 import java.awt.*;
+
+import se.liu.chess.pieces.Bishop;
+import se.liu.chess.pieces.King;
+import se.liu.chess.pieces.Knight;
+import se.liu.chess.pieces.Pawn;
 import se.liu.chess.pieces.Piece;
+import se.liu.chess.pieces.Queen;
+import se.liu.chess.pieces.Rook;
 
 /**
  * Creates a board which handles all game logic and saves the position of pieces. Has methods for moving pieces.
@@ -74,11 +81,50 @@ public class Board
 	}
     }
 
+    public void resetBoard() {
+        //White
+	setPiece(0, 0, new Rook(TeamColor.WHITE));
+	setPiece(1, 0, new Knight(TeamColor.WHITE));
+	setPiece(2, 0, new Bishop(TeamColor.WHITE));
+	setPiece(3, 0, new King(TeamColor.WHITE));
+	setPiece(4, 0, new Queen(TeamColor.WHITE));
+	setPiece(5, 0, new Bishop(TeamColor.WHITE));
+	setPiece(6, 0, new Knight(TeamColor.WHITE));
+	setPiece(7, 0, new Rook(TeamColor.WHITE));
+
+	setPiece(0, 1, new Pawn(TeamColor.WHITE));
+	setPiece(1, 1, new Pawn(TeamColor.WHITE));
+	setPiece(2, 1, new Pawn(TeamColor.WHITE));
+	setPiece(3, 1, new Pawn(TeamColor.WHITE));
+	setPiece(4, 1, new Pawn(TeamColor.WHITE));
+	setPiece(5, 1, new Pawn(TeamColor.WHITE));
+	setPiece(6, 1, new Pawn(TeamColor.WHITE));
+	setPiece(7, 1, new Pawn(TeamColor.WHITE));
+
+	//Black
+	setPiece(0, 7, new Rook(TeamColor.BLACK));
+	setPiece(1, 7, new Knight(TeamColor.BLACK));
+	setPiece(2, 7, new Bishop(TeamColor.BLACK));
+	setPiece(3, 7, new King(TeamColor.BLACK));
+	setPiece(4, 7, new Queen(TeamColor.BLACK));
+	setPiece(5, 7, new Bishop(TeamColor.BLACK));
+	setPiece(6, 7, new Knight(TeamColor.BLACK));
+	setPiece(7, 7, new Rook(TeamColor.BLACK));
+
+	setPiece(0, 6, new Pawn(TeamColor.BLACK));
+	setPiece(1, 6, new Pawn(TeamColor.BLACK));
+	setPiece(2, 6, new Pawn(TeamColor.BLACK));
+	setPiece(3, 6, new Pawn(TeamColor.BLACK));
+	setPiece(4, 6, new Pawn(TeamColor.BLACK));
+	setPiece(5, 6, new Pawn(TeamColor.BLACK));
+	setPiece(6, 6, new Pawn(TeamColor.BLACK));
+	setPiece(7, 6, new Pawn(TeamColor.BLACK));
+    }
+
     /**
      * https://en.wikipedia.org/wiki/Forsyth%E2%80%93Edwards_Notation
      * @return
      */
-
     /*
     public String boardStateToFEN() {
 	StringBuilder builder = new StringBuilder();

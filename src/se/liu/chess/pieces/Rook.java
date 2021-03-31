@@ -10,7 +10,7 @@ import java.util.List;
  */
 public class Rook extends AbstractPiece
 {
-    protected Rook(final TeamColor color) {
+    public Rook(final TeamColor color) {
 	super(color);
     }
 
