@@ -20,6 +20,7 @@ public class ChessComponent extends JComponent
     private Board board;
     private int width;
     private int height;
+
     private final static int SQUARE_SIZE = 64;
     private final static Color ODD_COLOR = Color.DARK_GRAY, EVEN_COLOR = Color.WHITE; // When starting at 0
     private ImageIcon pieceB = loadIcon("BishopBlack"), pieceb = loadIcon("BishopWhite"), pieceK = loadIcon("KingBlack"),

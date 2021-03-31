@@ -4,12 +4,12 @@ import se.liu.chess.pieces.Piece;
 
 import java.awt.*;
 
+import se.liu.chess.pieces.Rook;
+import se.liu.chess.pieces.Knight;
 import se.liu.chess.pieces.Bishop;
 import se.liu.chess.pieces.King;
-import se.liu.chess.pieces.Knight;
-import se.liu.chess.pieces.Pawn;
 import se.liu.chess.pieces.Queen;
-import se.liu.chess.pieces.Rook;
+import se.liu.chess.pieces.Pawn;
 
 /**
  * Creates a board which handles all game logic and saves the position of pieces. Has methods for moving pieces.

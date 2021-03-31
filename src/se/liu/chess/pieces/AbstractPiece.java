@@ -3,7 +3,6 @@ package se.liu.chess.pieces;
 import se.liu.chess.game.Board;
 import se.liu.chess.game.TeamColor;
 
-import javax.swing.*;
 import java.awt.*;
 
 /**
@@ -12,8 +11,8 @@ import java.awt.*;
 
 public abstract class AbstractPiece implements Piece
 {
-    private TeamColor color;
-    private boolean hasMoved = false;
+    protected TeamColor color;
+    protected boolean hasMoved = false;
 
     protected AbstractPiece(final TeamColor color) {
 	this.color = color;

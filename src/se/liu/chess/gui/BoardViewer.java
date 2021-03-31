@@ -3,7 +3,6 @@ package se.liu.chess.gui;
 import se.liu.chess.game.Board;
 
 import javax.swing.*;
-import javax.swing.border.LineBorder;
 import java.awt.*;
 
 /**
