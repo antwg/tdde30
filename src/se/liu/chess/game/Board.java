@@ -52,17 +52,26 @@ public class Board
         return pieces[y][x];
     }
 
-    public Piece getPiece(Point coordinate) {
-	return getPiece(coordinate.x, coordinate.y);
+    public Piece getPiece(Point p) {
+	return getPiece(p.x, p.y);
     }
 
     public void setPiece(int x, int y, Piece piece) {
 	pieces[y][x] = piece;
     }
 
-    public void setPiece(Point coordinate, Piece piece) {
-	setPiece(coordinate.x, coordinate.y, piece);
+    public void setPiece(Point p, Piece piece) {
+	setPiece(p.x, p.y, piece);
     }
+
+    public boolean isEmpty(int x, int y) {
+        return getPiece(x, y) == null;
+    }
+
+    public boolean isEmpty(Point p) {
+	return getPiece(p.x, p.y) == null;
+    }
+
 
     // ----------------------------------------------------- Public Methods ----------------------------------------------------------------
 
@@ -125,38 +134,49 @@ public class Board
      * https://en.wikipedia.org/wiki/Forsyth%E2%80%93Edwards_Notation
      * @return
      */
-    /*
+
     public String boardStateToFEN() {
 	StringBuilder builder = new StringBuilder();
 
 	// 1. Piece placement
 	for (int y = 0; y < height; y++) {
 	    int emptySquaresInARow = 0;
-
 	    for (int x = 0; x < width; x++) {
-		switch (getPiece(x, y).getColor()) {
-		    case :
-
-		    default:
-		        emptySquaresInARow++;
+		if (isEmpty(x, y)) {
+		    emptySquaresInARow++;
+		} else {
+		    if (emptySquaresInARow != 0) {
+			builder.append(emptySquaresInARow);
+			emptySquaresInARow = 0;
+		    }
+		    builder.append(getPiece(x, y));
 		}
+	    }
+	    if (emptySquaresInARow != 0) {
+		builder.append(emptySquaresInARow);
+		emptySquaresInARow = 0;
 	    }
 	    builder.append("/");
 	}
 	builder.append(" ");
+
 	// 2. Active color
 	builder.append(" ");
+
 	// 3. Castling availability
 	builder.append(" ");
+
 	// 4. En passant availability
 	builder.append(" ");
+
 	// 5. Halfmove clock
 	builder.append(" ");
+
 	// 6. Fullmove number
 	builder.append(" ");
 
-	return
-    } */
+	return builder.toString();
+    }
 
     public static void main(String[] args) {
         Board board = new Board(8, 8);

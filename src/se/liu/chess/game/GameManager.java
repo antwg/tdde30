@@ -28,6 +28,10 @@ public class GameManager
         GameManager gm = new GameManager();
         gm.createNewGame();
 
+        gm.board.resetBoard();
+        gm.board.printBoard();
+        System.out.println(gm.board.boardStateToFEN());
+
         BoardViewer boardViewer = new BoardViewer(gm.board);
         boardViewer.show();
 

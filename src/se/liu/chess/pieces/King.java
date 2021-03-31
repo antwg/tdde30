@@ -17,4 +17,11 @@ public class King extends AbstractPiece
     @Override public List<Piece> getMoves(Board board) {
 	return null;
     }
+
+    @Override public String toString() {
+	if (getColor() == TeamColor.BLACK) {
+	    return "K";
+	}
+	return "k";
+    }
 }

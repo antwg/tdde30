@@ -15,4 +15,6 @@ public interface Piece
     public TeamColor getColor();
 
     public PieceType getType();
+
+    public String toString();
 }
