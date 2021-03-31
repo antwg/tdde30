@@ -14,8 +14,14 @@ public class Bishop extends AbstractPiece
 	super(color);
     }
 
+
+
     @Override public List<Piece> getMoves(Board board) {
 	return null;
+    }
+
+    @Override public PieceType getType() {
+	return PieceType.BISHOP;
     }
 
     @Override public String toString() {

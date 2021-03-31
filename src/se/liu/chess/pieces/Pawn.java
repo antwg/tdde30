@@ -14,6 +14,10 @@ public class Pawn extends AbstractPiece
 	super(color);
     }
 
+    @Override public PieceType getType() {
+	return PieceType.PAWN;
+    }
+
     @Override public List<Piece> getMoves(Board board) {
 	return null;
     }
