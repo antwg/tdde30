@@ -10,7 +10,9 @@ import java.util.List;
  */
 public interface Piece
 {
-    public List<se.liu.chess.game.Piece> getMoves(Board board);
+    public List<Piece> getMoves(Board board);
 
     public TeamColor getColor();
+
+    public PieceType getType();
 }

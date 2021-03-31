@@ -1,6 +1,7 @@
 package se.liu.chess.game;
 
 import java.awt.*;
+import se.liu.chess.pieces.Piece;
 
 /**
  * Creates a board which handles all game logic and saves the position of pieces. Has methods for moving pieces.
@@ -23,7 +24,7 @@ public class Board
 
 	for (int y = 0; y < height; y++) {
 	    for (int x = 0; x < width; x++) {
-		pieces[y][x] = new Piece(x, y);
+		pieces[y][x] = null;
 	    }
 	}
     }

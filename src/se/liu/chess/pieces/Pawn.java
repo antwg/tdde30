@@ -1,7 +1,6 @@
 package se.liu.chess.pieces;
 
 import se.liu.chess.game.Board;
-import se.liu.chess.game.Piece;
 import se.liu.chess.game.TeamColor;
 
 import java.util.List;
