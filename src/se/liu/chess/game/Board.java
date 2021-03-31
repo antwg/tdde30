@@ -114,6 +114,30 @@ public class Board
 	}
     }
 
+    //TODO implement function
+    public boolean isChecked(Player player) {
+	return false;
+    }
+
+    //TODO implement function
+    public boolean hasLegalMoves(Player player) {
+        return true;
+    }
+
+    public boolean isGameOver(Player player) {
+	if (!hasLegalMoves(player)) {
+	    if (isChecked(player)) {
+	        // Checkmate detected
+		System.out.println("Checkmate!");
+	    } else {
+	        // Stalemate detected
+		System.out.println("Stalemate!");
+	    }
+	    return true;
+	}
+	return false;
+    }
+
     public void resetBoard() { // TODO Sätt alla andra till null?
         //White
 	setPiece(0, 0, new Rook(TeamColor.WHITE));
@@ -158,7 +182,6 @@ public class Board
      * https://en.wikipedia.org/wiki/Forsyth%E2%80%93Edwards_Notation
      * @return
      */
-
     public String boardStateToFEN() {
 	StringBuilder builder = new StringBuilder();
 
