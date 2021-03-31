@@ -8,7 +8,6 @@ import se.liu.chess.pieces.Bishop;
 import se.liu.chess.pieces.King;
 import se.liu.chess.pieces.Knight;
 import se.liu.chess.pieces.Pawn;
-import se.liu.chess.pieces.Piece;
 import se.liu.chess.pieces.Queen;
 import se.liu.chess.pieces.Rook;
 
@@ -26,6 +25,17 @@ public class Board
     private int width;
     private int height;
 
+    private Player[] players = new Player[2];
+
+    private int activePlayerIndex = 0;
+
+    //TODO add castlingAvailability
+
+    //TODO add enPassantTargets
+
+    private int halfmoveClock = 0;	// Used for 50 move rule
+    private int fullmoveNumber = 1;
+
     public Board(final int width, final int height) {
 	this.width = width;
 	this.height = height;
@@ -36,6 +46,9 @@ public class Board
 		pieces[y][x] = null;
 	    }
 	}
+
+	this.players[0] = new Player(TeamColor.WHITE, 300);
+	this.players[1] = new Player(TeamColor.BLACK, 300);
     }
 
     // ---------------------------------------------------- Getters/Setters ----------------------------------------------------------------
@@ -72,6 +85,17 @@ public class Board
 	return getPiece(p.x, p.y) == null;
     }
 
+    public Player getActivePlayer() {
+	return players[activePlayerIndex];
+    }
+
+    public int getHalfmoveClock() {
+	return halfmoveClock;
+    }
+
+    public int getFullmoveNumber() {
+	return fullmoveNumber;
+    }
 
     // ----------------------------------------------------- Public Methods ----------------------------------------------------------------
 
@@ -161,18 +185,29 @@ public class Board
 	builder.append(" ");
 
 	// 2. Active color
+	if (getActivePlayer().getColor() == TeamColor.WHITE) {
+	    builder.append("w");
+	} else {
+	    builder.append("b");
+	}
 	builder.append(" ");
 
 	// 3. Castling availability
+	//TODO add castling availability
+	builder.append("?");
 	builder.append(" ");
 
 	// 4. En passant availability
+	//TODO add en passant availability
+	builder.append("?");
 	builder.append(" ");
 
 	// 5. Halfmove clock
+	builder.append(halfmoveClock);
 	builder.append(" ");
 
 	// 6. Fullmove number
+	builder.append(fullmoveNumber);
 	builder.append(" ");
 
 	return builder.toString();
