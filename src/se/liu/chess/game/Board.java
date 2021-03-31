@@ -1,7 +1,5 @@
 package se.liu.chess.game;
 
-import se.liu.chess.pieces.Piece;
-
 import java.awt.*;
 
 /**
@@ -14,18 +12,18 @@ import java.awt.*;
 
 public class Board
 {
-    private Square[][] squares;
+    private Piece[][] pieces;
     private int width;
     private int height;
 
     public Board(final int width, final int height) {
 	this.width = width;
 	this.height = height;
-	this.squares = new Square[width][height];
+	this.pieces = new Piece[width][height];
 
 	for (int y = 0; y < height; y++) {
 	    for (int x = 0; x < width; x++) {
-		squares[y][x] = new Square(x, y);
+		pieces[y][x] = new Piece(x, y);
 	    }
 	}
     }
@@ -40,27 +38,27 @@ public class Board
 	return height;
     }
 
-    public Square getSquare(int x, int y) {
-	return squares[y][x];
+    public Piece getSquare(int x, int y) {
+	return pieces[y][x];
     }
 
-    public Square getSquare(Point coordinate) {
+    public Piece getSquare(Point coordinate) {
 	return getSquare(coordinate.x, coordinate.y);
     }
 
-    public Piece getPiece(int x, int y) {
+    public se.liu.chess.pieces.Piece getPiece(int x, int y) {
         return getSquare(x, y).getPiece();
     }
 
-    public Piece getPiece(Point coordinate) {
+    public se.liu.chess.pieces.Piece getPiece(Point coordinate) {
 	return getPiece(coordinate.x, coordinate.y);
     }
 
-    public void setPiece(int x, int y, Piece piece) {
+    public void setPiece(int x, int y, se.liu.chess.pieces.Piece piece) {
 	getSquare(x, y).setPiece(piece);
     }
 
-    public void setPiece(Point coordinate, Piece piece) {
+    public void setPiece(Point coordinate, se.liu.chess.pieces.Piece piece) {
 	setPiece(coordinate.x, coordinate.y, piece);
     }
 
