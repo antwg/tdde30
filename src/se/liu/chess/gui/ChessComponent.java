@@ -1,10 +1,8 @@
 package se.liu.chess.gui;
 
-
 import se.liu.chess.game.Board;
 import se.liu.chess.game.TeamColor;
 import se.liu.chess.pieces.Piece;
-
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
@@ -17,20 +15,16 @@ import java.awt.event.MouseEvent;
  * The board argument will take any Board object and paint it.
  */
 
-public class ChessComponent extends JComponent
-{
+public class ChessComponent extends JComponent {
     private Board board;
-    private int width;
-    private int height;
-
+    private int width, height;
+    private Point currentlyPressed = null;
     private final static int SQUARE_SIZE = 64;
-    private final static Color ODD_COLOR = Color.DARK_GRAY, EVEN_COLOR = Color.WHITE; // When starting at 0
-    private ImageIcon pieceB = loadIcon("BishopWhite"), pieceb = loadIcon("BishopBlack"),
-	    	      pieceK = loadIcon("KingWhite"), piecek = loadIcon("KingBlack"),
-	    	      pieceN = loadIcon("KnightWhite"), piecen = loadIcon("KnightBlack"),
-		      pieceP = loadIcon("PawnWhite"), piecep = loadIcon("PawnBlack"),
-	    	      pieceQ = loadIcon("QueenWhite"), pieceq = loadIcon("QueenBlack"),
-	    	      pieceR = loadIcon("RookWhite"), piecer = loadIcon("RookBlack");
+    private final static Color ODD_COLOR = Color.DARK_GRAY, EVEN_COLOR = Color.WHITE, SELECTED_COLOR = Color.RED;
+    private ImageIcon pieceB = loadIMG("BishopWhite"), pieceb = loadIMG("BishopBlack"), pieceK = loadIMG("KingWhite"),
+	    	      piecek = loadIMG("KingBlack"), pieceN = loadIMG("KnightWhite"), piecen = loadIMG("KnightBlack"),
+		      pieceP = loadIMG("PawnWhite"), piecep = loadIMG("PawnBlack"), pieceQ = loadIMG("QueenWhite"),
+	    	      pieceq = loadIMG("QueenBlack"), pieceR = loadIMG("RookWhite"), piecer = loadIMG("RookBlack");
 
     // Constructor
     public ChessComponent(final Board board) {
@@ -47,9 +41,10 @@ public class ChessComponent extends JComponent
 
     // ----------------------------------------------------- Public/Protected Methods ------------------------------------------------------
 
-    public Point pressedSquare(int x, int y){
-	Point point = new Point(Math.floorDiv(x, SQUARE_SIZE), Math.floorDiv(y, SQUARE_SIZE));
-	board.setPiece(point, board.getPiece(0, 0));
+    public Point pressedSquare(int x, int y){ // TODO Lägga på lämpligt ställe
+	Point point = new Point(Math.floorDiv(x, SQUARE_SIZE), Math.floorDiv(y, SQUARE_SIZE)); // Finds what point in board
+	this.currentlyPressed = point;
+	// board.setPiece(point, board.getPiece(0, 0));
 	repaint();
 	return point;
     }
@@ -72,6 +67,9 @@ public class ChessComponent extends JComponent
 		if ((col + row) % 2 == 0) {
 		    color = EVEN_COLOR;
 		}
+		if (currentlyPressed != null && currentlyPressed.equals(new Point(col, row))){
+		    color =  SELECTED_COLOR;
+		}
 		// Paint square
 		g2d.setColor(color);
 		g2d.fillRect(col * SQUARE_SIZE, row * SQUARE_SIZE, SQUARE_SIZE, SQUARE_SIZE);
@@ -90,7 +88,7 @@ public class ChessComponent extends JComponent
 
 
 
-    private ImageIcon loadIcon(String name){
+    private ImageIcon loadIMG(String name){
 	return new ImageIcon(ClassLoader.getSystemResource("images/" + name + ".png"));
     }
 
