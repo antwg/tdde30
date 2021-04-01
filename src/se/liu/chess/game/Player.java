@@ -13,6 +13,7 @@ public class Player
     private boolean kingsideCastleAvailable;
     private boolean queensideCastleAvailable;
 
+    // Constructor
     public Player(final TeamColor color, final double timeLeft) {
 	this.color = color;
 	this.timeLeft = timeLeft;

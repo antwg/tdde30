@@ -13,6 +13,7 @@ public class BoardViewer
     private JFrame frame;
     private ChessComponent chessComponent;
 
+    // Constructor
     public BoardViewer(ChessComponent chessComponent) {
 	this.frame = new JFrame("Chess");
 	this.chessComponent = chessComponent;

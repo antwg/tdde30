@@ -7,6 +7,8 @@ import se.liu.chess.pieces.Piece;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
 /**
  * An extension of JComponent. Given a Board object, ChessComponent will be able to paint the board itself as well as the pieces on the board.
@@ -30,13 +32,27 @@ public class ChessComponent extends JComponent
 	    	      pieceQ = loadIcon("QueenWhite"), pieceq = loadIcon("QueenBlack"),
 	    	      pieceR = loadIcon("RookWhite"), piecer = loadIcon("RookBlack");
 
+    // Constructor
     public ChessComponent(final Board board) {
 	this.board = board;
 	this.width = SQUARE_SIZE * board.getWidth();
 	this.height = SQUARE_SIZE * board.getHeight();
+
+	this.addMouseListener(new MouseAdapter(){
+	    @Override public void mousePressed(final MouseEvent e) {
+		pressedSquare(e.getX(), e.getY());
+	    }
+	});
     }
 
     // ----------------------------------------------------- Public/Protected Methods ------------------------------------------------------
+
+    public Point pressedSquare(int x, int y){
+	Point point = new Point(Math.floorDiv(x, SQUARE_SIZE), Math.floorDiv(y, SQUARE_SIZE));
+	board.setPiece(point, board.getPiece(0, 0));
+	repaint();
+	return point;
+    }
 
     @Override public Dimension getPreferredSize() {
 	return new Dimension(width, height);

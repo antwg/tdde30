@@ -11,6 +11,7 @@ public class GameManager
 {
     private Board board;
 
+    // Constructor
     public GameManager() {
         this.board = new Board(8, 8);
     }

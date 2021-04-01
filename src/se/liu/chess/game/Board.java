@@ -32,6 +32,7 @@ public class Board
     private int halfmoveClock = 0;	// Used for 50 move rule
     private int fullmoveNumber = 1;
 
+    // Constructor
     public Board(final int width, final int height) {
 	this.width = width;
 	this.height = height;
@@ -45,6 +46,7 @@ public class Board
 
 	this.whitePlayer = new Player(TeamColor.WHITE, 300);
 	this.blackPlayer = new Player(TeamColor.BLACK, 300);
+
     }
 
     // ---------------------------------------------------- Getters/Setters ----------------------------------------------------------------
