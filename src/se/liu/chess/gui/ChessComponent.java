@@ -19,7 +19,7 @@ public class ChessComponent extends JComponent {
     private Board board;
     private int width, height;
     private Point currentlyPressed = null;
-    private final static int SQUARE_SIZE = 64;
+    private final static int SQUARE_SIZE = 72, IMGSIZE = 64, OFFSET = (SQUARE_SIZE - IMGSIZE) / 2;
     private final static Color ODD_COLOR = Color.DARK_GRAY, EVEN_COLOR = Color.WHITE, SELECTED_COLOR = Color.RED;
     private ImageIcon pieceB = loadIMG("BishopWhite"), pieceb = loadIMG("BishopBlack"), pieceK = loadIMG("KingWhite"),
 	    	      piecek = loadIMG("KingBlack"), pieceN = loadIMG("KnightWhite"), piecen = loadIMG("KnightBlack"),
@@ -43,8 +43,12 @@ public class ChessComponent extends JComponent {
 
     public Point pressedSquare(int x, int y){ // TODO Lägga på lämpligt ställe
 	Point point = new Point(Math.floorDiv(x, SQUARE_SIZE), Math.floorDiv(y, SQUARE_SIZE)); // Finds what point in board
+	final Point lastPressed = currentlyPressed;
 	this.currentlyPressed = point;
-	// board.setPiece(point, board.getPiece(0, 0));
+	if(lastPressed != null && board.getPiece(lastPressed) != null){
+		board.movePiece(lastPressed, currentlyPressed);
+		currentlyPressed = null;
+	}
 	repaint();
 	return point;
     }
@@ -77,8 +81,8 @@ public class ChessComponent extends JComponent {
 		// Paint piece if exists
 		if (!board.isEmpty(col, row)) {
 		    Piece piece = board.getPiece(col, row);
-		    ImageIcon image = getImageForPiece(piece, piece.getColor());
-		    image.paintIcon(this, g, col * SQUARE_SIZE, row * SQUARE_SIZE);
+		    ImageIcon imageIcon = getImageForPiece(piece, piece.getColor());
+		    imageIcon.paintIcon(this, g, col * SQUARE_SIZE + OFFSET, row * SQUARE_SIZE + OFFSET);
 	    }
 	}
     }
