@@ -41,16 +41,18 @@ public class ChessComponent extends JComponent {
 
     // ----------------------------------------------------- Public/Protected Methods ------------------------------------------------------
 
-    public Point pressedSquare(int x, int y){ // TODO Lägga på lämpligt ställe
-	Point point = new Point(Math.floorDiv(x, SQUARE_SIZE), Math.floorDiv(y, SQUARE_SIZE)); // Finds what point in board
+    public void pressedSquare(int x, int y){
+	Point point = new Point(Math.floorDiv(x, SQUARE_SIZE), Math.floorDiv(y, SQUARE_SIZE)); // Finds what point on board
 	final Point lastPressed = currentlyPressed;
 	this.currentlyPressed = point;
-	if(lastPressed != null && board.getPiece(lastPressed) != null){
+
+	if(lastPressed != null && board.getPiece(lastPressed) != null){ // Stop from moving empty pieces (null)
+	    if(!currentlyPressed.equals(lastPressed)) { // Stop from destroying itself
 		board.movePiece(lastPressed, currentlyPressed);
-		currentlyPressed = null;
+	    }
+	    currentlyPressed = null;
 	}
 	repaint();
-	return point;
     }
 
     @Override public Dimension getPreferredSize() {

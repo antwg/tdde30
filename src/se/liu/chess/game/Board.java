@@ -104,9 +104,7 @@ public class Board
 
     public void movePiece(Point p1, Point p2) {
 	setPiece(p2, getPiece(p1));
-	if (!p1.equals(p2)) {
-	    setPiece(p1, null);
-	}
+	setPiece(p1, null);
     }
 
     public void printBoard() {
