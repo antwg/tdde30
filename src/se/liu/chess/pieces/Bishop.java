@@ -4,6 +4,7 @@ import se.liu.chess.game.Board;
 import se.liu.chess.game.TeamColor;
 
 import java.awt.*;
+import java.util.ArrayList;
 import java.util.List;
 
 import static se.liu.chess.game.TeamColor.BLACK;
@@ -18,7 +19,8 @@ public class Bishop extends AbstractPiece
     }
 
     @Override public List<Point> getMoves(Board board, int x, int y) {
-	return null;
+	List<Point> list = new ArrayList<>();
+	return list;
     }
 
     @Override public PieceType getType() {

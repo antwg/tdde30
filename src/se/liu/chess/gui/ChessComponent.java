@@ -67,7 +67,7 @@ public class ChessComponent extends JComponent {
     public List<Point> getValidMoves(int x, int y){
 	Piece selectedPiece = board.getPiece(x, y);
 	List<Point> list = new ArrayList<>();
-	if (selectedPiece.getMoves(board, x, y) != null) {
+	if (selectedPiece != null) {
 	    list = selectedPiece.getMoves(board, x, y);
 	}
 	return list;
