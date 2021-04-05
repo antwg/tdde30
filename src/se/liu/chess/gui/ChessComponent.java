@@ -3,16 +3,20 @@ package se.liu.chess.gui;
 import se.liu.chess.game.Board;
 import se.liu.chess.game.TeamColor;
 import se.liu.chess.pieces.Piece;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * An extension of JComponent. Given a Board object, ChessComponent will be able to paint the board itself as well as the pieces on the board.
  * ChessComponent will loop over all all points in board and paint relevant data.
  * The graphics for the pieces are saved in resources.
  * The board argument will take any Board object and paint it.
+ * Listens for mouse input.
  */
 
 public class ChessComponent extends JComponent {
@@ -20,7 +24,7 @@ public class ChessComponent extends JComponent {
     private int width, height;
     private Point currentlyPressed = null;
     private final static int SQUARE_SIZE = 72, IMGSIZE = 64, OFFSET = (SQUARE_SIZE - IMGSIZE) / 2;
-    private final static Color ODD_COLOR = Color.DARK_GRAY, EVEN_COLOR = Color.WHITE, SELECTED_COLOR = Color.RED;
+    private final static Color ODD_COLOR = Color.DARK_GRAY, EVEN_COLOR = Color.WHITE, SELECTED_COLOR = new Color(255, 0, 0, 100);
     private ImageIcon pieceB = loadIMG("BishopWhite"), pieceb = loadIMG("BishopBlack"), pieceK = loadIMG("KingWhite"),
 	    	      piecek = loadIMG("KingBlack"), pieceN = loadIMG("KnightWhite"), piecen = loadIMG("KnightBlack"),
 		      pieceP = loadIMG("PawnWhite"), piecep = loadIMG("PawnBlack"), pieceQ = loadIMG("QueenWhite"),
@@ -52,11 +56,21 @@ public class ChessComponent extends JComponent {
 	    }
 	    currentlyPressed = null;
 	}
+	getValidMoves(point.x, point.y);
 	repaint();
     }
 
     @Override public Dimension getPreferredSize() {
 	return new Dimension(width, height);
+    }
+
+    public List<Point> getValidMoves(int x, int y){
+	Piece selectedPiece = board.getPiece(x, y);
+	List<Point> list = new ArrayList<>();
+	if (selectedPiece.getMoves(board, x, y) != null) {
+	    list = selectedPiece.getMoves(board, x, y);
+	}
+	return list;
     }
 
     @Override protected void paintComponent(final Graphics g) {
@@ -70,15 +84,26 @@ public class ChessComponent extends JComponent {
 
 		// Determine color of square
 		Color color = ODD_COLOR;
+		Color color2 = new Color(0, 0, 0, 0);
+
+		// Normal case
 		if ((col + row) % 2 == 0) {
 		    color = EVEN_COLOR;
 		}
+		// If selected
 		if (currentlyPressed != null && currentlyPressed.equals(new Point(col, row))){
-		    color =  SELECTED_COLOR;
+		    color2 = SELECTED_COLOR;
+		}
+		// If valid move
+		if (currentlyPressed != null && getValidMoves(currentlyPressed.x, currentlyPressed.y).contains(new Point(col, row))){
+		    color2 = SELECTED_COLOR;
 		}
 		// Paint square
 		g2d.setColor(color);
 		g2d.fillRect(col * SQUARE_SIZE, row * SQUARE_SIZE, SQUARE_SIZE, SQUARE_SIZE);
+		g2d.setColor(color2);
+		g2d.fillRect(col * SQUARE_SIZE, row * SQUARE_SIZE, SQUARE_SIZE, SQUARE_SIZE);
+
 
 		// Paint piece if exists
 		if (!board.isEmpty(col, row)) {

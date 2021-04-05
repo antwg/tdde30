@@ -3,6 +3,7 @@ package se.liu.chess.pieces;
 import se.liu.chess.game.Board;
 import se.liu.chess.game.TeamColor;
 
+import java.awt.*;
 import java.util.List;
 
 /**
@@ -18,7 +19,7 @@ public class Rook extends AbstractPiece
 	return PieceType.ROOK;
     }
 
-    @Override public List<Piece> getMoves(Board board) {
+    @Override public List<Point> getMoves(Board board, int x, int y) {
 	return null;
     }
 
