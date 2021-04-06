@@ -68,11 +68,11 @@ public class ChessComponent extends JComponent {
 
     public Set<Point> getValidMoves(int x, int y){
 	Piece selectedPiece = board.getPiece(x, y);
-	Set<Point> list = new HashSet<>();
+	Set<Point> moveSet = new HashSet<>();
 	if (selectedPiece != null) {
-	    list = selectedPiece.getMoves(board, x, y);
+	    moveSet = selectedPiece.getMoves(board, x, y);
 	}
-	return list;
+	return moveSet;
     }
 
     @Override protected void paintComponent(final Graphics g) {

@@ -23,8 +23,8 @@ public class Pawn extends AbstractPiece
     }
 
     @Override public Set<Point> getMoves(Board board, int x, int y) {
-	Set<Point> list = new HashSet<>();
-	return list;
+	List<Point> list = new ArrayList<>();
+	return new HashSet<>();
     }
 
     @Override public String toString() {

@@ -36,7 +36,6 @@ public class Knight extends AbstractPiece
 	return PieceType.KNIGHT;
     }
 
-
     @Override public String toString() {
 	if (getColor() == TeamColor.WHITE) {
 	    return "N";
