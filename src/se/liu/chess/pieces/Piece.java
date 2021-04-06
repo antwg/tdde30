@@ -19,4 +19,9 @@ public interface Piece
     public PieceType getType();
 
     public String toString();
+
+    void sethasMoved(boolean b);
+
+    boolean hasMoved();
+
 }

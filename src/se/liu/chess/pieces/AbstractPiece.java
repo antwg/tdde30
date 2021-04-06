@@ -26,6 +26,10 @@ public abstract class AbstractPiece implements Piece
         return hasMoved;
     }
 
+    public void sethasMoved(final boolean hasMoved) {
+        this.hasMoved = hasMoved;
+    }
+
     protected boolean isLegalCoordinate(Point coordinate, Board board) {
         return true;
     }

@@ -98,6 +98,17 @@ public class Board
 	return fullmoveNumber;
     }
 
+    public void setEnPassantTarget(final Point enPassantTarget) {
+	this.enPassantTarget = enPassantTarget;
+    }
+
+    public void setEnPassantTarget(int x, int y) {
+	this.enPassantTarget = new Point(x, y);
+    }
+
+    public Point getEnPassantTarget() {
+	return enPassantTarget;
+    }
 
     // ----------------------------------------------------- Public Methods ----------------------------------------------------------------
 

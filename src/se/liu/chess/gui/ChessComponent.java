@@ -3,6 +3,7 @@ package se.liu.chess.gui;
 import se.liu.chess.game.Board;
 import se.liu.chess.game.TeamColor;
 import se.liu.chess.pieces.Piece;
+import se.liu.chess.pieces.PieceType;
 
 import javax.swing.*;
 import java.awt.*;
@@ -52,18 +53,15 @@ public class ChessComponent extends JComponent {
 
 	// Stop from moving empty pieces (null)
 	if(lastPressed != null && board.getPiece(lastPressed) != null){
-	    // Stop from destroying itself
-	    if(!currentlyPressed.equals(lastPressed)) {
-	        // Stop from making illegal moves
-		// TODO Remove comments (*) when pawn is implemented
-	        // (*) if (getValidMoves(lastPressed.x, lastPressed.y).contains(currentlyPressed)){
-	            board.movePiece(lastPressed, currentlyPressed);
-		// (*) }
 
+	    // Get legal moves
+	    if (getValidMoves(lastPressed.x, lastPressed.y).contains(currentlyPressed)) {
+		board.movePiece(lastPressed, currentlyPressed);
 	    }
-	    currentlyPressed = null;
+	    tryToKillEnPassant();
+	    setEnPassant(lastPressed);
+	    this.currentlyPressed = null;
 	}
-	getValidMoves(point.x, point.y);
 	repaint();
     }
 
@@ -74,6 +72,7 @@ public class ChessComponent extends JComponent {
     public Set<Point> getValidMoves(int x, int y){
 	Piece selectedPiece = board.getPiece(x, y);
 	Set<Point> moveSet = new HashSet<>();
+
 	if (selectedPiece != null) {
 	    moveSet = selectedPiece.getMoves(board, x, y);
 	}
@@ -128,6 +127,29 @@ public class ChessComponent extends JComponent {
 
     private ImageIcon loadIMG(String name){
 	return new ImageIcon(ClassLoader.getSystemResource("images/" + name + ".png"));
+    }
+
+    private void setEnPassant(Point lastPressed) {
+	if (board.getPiece(currentlyPressed).getType() == PieceType.PAWN
+	    && Math.abs(currentlyPressed.y - lastPressed.y) == 2){
+	    board.setEnPassantTarget(lastPressed.x, (currentlyPressed.y + lastPressed.y) / 2);
+	}
+	else {
+	    board.setEnPassantTarget(null);
+	}
+	board.getPiece(currentlyPressed).sethasMoved(true);
+    }
+
+    private void tryToKillEnPassant() {
+	if (board.getEnPassantTarget() != null && board.getPiece(board.getEnPassantTarget()) != null){
+	    Point ep = board.getEnPassantTarget();
+	    if (board.getPiece(ep).getColor() == TeamColor.BLACK) {
+		board.setPiece(ep.x, ep.y - 1, null);
+	    }
+	    else {
+		board.setPiece(ep.x, ep.y + 1, null);
+	    }
+	}
     }
 
     private ImageIcon getImageForPiece(Piece piece, TeamColor color){
