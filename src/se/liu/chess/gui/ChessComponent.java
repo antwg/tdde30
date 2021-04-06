@@ -32,7 +32,6 @@ public class ChessComponent extends JComponent {
 		      pieceP = loadIMG("PawnWhite"), piecep = loadIMG("PawnBlack"), pieceQ = loadIMG("QueenWhite"),
 	    	      pieceq = loadIMG("QueenBlack"), pieceR = loadIMG("RookWhite"), piecer = loadIMG("RookBlack");
 
-    // Constructor
     public ChessComponent(final Board board) {
 	this.board = board;
 	this.width = SQUARE_SIZE * board.getWidth();
@@ -43,6 +42,10 @@ public class ChessComponent extends JComponent {
 		pressedSquare(e.getX(), e.getY());
 	    }
 	});
+    }
+
+    public Board getBoard() {
+	return board;
     }
 
     // ----------------------------------------------------- Public/Protected Methods ------------------------------------------------------
@@ -58,6 +61,7 @@ public class ChessComponent extends JComponent {
 	    // Get legal moves
 	    if (getValidMoves(lastPressed.x, lastPressed.y).contains(currentlyPressed)) {
 		board.movePiece(lastPressed, currentlyPressed);
+		board.getPiece(currentlyPressed).setHasMoved(true);
 	    }
 	    tryToKillEnPassant();
 	    setEnPassant(lastPressed);
@@ -131,24 +135,23 @@ public class ChessComponent extends JComponent {
     }
 
     private void setEnPassant(Point lastPressed) {
-	if (board.getPiece(currentlyPressed).getType() == PieceType.PAWN
+	if (board.getPiece(currentlyPressed) != null && board.getPiece(currentlyPressed).getType() == PieceType.PAWN
 	    && Math.abs(currentlyPressed.y - lastPressed.y) == 2){
 	    board.setEnPassantTarget(lastPressed.x, (currentlyPressed.y + lastPressed.y) / 2);
 	}
 	else {
 	    board.setEnPassantTarget(null);
 	}
-	board.getPiece(currentlyPressed).setHasMoved(true);
     }
 
     private void tryToKillEnPassant() {
 	if (board.getEnPassantTarget() != null && board.getPiece(board.getEnPassantTarget()) != null){
 	    Point ep = board.getEnPassantTarget();
-	    int tempY = ep.y + 1;
+	    int previousY = ep.y + 1;
 	    if (board.getPiece(ep).getColor() == TeamColor.BLACK) {
-		 tempY = ep.y - 1;
+		 previousY = ep.y - 1;
 	    }
-	    board.setPiece(ep.x, ep.y + 1, null);
+	    board.setPiece(ep.x, previousY, null);
 	}
     }
 

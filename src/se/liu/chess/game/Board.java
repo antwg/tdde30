@@ -4,6 +4,7 @@ import se.liu.chess.pieces.Piece;
 
 import java.awt.*;
 
+import se.liu.chess.pieces.PieceType;
 import se.liu.chess.pieces.Rook;
 import se.liu.chess.pieces.Knight;
 import se.liu.chess.pieces.Bishop;
@@ -31,7 +32,6 @@ public class Board
     private int halfmoveClock = 0;	// Used for 50 move rule
     private int fullmoveNumber = 1; //TODO inspect vill separera half/full-Move ex half_move
 
-    // Constructor
     public Board(final int width, final int height) {
 	this.width = width;
 	this.height = height;
@@ -160,6 +160,11 @@ public class Board
     }
 
     public void resetBoard() { // TODO Sätt alla andra till null?
+	for (int y = 0; y < height; y++) {
+	    for (int x = 0; x < width; x++) {
+		pieces[y][x] = null;
+	    }
+	}
         boardFromFEN("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1");
     }
     //TODO split into multiple smaller methods
