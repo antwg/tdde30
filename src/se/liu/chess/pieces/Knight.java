@@ -2,18 +2,16 @@ package se.liu.chess.pieces;
 
 import se.liu.chess.game.Board;
 import se.liu.chess.game.TeamColor;
-
 import java.awt.*;
-import java.util.HashSet;
 import java.util.Set;
 
 
 /**
  *
  */
-public class Knight extends AbstractPiece
+public class Knight extends PointMovePiece
 {
-    private Point[] allMoves = {new Point(1, 2), new Point(2, 1), new Point(1, -2), new Point(2, -1),
+    private Point[] knightMoves = {new Point(1, 2), new Point(2, 1), new Point(1, -2), new Point(2, -1),
 	    			new Point(-1, 2), new Point(-2, 1), new Point(-1, -2), new Point(-2, -1)};
 
     public Knight(final TeamColor color) {
@@ -21,15 +19,8 @@ public class Knight extends AbstractPiece
     }
 
     @Override public Set<Point> getMoves(final Board board, final int x, final int y) {
-	Set<Point> legalMoves = new HashSet<>();
-
-	for (Point move: allMoves) {
-	    Point temp = new Point(x + move.x, y + move.y);
-	    if (board.isValidTile(temp.x, temp.y) && (board.getPiece(temp.x, temp.y) == null || board.getPiece(temp.x, temp.y).getColor() != color)){
-	        legalMoves.add(temp);
-	    }
-	}
-	return legalMoves;
+	allMoves = knightMoves;
+	return super.getMoves(board, x, y);
     }
 
     @Override public PieceType getType() {
