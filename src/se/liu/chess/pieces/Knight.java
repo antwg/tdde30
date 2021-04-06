@@ -11,8 +11,14 @@ import java.util.Set;
  */
 public class Knight extends PointMovePiece
 {
-    private Point[] knightMoves = {new Point(1, 2), new Point(2, 1), new Point(1, -2), new Point(2, -1),
-	    			new Point(-1, 2), new Point(-2, 1), new Point(-1, -2), new Point(-2, -1)};
+    private Point[] knightMoves = {new Point(1, 2),
+	    			   new Point(2, 1),
+	    			   new Point(1, -2),
+	    			   new Point(2, -1),
+	    			   new Point(-1, 2),
+	    			   new Point(-2, 1),
+	    			   new Point(-1, -2),
+	    			   new Point(-2, -1)};
 
     public Knight(final TeamColor color) {
 	super(color);

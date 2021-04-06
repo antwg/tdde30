@@ -10,8 +10,14 @@ import java.util.Set;
  */
 public class King extends PointMovePiece
 {
-    private Point[] kingMoves = {new Point(1, 0), new Point(-1, 0), new Point(1, 1), new Point(1, -1),
-	    			new Point(0, 1), new Point(0, -1), new Point(-1, 1), new Point(-1, -1) };
+    private Point[] kingMoves = {new Point(1, 0),
+	    			 new Point(-1, 0),
+	    			 new Point(1, 1),
+	    			 new Point(1, -1),
+	    			 new Point(0, 1),
+	    			 new Point(0, -1),
+	    			 new Point(-1, 1),
+	    			 new Point(-1, -1) };
 
     public King(final TeamColor color) {
 	super(color);

@@ -52,9 +52,16 @@ public class ChessComponent extends JComponent {
 	Point lastPressed = currentlyPressed;
 	this.currentlyPressed = point;
 
-	if(lastPressed != null && board.getPiece(lastPressed) != null){ // Stop from moving empty pieces (null)
-	    if(!currentlyPressed.equals(lastPressed)) { // Stop from destroying itself
-		board.movePiece(lastPressed, currentlyPressed);
+	// Stop from moving empty pieces (null)
+	if(lastPressed != null && board.getPiece(lastPressed) != null){
+	    // Stop from destroying itself
+	    if(!currentlyPressed.equals(lastPressed)) {
+	        // Stop from making illegal moves
+		// TODO Remove comment (*) when pawn is implemented
+	        // (*) if (getValidMoves(lastPressed.x, lastPressed.y).contains(currentlyPressed)){
+	            board.movePiece(lastPressed, currentlyPressed);
+		// (*) }
+
 	    }
 	    currentlyPressed = null;
 	}
