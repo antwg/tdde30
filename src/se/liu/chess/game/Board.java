@@ -14,7 +14,6 @@ import se.liu.chess.pieces.Pawn;
 /**
  * Creates a board which handles all game logic and saves the position of pieces. Has methods for moving pieces.
  */
-
 public class Board
 {
     private Piece[][] pieces;
@@ -99,12 +98,16 @@ public class Board
 	return fullmoveNumber;
     }
 
-    // ----------------------------------------------------- Public Methods ----------------------------------------------------------------
 
+    // ----------------------------------------------------- Public Methods ----------------------------------------------------------------
 
     public void movePiece(Point p1, Point p2) {
 	setPiece(p2, getPiece(p1));
 	setPiece(p1, null);
+    }
+
+    public boolean isValidTile(int x, int y) {
+	return (0 <= x && x < width && 0 <= y && y < height);
     }
 
     public void printBoard() {
@@ -120,13 +123,13 @@ public class Board
 	    System.out.print("\n");
 	}
     }
-
     //TODO implement function
+
     public boolean isInCheck(Player player) {
 	return false;
     }
-
     //TODO implement function
+
     public boolean hasLegalMoves(Player player) {
         return true;
     }
@@ -148,6 +151,7 @@ public class Board
     public void resetBoard() { // TODO Sätt alla andra till null?
         boardFromFEN("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1");
     }
+    //TODO split into multiple smaller methods
 
     /**
      * https://en.wikipedia.org/wiki/Forsyth%E2%80%93Edwards_Notation
@@ -221,11 +225,6 @@ public class Board
 	return builder.toString();
     }
 
-    private String positionToNotation(final Point p) {
-	final String alphas = "abcdefghijklmnopqrstuvwxyz?";
-	return alphas.substring(p.x, p.x + 1) + (p.y + 1);
-    }
-
     public void boardFromFEN(final String fen) {
         int x = 0;
         int y = 0;
@@ -292,5 +291,10 @@ public class Board
 		    x += Character.getNumericValue(curr);
 	    }
 	}
+    }
+
+    private String positionToNotation(final Point p) {
+	final String alphas = "abcdefghijklmnopqrstuvwxyz?";
+	return alphas.substring(p.x, p.x + 1) + (p.y + 1);
     }
 }
