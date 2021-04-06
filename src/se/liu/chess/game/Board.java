@@ -29,7 +29,7 @@ public class Board
 
     //TODO implement halfmoveClock
     private int halfmoveClock = 0;	// Used for 50 move rule
-    private int fullmoveNumber = 1;
+    private int fullmoveNumber = 1; //TODO inspect vill separera half/full-Move ex half_move
 
     // Constructor
     public Board(final int width, final int height) {
@@ -206,13 +206,13 @@ public class Board
 	if (whitePlayer.canCastleKingside()) {
 	    builder.append("K");
 	}
-	if (whitePlayer.canCastleQueenside()) {
+	if (whitePlayer.canCastleQueenside()) { //TODO inspect vill separera queenside
 	    builder.append("Q");
 	}
 	if (blackPlayer.canCastleKingside()) {
 	    builder.append("k");
 	}
-	if (blackPlayer.canCastleQueenside()) {
+	if (blackPlayer.canCastleQueenside()) { //TODO inspect vill separera queenside
 	    builder.append("q");
 	}
 	builder.append(" ");

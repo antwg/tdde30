@@ -26,7 +26,7 @@ public abstract class AbstractPiece implements Piece
         return hasMoved;
     }
 
-    public void sethasMoved(final boolean hasMoved) {
+    public void setHasMoved(final boolean hasMoved) {
         this.hasMoved = hasMoved;
     }
 

@@ -20,7 +20,7 @@ public interface Piece
 
     public String toString();
 
-    void sethasMoved(boolean b);
+    void setHasMoved(boolean b);
 
     boolean hasMoved();
 

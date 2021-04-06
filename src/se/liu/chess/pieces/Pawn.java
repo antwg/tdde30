@@ -12,7 +12,7 @@ import java.util.Set;
  */
 public class Pawn extends AbstractPiece {
 
-    Point[] attackingMoves = {new Point(1,1), new Point(-1, 1)};
+    private Point[] attackingMoves = {new Point(1,1), new Point(-1, 1)};
 
     public Pawn(final TeamColor color) {
 	super(color);
@@ -26,38 +26,38 @@ public class Pawn extends AbstractPiece {
 	Set<Point> legalMoves = new HashSet<>();
 
 	// Normal move
-	int tempY1 = y - 1;
+	int normalMoveY = y - 1;
 	if (color == TeamColor.BLACK){
-	    tempY1 = y + 1;
+	    normalMoveY = y + 1;
 	}
-	if (validMoveToNullPiece(board, x, tempY1)) {
-	    legalMoves.add(new Point(x, tempY1));
+	if (isValidMoveToNullPiece(board, x, normalMoveY)) {
+	    legalMoves.add(new Point(x, normalMoveY));
 	}
 
 	// Attacking moves
 	for (Point move: attackingMoves) {
-	    int tempX = x - move.x;
-	    int tempY2 = y - move.y;
+	    int combinedAttackX = x - move.x;
+	    int combinedAttackY = y - move.y;
 	    if (color == TeamColor.BLACK) {
-		tempX = x + move.x;
-		tempY2 = y + move.y;
+		combinedAttackX = x + move.x;
+		combinedAttackY = y + move.y;
 	    }
-	    if (board.isValidTile(tempX, tempY2)) {
-	        Piece piece = board.getPiece(tempX, tempY2);
-		if (new Point(tempX, tempY2).equals(board.getEnPassantTarget()) || (piece != null && piece.getColor() != color)) {
-		    legalMoves.add(new Point(tempX, tempY2));
+	    if (board.isValidTile(combinedAttackX, combinedAttackY)) {
+	        Piece piece = board.getPiece(combinedAttackX, combinedAttackY);
+		if (new Point(combinedAttackX, combinedAttackY).equals(board.getEnPassantTarget()) || (piece != null && piece.getColor() != color)) {
+		    legalMoves.add(new Point(combinedAttackX, combinedAttackY));
 		}
 	    }
 	}
 
 	// 2 steps first move
 	if (!hasMoved){
-	    int tempY3 = y - 2;
+	    int twoStepY = y - 2;
 	    if (color == TeamColor.BLACK) {
-		tempY3 = y + 2;
+		twoStepY = y + 2;
 	    }
-	    if (validMoveToNullPiece(board, x, tempY3)){
-	        legalMoves.add(new Point(x, tempY3));
+	    if (isValidMoveToNullPiece(board, x, twoStepY)){
+	        legalMoves.add(new Point(x, twoStepY));
 	    }
 	}
 	return legalMoves;
@@ -70,7 +70,7 @@ public class Pawn extends AbstractPiece {
 	return "p";
     }
 
-    private boolean validMoveToNullPiece(Board board, int x, int y){
+    private boolean isValidMoveToNullPiece(Board board, int x, int y){
 	if (board.isValidTile(x, y)) {
 	    Piece piece = board.getPiece(x, y);
 	    if (piece == null) {

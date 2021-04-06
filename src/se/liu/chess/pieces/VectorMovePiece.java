@@ -19,24 +19,24 @@ public abstract class VectorMovePiece extends AbstractPiece{
 	Set<Point> legalMoves = new HashSet<>();
 
 	for (Point direction : allMoveDirections) {
-	    int tempX = x + direction.x;
-	    int tempY = y + direction.y;
+	    int combinedX = x + direction.x;
+	    int combinedY = y + direction.y;
 
 	    while (true) {
-		if (!board.isValidTile(tempX, tempY)) {
+		if (!board.isValidTile(combinedX, combinedY)) {
 		    break;
-		} else if (board.getPiece(tempX, tempY) == null) {
-		    legalMoves.add(new Point(tempX, tempY));
-		} else if (board.getPiece(tempX, tempY).getColor() == this.getColor()) {
+		} else if (board.getPiece(combinedX, combinedY) == null) {
+		    legalMoves.add(new Point(combinedX, combinedY));
+		} else if (board.getPiece(combinedX, combinedY).getColor() == this.getColor()) {
 		    break;
-		} else if (board.getPiece(tempX, tempY).getColor() != this.getColor()) {
-		    legalMoves.add(new Point(tempX, tempY));
+		} else if (board.getPiece(combinedX, combinedY).getColor() != this.getColor()) {
+		    legalMoves.add(new Point(combinedX, combinedY));
 		    break;
 		} else {
 		    System.out.println("Code should not get here");
 		}
-		tempX += direction.x;
-		tempY += direction.y;
+		combinedX += direction.x;
+		combinedY += direction.y;
 	    }
 	}
 

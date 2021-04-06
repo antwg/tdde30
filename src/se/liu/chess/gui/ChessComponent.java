@@ -24,8 +24,9 @@ public class ChessComponent extends JComponent {
     private Board board;
     private int width, height;
     private Point currentlyPressed = null;
-    private final static int SQUARE_SIZE = 72, IMGSIZE = 64, OFFSET = (SQUARE_SIZE - IMGSIZE) / 2;
+    private final static int SQUARE_SIZE = 72, IMG_SIZE = 64, OFFSET = (SQUARE_SIZE - IMG_SIZE) / 2;
     private final static Color ODD_COLOR = Color.DARK_GRAY, EVEN_COLOR = Color.WHITE, SELECTED_COLOR = new Color(0, 0, 255, 100);
+    // Inspection doesn't like names (ex pieceb), the reason for having a lower case b is that thats how it's written in FEN
     private ImageIcon pieceB = loadIMG("BishopWhite"), pieceb = loadIMG("BishopBlack"), pieceK = loadIMG("KingWhite"),
 	    	      piecek = loadIMG("KingBlack"), pieceN = loadIMG("KnightWhite"), piecen = loadIMG("KnightBlack"),
 		      pieceP = loadIMG("PawnWhite"), piecep = loadIMG("PawnBlack"), pieceQ = loadIMG("QueenWhite"),
@@ -137,18 +138,17 @@ public class ChessComponent extends JComponent {
 	else {
 	    board.setEnPassantTarget(null);
 	}
-	board.getPiece(currentlyPressed).sethasMoved(true);
+	board.getPiece(currentlyPressed).setHasMoved(true);
     }
 
     private void tryToKillEnPassant() {
 	if (board.getEnPassantTarget() != null && board.getPiece(board.getEnPassantTarget()) != null){
 	    Point ep = board.getEnPassantTarget();
+	    int tempY = ep.y + 1;
 	    if (board.getPiece(ep).getColor() == TeamColor.BLACK) {
-		board.setPiece(ep.x, ep.y - 1, null);
+		 tempY = ep.y - 1;
 	    }
-	    else {
-		board.setPiece(ep.x, ep.y + 1, null);
-	    }
+	    board.setPiece(ep.x, ep.y + 1, null);
 	}
     }
 
