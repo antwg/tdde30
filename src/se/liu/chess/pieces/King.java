@@ -29,11 +29,35 @@ public class King extends AbstractPiece
 	    if(piece == null || piece.getColor() != color){
 	    	list.add(new Point(x + 1, y));
 	    }
+	    if (y < 7){
+		piece = board.getPiece(x + 1, y + 1);
+		if (piece == null || piece.getColor() != color) {
+		    list.add(new Point(x + 1, y + 1));
+		}
+	    }
+	    if (y > 0){
+		piece = board.getPiece(x + 1, y - 1);
+		if (piece == null || piece.getColor() != color) {
+		    list.add(new Point(x + 1, y - 1));
+		}
+	    }
 	}
 	if (x > 0){
 	    piece = board.getPiece(x - 1, y);
 	    if (piece == null || piece.getColor() != color){
 	    list.add(new Point(x - 1, y));
+	    }
+	    if (y > 0){
+		piece = board.getPiece(x - 1, y - 1);
+		if (piece == null || piece.getColor() != color) {
+		    list.add(new Point(x - 1, y - 1));
+		}
+	    }
+	    if (y < 7){
+		piece = board.getPiece(x - 1, y + 1);
+		if (piece == null || piece.getColor() != color) {
+		    list.add(new Point(x - 1, y + 1));
+		}
 	    }
 	}
 	if (y < 7){

@@ -47,7 +47,7 @@ public class ChessComponent extends JComponent {
 
     public void pressedSquare(int x, int y){
 	Point point = new Point(Math.floorDiv(x, SQUARE_SIZE), Math.floorDiv(y, SQUARE_SIZE)); // Finds what point on board
-	final Point lastPressed = currentlyPressed;
+	Point lastPressed = currentlyPressed;
 	this.currentlyPressed = point;
 
 	if(lastPressed != null && board.getPiece(lastPressed) != null){ // Stop from moving empty pieces (null)
