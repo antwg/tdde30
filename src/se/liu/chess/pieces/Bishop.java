@@ -4,8 +4,8 @@ import se.liu.chess.game.Board;
 import se.liu.chess.game.TeamColor;
 
 import java.awt.*;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 import static se.liu.chess.game.TeamColor.BLACK;
 
@@ -18,8 +18,8 @@ public class Bishop extends AbstractPiece
 	super(color);
     }
 
-    @Override public List<Point> getMoves(Board board, int x, int y) {
-	List<Point> list = new ArrayList<>();
+    @Override public Set<Point> getMoves(Board board, int x, int y) {
+	Set<Point> list = new HashSet<>();
 	return list;
     }
 

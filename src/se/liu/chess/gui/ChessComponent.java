@@ -9,7 +9,9 @@ import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  * An extension of JComponent. Given a Board object, ChessComponent will be able to paint the board itself as well as the pieces on the board.
@@ -64,9 +66,9 @@ public class ChessComponent extends JComponent {
 	return new Dimension(width, height);
     }
 
-    public List<Point> getValidMoves(int x, int y){
+    public Set<Point> getValidMoves(int x, int y){
 	Piece selectedPiece = board.getPiece(x, y);
-	List<Point> list = new ArrayList<>();
+	Set<Point> list = new HashSet<>();
 	if (selectedPiece != null) {
 	    list = selectedPiece.getMoves(board, x, y);
 	}

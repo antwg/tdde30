@@ -5,13 +5,14 @@ import se.liu.chess.game.TeamColor;
 
 import java.awt.*;
 import java.util.List;
+import java.util.Set;
 
 /**
  *
  */
 public interface Piece
 {
-    public List<Point> getMoves(Board board, int x, int y);
+    public Set<Point> getMoves(Board board, int x, int y);
 
     public TeamColor getColor();
 

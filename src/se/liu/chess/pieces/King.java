@@ -2,78 +2,36 @@ package se.liu.chess.pieces;
 
 import se.liu.chess.game.Board;
 import se.liu.chess.game.TeamColor;
-
 import java.awt.*;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  *
  */
 public class King extends AbstractPiece
 {
+    private Point[] allMoves = {new Point(1, 0), new Point(-1, 0), new Point(1, 1), new Point(1, -1),
+	    			new Point(0, 1), new Point(0, -1), new Point(-1, 1), new Point(-1, -1) };
+
     public King(final TeamColor color) {
 	super(color);
     }
 
-    @Override public PieceType getType() {
-	return PieceType.KING;
+    @Override public Set<Point> getMoves(final Board board, final int x, final int y) {
+	Set<Point> legalMoves = new HashSet<>();
+
+	for (Point move: allMoves) {
+	    Point temp = new Point(x + move.x, y + move.y);
+	    if (board.isValidTile(temp.x, temp.y) && (board.getPiece(temp.x, temp.y) == null || board.getPiece(temp.x, temp.y).getColor() != color)){
+		legalMoves.add(temp);
+	    }
+	}
+	return legalMoves;
     }
 
-    @Override public List<Point> getMoves(Board board, int x, int y) {
-	List<Point> list = new ArrayList<>();
-	Piece piece = null;
-
-	if (x < 7){
-	    piece = board.getPiece(x + 1, y);
-	    if(piece == null || piece.getColor() != color){
-	    	list.add(new Point(x + 1, y));
-	    }
-	    if (y < 7){
-		piece = board.getPiece(x + 1, y + 1);
-		if (piece == null || piece.getColor() != color) {
-		    list.add(new Point(x + 1, y + 1));
-		}
-	    }
-	    if (y > 0){
-		piece = board.getPiece(x + 1, y - 1);
-		if (piece == null || piece.getColor() != color) {
-		    list.add(new Point(x + 1, y - 1));
-		}
-	    }
-	}
-	if (x > 0){
-	    piece = board.getPiece(x - 1, y);
-	    if (piece == null || piece.getColor() != color){
-	    list.add(new Point(x - 1, y));
-	    }
-	    if (y > 0){
-		piece = board.getPiece(x - 1, y - 1);
-		if (piece == null || piece.getColor() != color) {
-		    list.add(new Point(x - 1, y - 1));
-		}
-	    }
-	    if (y < 7){
-		piece = board.getPiece(x - 1, y + 1);
-		if (piece == null || piece.getColor() != color) {
-		    list.add(new Point(x - 1, y + 1));
-		}
-	    }
-	}
-	if (y < 7){
-	    piece = board.getPiece(x, y + 1);
-	    if (piece == null || piece.getColor() != color){
-		list.add(new Point(x, y + 1));
-	    }
-	}
-	if (y > 0) {
-	    piece = board.getPiece(x, y - 1);
-	    if (piece == null || piece.getColor() != color) {
-		list.add(new Point(x, y - 1));
-	    }
-	}
-
-	return list;
+    @Override public PieceType getType() {
+	return PieceType.KING;
     }
 
     @Override public String toString() {
@@ -82,4 +40,8 @@ public class King extends AbstractPiece
 	}
 	return "k";
     }
+
+    /*    private Point[] allMoves =
+	    { new Point(1, 0), new Point(-1, 0), new Point(1, 1), new Point(1, -1), new Point(0, 1), new Point(0, -1), new Point(-1, 1),
+		    new Point(-1, -1) };*/
 }
