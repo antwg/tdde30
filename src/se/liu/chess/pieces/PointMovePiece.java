@@ -19,9 +19,14 @@ public abstract class PointMovePiece extends AbstractPiece{
 	Set<Point> legalMoves = new HashSet<>();
 
 	for (Point move: allMoves) {
-	    Point temp = new Point(x + move.x, y + move.y);
-	    if (board.isValidTile(temp.x, temp.y) && (board.getPiece(temp.x, temp.y) == null || board.getPiece(temp.x, temp.y).getColor() != color)){
-		legalMoves.add(temp);
+	    int tempX = x + move.x;
+	    int tempY = y + move.y;
+
+	    if (board.isValidTile(tempX, tempY)) {
+		Piece piece = board.getPiece(tempX, tempY);
+		if (piece == null || piece.getColor() != color) {
+		    legalMoves.add(new Point(tempX, tempY));
+		}
 	    }
 	}
 	return legalMoves;

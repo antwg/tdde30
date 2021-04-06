@@ -8,9 +8,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 /**
@@ -26,7 +24,7 @@ public class ChessComponent extends JComponent {
     private int width, height;
     private Point currentlyPressed = null;
     private final static int SQUARE_SIZE = 72, IMGSIZE = 64, OFFSET = (SQUARE_SIZE - IMGSIZE) / 2;
-    private final static Color ODD_COLOR = Color.DARK_GRAY, EVEN_COLOR = Color.WHITE, SELECTED_COLOR = new Color(255, 0, 0, 100);
+    private final static Color ODD_COLOR = Color.DARK_GRAY, EVEN_COLOR = Color.WHITE, SELECTED_COLOR = new Color(0, 0, 255, 100);
     private ImageIcon pieceB = loadIMG("BishopWhite"), pieceb = loadIMG("BishopBlack"), pieceK = loadIMG("KingWhite"),
 	    	      piecek = loadIMG("KingBlack"), pieceN = loadIMG("KnightWhite"), piecen = loadIMG("KnightBlack"),
 		      pieceP = loadIMG("PawnWhite"), piecep = loadIMG("PawnBlack"), pieceQ = loadIMG("QueenWhite"),
@@ -57,7 +55,7 @@ public class ChessComponent extends JComponent {
 	    // Stop from destroying itself
 	    if(!currentlyPressed.equals(lastPressed)) {
 	        // Stop from making illegal moves
-		// TODO Remove comment (*) when pawn is implemented
+		// TODO Remove comments (*) when pawn is implemented
 	        // (*) if (getValidMoves(lastPressed.x, lastPressed.y).contains(currentlyPressed)){
 	            board.movePiece(lastPressed, currentlyPressed);
 		// (*) }
