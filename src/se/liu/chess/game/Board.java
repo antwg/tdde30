@@ -29,7 +29,7 @@ public class Board
 
     //TODO implement halfmoveClock
     private int halfmoveClock = 0;	// Used for 50 move rule
-    private int fullmoveNumber = 1; //TODO inspect vill separera half/full-Move ex half_move
+    private int fullmoveNumber = 1; // It's called halfmove as one word
 
     public Board(final int width, final int height) {
 	this.width = width;

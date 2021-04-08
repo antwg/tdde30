@@ -2,8 +2,12 @@ package se.liu.chess.gui;
 
 import se.liu.chess.game.Board;
 import se.liu.chess.game.TeamColor;
+import se.liu.chess.pieces.Bishop;
+import se.liu.chess.pieces.Knight;
 import se.liu.chess.pieces.Piece;
 import se.liu.chess.pieces.PieceType;
+import se.liu.chess.pieces.Queen;
+import se.liu.chess.pieces.Rook;
 
 import javax.swing.*;
 import java.awt.*;
@@ -114,10 +118,12 @@ public class ChessComponent extends JComponent {
 	    if (getValidMoves(lastPressed.x, lastPressed.y).contains(currentlyPressed)) {
 		board.movePiece(lastPressed, currentlyPressed);
 		board.getPiece(currentlyPressed).setHasMoved(true);
+		testForUpgrade();
 		board.passTurn();
 	    }
 	    tryToKillEnPassant();
 	    setEnPassant(lastPressed);
+
 	    this.currentlyPressed = null;
 	}
 	repaint();
@@ -132,6 +138,32 @@ public class ChessComponent extends JComponent {
 	    moves = selectedPiece.getMoves(board, x, y);
 	}
 	return moves;
+    }
+
+    private void testForUpgrade(){
+        if (board.getPiece(currentlyPressed) != null && board.getPiece(currentlyPressed).getType() == PieceType.PAWN){
+            if(currentlyPressed.y == 0 || currentlyPressed.y == 7){
+                String[] options = {"Queen", "Rook", "Bishop", "Knight"};
+                int choise = JOptionPane.showOptionDialog(null, "Choose piece", " ",JOptionPane.DEFAULT_OPTION,
+					     JOptionPane.INFORMATION_MESSAGE, null, options, options[0]);
+                switch(choise){
+		    case 0:
+		        board.setPiece(currentlyPressed, new Queen(board.getActivePlayer().getColor()));
+		        break;
+		    case 1:
+			board.setPiece(currentlyPressed, new Rook(board.getActivePlayer().getColor()));
+			break;
+		    case 2:
+		        board.setPiece(currentlyPressed, new Bishop(board.getActivePlayer().getColor()));
+			break;
+		    case 3:
+			board.setPiece(currentlyPressed, new Knight(board.getActivePlayer().getColor()));
+			break;
+		    default:
+			System.out.println("Error in testForUpgrade");
+		}
+	    }
+	}
     }
 
     private ImageIcon loadIMG(String name){

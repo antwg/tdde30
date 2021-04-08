@@ -1,6 +1,6 @@
 package se.liu.chess.game;
 
-import se.liu.chess.gui.BoardViewer;
+import se.liu.chess.gui.GameViewer;
 import se.liu.chess.gui.ChessComponent;
 import se.liu.chess.gui.TimeComponent;
 
@@ -32,8 +32,8 @@ public class GameManager
         gm.board.printBoard();
         System.out.println(gm.board.convertBoardToFEN());
 
-        BoardViewer boardViewer = new BoardViewer(new ChessComponent(gm.board), new TimeComponent(gm.board, 180, 512));
-        boardViewer.show();
+        GameViewer gameViewer = new GameViewer(new ChessComponent(gm.board), new TimeComponent(gm.board, 180, 512));
+        gameViewer.show();
 
     }
 }

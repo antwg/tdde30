@@ -9,14 +9,14 @@ import java.awt.event.ActionEvent;
  * It also handles all needed settings for the JFrame.
  */
 
-public class BoardViewer
+public class GameViewer
 {
     private JFrame frame;
     private ChessComponent chessComponent;
     private JMenuBar menuBar;
     private TimeComponent timeComponent;
 
-    public BoardViewer(ChessComponent chessComponent, TimeComponent timeComponent) {
+    public GameViewer(ChessComponent chessComponent, TimeComponent timeComponent) {
 	this.frame = new JFrame("Chess");
 	this.chessComponent = chessComponent;
 	this.menuBar = new JMenuBar();
