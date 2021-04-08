@@ -114,6 +114,7 @@ public class ChessComponent extends JComponent {
 	    if (getValidMoves(lastPressed.x, lastPressed.y).contains(currentlyPressed)) {
 		board.movePiece(lastPressed, currentlyPressed);
 		board.getPiece(currentlyPressed).setHasMoved(true);
+		board.passTurn();
 	    }
 	    tryToKillEnPassant();
 	    setEnPassant(lastPressed);
@@ -126,7 +127,8 @@ public class ChessComponent extends JComponent {
 	Piece selectedPiece = board.getPiece(x, y);
 	Set<Point> moves = new HashSet<>();
 
-	if (selectedPiece != null) {
+	if (selectedPiece != null &&
+	    selectedPiece.getColor() == board.getActivePlayer().getColor()) {
 	    moves = selectedPiece.getMoves(board, x, y);
 	}
 	return moves;

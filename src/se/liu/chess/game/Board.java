@@ -250,7 +250,7 @@ public class Board
 	for (int i = 0; i < fen.length(); i++) {
 	    char curr = fen.charAt(i);
 
-	    //TODO replace with piece construction method
+	    //TODO replace with piece construction method?
 	    switch (curr) {
 		case ' ':
 		    return;
@@ -323,6 +323,19 @@ public class Board
 		pieces[y][x] = null;
 	    }
 	}
+    }
+
+    public void passTurn() {
+        int nextActivePlayerIndex = (activePlayerIndex + 1) % 2;
+
+        activePlayerIndex = nextActivePlayerIndex;
+
+	if (nextActivePlayerIndex == 0) {
+	    fullmoveNumber++;
+	}
+
+	//TODO remove debug prints when done
+	System.out.println("Turn number: " + getFullmoveNumber() + "	Active player: " + getActivePlayer().getColor());
     }
 }
 
