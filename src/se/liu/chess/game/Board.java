@@ -271,51 +271,51 @@ public class Board
 		    x = 0;
 		    break;
 		case 'r':
-		    setPiece(x, y, new Rook(TeamColor.BLACK));
+		    setPiece(x, y, new Rook(getBlackPlayer()));
 		    x++;
 		    break;
 		case 'R':
-		    setPiece(x, y, new Rook(TeamColor.WHITE));
+		    setPiece(x, y, new Rook(getWhitePlayer()));
 		    x++;
 		    break;
 		case 'n':
-		    setPiece(x, y, new Knight(TeamColor.BLACK));
+		    setPiece(x, y, new Knight(getBlackPlayer()));
 		    x++;
 		    break;
 		case 'N':
-		    setPiece(x, y, new Knight(TeamColor.WHITE));
+		    setPiece(x, y, new Knight(getWhitePlayer()));
 		    x++;
 		    break;
 		case 'b':
-		    setPiece(x, y, new Bishop(TeamColor.BLACK));
+		    setPiece(x, y, new Bishop(getBlackPlayer()));
 		    x++;
 		    break;
 		case 'B':
-		    setPiece(x, y, new Bishop(TeamColor.WHITE));
+		    setPiece(x, y, new Bishop(getWhitePlayer()));
 		    x++;
 		    break;
 		case 'k':
-		    setPiece(x, y, new King(TeamColor.BLACK));
+		    setPiece(x, y, new King(getBlackPlayer()));
 		    x++;
 		    break;
 		case 'K':
-		    setPiece(x, y, new King(TeamColor.WHITE));
+		    setPiece(x, y, new King(getWhitePlayer()));
 		    x++;
 		    break;
 		case 'q':
-		    setPiece(x, y, new Queen(TeamColor.BLACK));
+		    setPiece(x, y, new Queen(getBlackPlayer()));
 		    x++;
 		    break;
 		case 'Q':
-		    setPiece(x, y, new Queen(TeamColor.WHITE));
+		    setPiece(x, y, new Queen(getWhitePlayer()));
 		    x++;
 		    break;
 		case 'p':
-		    setPiece(x, y, new Pawn(TeamColor.BLACK));
+		    setPiece(x, y, new Pawn(getBlackPlayer()));
 		    x++;
 		    break;
 		case 'P':
-		    setPiece(x, y, new Pawn(TeamColor.WHITE));
+		    setPiece(x, y, new Pawn(getWhitePlayer()));
 		    x++;
 		    break;
 		default:

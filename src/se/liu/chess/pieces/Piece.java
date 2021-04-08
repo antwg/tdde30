@@ -4,7 +4,6 @@ import se.liu.chess.game.Board;
 import se.liu.chess.game.TeamColor;
 
 import java.awt.*;
-import java.util.List;
 import java.util.Set;
 
 /**

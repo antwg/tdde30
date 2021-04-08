@@ -1,6 +1,7 @@
 package se.liu.chess.pieces;
 
 import se.liu.chess.game.Board;
+import se.liu.chess.game.Player;
 import se.liu.chess.game.TeamColor;
 
 import java.awt.*;
@@ -19,8 +20,8 @@ public class King extends PointMovePiece {
 	    			  new Point(-1, 1),
 	    			  new Point(-1, -1) };
 
-    public King(final TeamColor color) {
-	super(color);
+    public King(final Player owner) {
+	super(owner);
     }
 
     @Override public Set<Point> getMoves(final Board board, final int x, final int y) {

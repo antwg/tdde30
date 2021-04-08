@@ -1,6 +1,7 @@
 package se.liu.chess.pieces;
 
 import se.liu.chess.game.Board;
+import se.liu.chess.game.Player;
 import se.liu.chess.game.TeamColor;
 
 import java.awt.*;
@@ -11,8 +12,8 @@ public abstract class VectorMovePiece extends AbstractPiece{
 
     protected Point[] allMoveDirections = null;
 
-    protected VectorMovePiece(final TeamColor color) {
-	super(color);
+    protected VectorMovePiece(final Player owner) {
+	super(owner);
     }
 
     @Override public Set<Point> getMoves(final Board board, final int x, final int y) {

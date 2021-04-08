@@ -1,6 +1,7 @@
 package se.liu.chess.pieces;
 
 import se.liu.chess.game.Board;
+import se.liu.chess.game.Player;
 import se.liu.chess.game.TeamColor;
 
 import java.awt.*;
@@ -14,8 +15,8 @@ public class Pawn extends AbstractPiece {
 
     private Point[] attackingMoves = {new Point(1,1), new Point(-1, 1)};
 
-    public Pawn(final TeamColor color) {
-	super(color);
+    public Pawn(final Player owner) {
+	super(owner);
     }
 
     @Override public PieceType getType() {
@@ -27,7 +28,7 @@ public class Pawn extends AbstractPiece {
 
 	// Normal move
 	int normalMoveY = y - 1;
-	if (color == TeamColor.BLACK){
+	if (this.getColor() == TeamColor.BLACK){
 	    normalMoveY = y + 1;
 	}
 	if (isValidMoveToEmptyPiece(board, x, normalMoveY)) {
@@ -38,13 +39,13 @@ public class Pawn extends AbstractPiece {
 	for (Point move: attackingMoves) {
 	    int combinedAttackX = x - move.x;
 	    int combinedAttackY = y - move.y;
-	    if (color == TeamColor.BLACK) {
+	    if (this.getColor() == TeamColor.BLACK) {
 		combinedAttackX = x + move.x;
 		combinedAttackY = y + move.y;
 	    }
 	    if (board.isValidTile(combinedAttackX, combinedAttackY)) {
 	        Piece piece = board.getPiece(combinedAttackX, combinedAttackY);
-		if (new Point(combinedAttackX, combinedAttackY).equals(board.getEnPassantTarget()) || (piece != null && piece.getColor() != color)) {
+		if (new Point(combinedAttackX, combinedAttackY).equals(board.getEnPassantTarget()) || (piece != null && piece.getColor() != this.getColor())) {
 		    legalMoves.add(new Point(combinedAttackX, combinedAttackY));
 		}
 	    }
@@ -53,7 +54,7 @@ public class Pawn extends AbstractPiece {
 	// 2 steps first move
 	if (!hasMoved){
 	    int twoStepY = y - 2;
-	    if (color == TeamColor.BLACK) {
+	    if (this.getColor() == TeamColor.BLACK) {
 		twoStepY = y + 2;
 	    }
 	    if (isValidMoveToEmptyPiece(board, x, twoStepY)){
@@ -64,7 +65,7 @@ public class Pawn extends AbstractPiece {
     }
 
     @Override public String toString() {
-	if (getColor() == TeamColor.WHITE) {
+	if (this.getColor() == TeamColor.WHITE) {
 	    return "P";
 	}
 	return "p";
