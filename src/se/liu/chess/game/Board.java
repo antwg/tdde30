@@ -28,7 +28,7 @@ public class Board
     private Point enPassantTarget = null;
 
     //TODO implement halfmoveClock
-    private int halfmoveClock = 0;	// Used for 50 move rule
+    private int halfmoveClock = 0;        // Used for 50 move rule
     private int fullmoveNumber = 1; // It's called halfmove as one word
 
     public Board(final int width, final int height) {
@@ -54,7 +54,7 @@ public class Board
     }
 
     public Piece getPiece(int x, int y) {
-        return pieces[y][x];
+	return pieces[y][x];
     }
 
     public Piece getPiece(Point p) {
@@ -70,7 +70,7 @@ public class Board
     }
 
     public boolean isEmpty(int x, int y) {
-        return getPiece(x, y) == null;
+	return getPiece(x, y) == null;
     }
 
     public boolean isEmpty(Point p) {
@@ -128,19 +128,6 @@ public class Board
 	return (0 <= x && x < width && 0 <= y && y < height);
     }
 
-    public void printBoard() { // temp
-	for (int y = 0; y < getWidth(); y++) {
-	    for (int x = 0; x < getHeight(); x++) {
-	        Piece piece = getPiece(x, y);
-		if (piece == null) {
-		    System.out.print("- ");
-		} else {
-		    System.out.print(piece + " ");
-		}
-	    }
-	    System.out.print("\n");
-	}
-    }
     //TODO implement function
 
     public boolean isInCheck(Player player) {
@@ -149,16 +136,16 @@ public class Board
     //TODO implement function
 
     public boolean hasLegalMoves(Player player) {
-        return true;
+	return true;
     }
 
     public boolean isGameOver(Player player) {
 	if (!hasLegalMoves(player)) {
 	    if (isInCheck(player)) {
-	        // Checkmate detected
+		// Checkmate detected
 		System.out.println("Checkmate!");
 	    } else {
-	        // Stalemate detected
+		// Stalemate detected
 		System.out.println("Stalemate!");
 	    }
 	    return true;
@@ -168,9 +155,21 @@ public class Board
 
     public void resetBoard() {
 	clearBoard();
-        getBoardFromFEN("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1");
+	getBoardFromFEN("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1");
     }
-    //TODO split into multiple smaller methods
+
+    public void passTurn() {
+	int nextActivePlayerIndex = (activePlayerIndex + 1) % 2;
+
+	activePlayerIndex = nextActivePlayerIndex;
+
+	if (nextActivePlayerIndex == 0) {
+	    fullmoveNumber++;
+	}
+
+	//TODO remove debug prints when done
+	System.out.println("Turn number: " + getFullmoveNumber() + "	Active player: " + getActivePlayer().getColor());
+    }
 
     /**
      * https://en.wikipedia.org/wiki/Forsyth%E2%80%93Edwards_Notation
@@ -179,7 +178,47 @@ public class Board
     public String convertBoardToFEN() {
 	final StringBuilder builder = new StringBuilder();
 
-	// 1. Piece placement
+	convertPiecesToFEN(builder);
+	convertActivePlayerToFEN(builder);
+	convertCastlingAbilityToFEN(builder); //TODO add castling availability
+	convertEnPassantAvailabilityToFEN(builder);
+	convertMoveToFEN(builder);
+
+	return builder.toString();
+    }
+
+
+    public void getBoardFromFEN(final String fen) {
+	// Split fen string
+	String[] arrOfString = fen.split(" ");
+
+	placePiecesFromFEN(arrOfString[0]);
+	setActivePlayerFromFEN(arrOfString[1]);
+	setCastlingAvailabilityFromFEN(arrOfString[2]);
+	setEnPassantTargetFromFEN(arrOfString[3]);
+	setMovesFromFEN(arrOfString[4], arrOfString[5]);
+    }
+
+    // ----------------------------------------------------- Private Methods ---------------------------------------------------------------
+
+
+    private String convertPositionToNotation(final Point p) {
+	final String alphas = "abcdefghijklmnopqrstuvwxyz?";
+	return alphas.substring(p.x, p.x + 1) + (p.y + 1);
+    }
+
+    private void clearBoard(){
+	for (int y = 0; y < height; y++) {
+	    for (int x = 0; x < width; x++) {
+		pieces[y][x] = null;
+	    }
+	}
+    }
+
+    //                                                   --- Convert to FEN ---
+
+
+    private void convertPiecesToFEN(StringBuilder builder) {
 	for (int y = 0; y < height; y++) {
 	    int emptySquaresInARow = 0;
 	    for (int x = 0; x < width; x++) {
@@ -200,39 +239,44 @@ public class Board
 	    builder.append("/");
 	}
 	builder.append(" ");
+    }
 
-	// 2. Active color
-	if (getActivePlayer().getColor() == TeamColor.WHITE) {
+    private void convertActivePlayerToFEN(StringBuilder builder) {
+	if(getActivePlayer().getColor() ==TeamColor.WHITE) {
 	    builder.append("w");
-	} else {
+	}
+	else {
 	    builder.append("b");
 	}
 	builder.append(" ");
+    }
 
-	// 3. Castling availability
-	//TODO add castling availability
+    private void convertCastlingAbilityToFEN(StringBuilder builder){
 	if (whitePlayer.canCastleKingside()) {
 	    builder.append("K");
 	}
-	if (whitePlayer.canCastleQueenside()) { //TODO inspect vill separera queenside
+	if (whitePlayer.canCastleQueenside()) { // It's written as one word
 	    builder.append("Q");
 	}
 	if (blackPlayer.canCastleKingside()) {
 	    builder.append("k");
 	}
-	if (blackPlayer.canCastleQueenside()) { //TODO inspect vill separera queenside
+	if (blackPlayer.canCastleQueenside()) {
 	    builder.append("q");
 	}
 	builder.append(" ");
+    }
 
-	// 4. En passant availability
+    private void convertEnPassantAvailabilityToFEN(StringBuilder builder){
 	if (enPassantTarget == null) {
 	    builder.append("-");
 	} else {
 	    builder.append(convertPositionToNotation(enPassantTarget));
 	}
 	builder.append(" ");
+    }
 
+    private void convertMoveToFEN(StringBuilder builder){
 	// 5. Halfmove clock
 	builder.append(halfmoveClock);
 	builder.append(" ");
@@ -240,27 +284,14 @@ public class Board
 	// 6. Fullmove number
 	builder.append(fullmoveNumber);
 	builder.append(" ");
-
-	return builder.toString();
     }
 
-    public void getBoardFromFEN(final String fen) {
-        //TODO break into smaller functions
-
-	// Split fen string
-	String[] arrOfString = fen.split(" ");
-
-	String piecePositions = arrOfString[0];
-	String activePlayer = arrOfString[1];
-	String castlingAvailability = arrOfString[2];
-	String enPassantTarget = arrOfString[3];
-	String halfmoveClock = arrOfString[4];
-	String fullmoveNumber = arrOfString[5];
+    //                                                   --- Convert from FEN ---
 
 
-	// Place pieces
-        int x = 0;
-        int y = 0;
+    private void placePiecesFromFEN(String piecePositions){
+	int x = 0;
+	int y = 0;
 	for (int i = 0; i < piecePositions.length(); i++) {
 	    char curr = piecePositions.charAt(i);
 
@@ -322,51 +353,30 @@ public class Board
 		    x += Character.getNumericValue(curr);
 	    }
 	}
+    }
 
-	// Set active player
-	if (activePlayer == "b") {
+    private void setActivePlayerFromFEN(String activePlayer){
+	if (activePlayer.equals("b")) {
 	    this.activePlayerIndex = 1;
 	} else {
 	    this.activePlayerIndex = 0;
 	}
+    }
 
-	// Set castling availability
+    private void setCastlingAvailabilityFromFEN(String str){
 	//TODO add functionality
+    }
 
-	// Set en passant target
+    private void setEnPassantTargetFromFEN(String str){
 	//TODO add functionality
+    }
 
+    private void setMovesFromFEN(String halfmoveClock, String fullmoveNumber){
 	// Set halfmove clock
 	this.halfmoveClock = Integer.parseInt(halfmoveClock);
 
 	// Set fullmove number
 	this.fullmoveNumber = Integer.parseInt(fullmoveNumber);
-    }
-
-    private String convertPositionToNotation(final Point p) {
-	final String alphas = "abcdefghijklmnopqrstuvwxyz?";
-	return alphas.substring(p.x, p.x + 1) + (p.y + 1);
-    }
-
-    private void clearBoard(){
-	for (int y = 0; y < height; y++) {
-	    for (int x = 0; x < width; x++) {
-		pieces[y][x] = null;
-	    }
-	}
-    }
-
-    public void passTurn() {
-        int nextActivePlayerIndex = (activePlayerIndex + 1) % 2;
-
-        activePlayerIndex = nextActivePlayerIndex;
-
-	if (nextActivePlayerIndex == 0) {
-	    fullmoveNumber++;
-	}
-
-	//TODO remove debug prints when done
-	System.out.println("Turn number: " + getFullmoveNumber() + "	Active player: " + getActivePlayer().getColor());
     }
 }
 

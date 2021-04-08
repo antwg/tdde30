@@ -29,7 +29,6 @@ public class GameManager
         gm.createNewGame();
 
         gm.board.resetBoard();
-        gm.board.printBoard();
         System.out.println(gm.board.convertBoardToFEN());
 
         GameViewer gameViewer = new GameViewer(new ChessComponent(gm.board), new TimeComponent(gm.board, 180, 512));

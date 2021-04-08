@@ -144,8 +144,8 @@ public class ChessComponent extends JComponent {
         if (board.getPiece(currentlyPressed) != null && board.getPiece(currentlyPressed).getType() == PieceType.PAWN){
             if(currentlyPressed.y == 0 || currentlyPressed.y == 7){
                 String[] options = {"Queen", "Rook", "Bishop", "Knight"};
-                int choise = JOptionPane.showOptionDialog(null, "Choose piece", " ",JOptionPane.DEFAULT_OPTION,
-					     JOptionPane.INFORMATION_MESSAGE, null, options, options[0]);
+                int choise = JOptionPane.showOptionDialog(null, "Choose upgrade", "",JOptionPane.DEFAULT_OPTION,
+							  JOptionPane.INFORMATION_MESSAGE, null, options, options[0]);
                 switch(choise){
 		    case 0:
 		        board.setPiece(currentlyPressed, new Queen(board.getActivePlayer().getColor()));
