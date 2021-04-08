@@ -1,6 +1,7 @@
 package se.liu.chess.pieces;
 
 import se.liu.chess.game.Board;
+import se.liu.chess.game.Player;
 import se.liu.chess.game.TeamColor;
 
 import java.awt.*;
@@ -11,8 +12,8 @@ public abstract class PointMovePiece extends AbstractPiece{
 
     protected Point[] allMoves = null;
 
-    protected PointMovePiece(final TeamColor color) {
-	super(color);
+    protected PointMovePiece(final Player owner) {
+	super(owner);
     }
 
     @Override public Set<Point> getMoves(final Board board, final int x, final int y) {
@@ -24,7 +25,7 @@ public abstract class PointMovePiece extends AbstractPiece{
 
 	    if (board.isValidTile(combinedX, combinedY)) {
 		Piece piece = board.getPiece(combinedX, combinedY);
-		if (piece == null || piece.getColor() != color) {
+		if (piece == null || piece.getColor() != this.getColor()) {
 		    legalMoves.add(new Point(combinedX, combinedY));
 		}
 	    }

@@ -148,16 +148,16 @@ public class ChessComponent extends JComponent {
 							  JOptionPane.INFORMATION_MESSAGE, null, options, options[0]);
                 switch(choise){
 		    case 0:
-		        board.setPiece(currentlyPressed, new Queen(board.getActivePlayer().getColor()));
+		        board.setPiece(currentlyPressed, new Queen(board.getActivePlayer()));
 		        break;
 		    case 1:
-			board.setPiece(currentlyPressed, new Rook(board.getActivePlayer().getColor()));
+			board.setPiece(currentlyPressed, new Rook(board.getActivePlayer()));
 			break;
 		    case 2:
-		        board.setPiece(currentlyPressed, new Bishop(board.getActivePlayer().getColor()));
+		        board.setPiece(currentlyPressed, new Bishop(board.getActivePlayer()));
 			break;
 		    case 3:
-			board.setPiece(currentlyPressed, new Knight(board.getActivePlayer().getColor()));
+			board.setPiece(currentlyPressed, new Knight(board.getActivePlayer()));
 			break;
 		    default:
 			System.out.println("Error in testForUpgrade");

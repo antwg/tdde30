@@ -1,6 +1,7 @@
 package se.liu.chess.pieces;
 
 import se.liu.chess.game.Board;
+import se.liu.chess.game.Player;
 import se.liu.chess.game.TeamColor;
 
 import java.awt.*;
@@ -20,8 +21,8 @@ public class Queen extends VectorMovePiece
 	    				   new Point(-1, 0),
 	    				   new Point(0, -1)};
 
-    public Queen(final TeamColor color) {
-	super(color);
+    public Queen(final Player owner) {
+	super(owner);
     }
 
     @Override public PieceType getType() {
