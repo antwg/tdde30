@@ -30,7 +30,7 @@ public class Pawn extends AbstractPiece {
 	if (color == TeamColor.BLACK){
 	    normalMoveY = y + 1;
 	}
-	if (isValidMoveToNullPiece(board, x, normalMoveY)) {
+	if (isValidMoveToEmptyPiece(board, x, normalMoveY)) {
 	    legalMoves.add(new Point(x, normalMoveY));
 	}
 
@@ -56,7 +56,7 @@ public class Pawn extends AbstractPiece {
 	    if (color == TeamColor.BLACK) {
 		twoStepY = y + 2;
 	    }
-	    if (isValidMoveToNullPiece(board, x, twoStepY)){
+	    if (isValidMoveToEmptyPiece(board, x, twoStepY)){
 	        legalMoves.add(new Point(x, twoStepY));
 	    }
 	}
@@ -70,7 +70,7 @@ public class Pawn extends AbstractPiece {
 	return "p";
     }
 
-    private boolean isValidMoveToNullPiece(Board board, int x, int y){
+    private boolean isValidMoveToEmptyPiece(Board board, int x, int y){
 	if (board.isValidTile(x, y)) {
 	    Piece piece = board.getPiece(x, y);
 	    if (piece == null) {

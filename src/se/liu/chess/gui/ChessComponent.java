@@ -44,13 +44,65 @@ public class ChessComponent extends JComponent {
 	});
     }
 
+
+
+    // ----------------------------------------------------- Public Methods ----------------------------------------------------------------
+
     public Board getBoard() {
 	return board;
     }
 
-    // ----------------------------------------------------- Public/Protected Methods ------------------------------------------------------
+    @Override public Dimension getPreferredSize() {
+	return new Dimension(width, height);
+    }
 
-    public void pressedSquare(int x, int y){
+    // ----------------------------------------------------- Protected Methods -------------------------------------------------------------
+
+
+    @Override protected void paintComponent(final Graphics g) {
+	super.paintComponent(g);
+	final Graphics2D g2d = (Graphics2D) g;
+	g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+
+	// For all coordinates in board
+	for (int col = 0; col < board.getWidth(); col++) {
+	    for (int row = 0; row < board.getHeight(); row++) {
+
+		// Determine color of square
+		Color color = ODD_COLOR;
+		Color color2 = new Color(0, 0, 0, 0);
+
+		// Normal board colouring
+		if ((col + row) % 2 == 0) {
+		    color = EVEN_COLOR;
+		}
+		// If piece selected
+		if (currentlyPressed != null && currentlyPressed.equals(new Point(col, row))){
+		    color2 = SELECTED_COLOR;
+		}
+		// If valid move
+		if (currentlyPressed != null && getValidMoves(currentlyPressed.x, currentlyPressed.y).contains(new Point(col, row))){
+		    color2 = SELECTED_COLOR;
+		}
+		// Paint square
+		g2d.setColor(color);
+		g2d.fillRect(col * SQUARE_SIZE, row * SQUARE_SIZE, SQUARE_SIZE, SQUARE_SIZE);
+		g2d.setColor(color2);
+		g2d.fillRect(col * SQUARE_SIZE, row * SQUARE_SIZE, SQUARE_SIZE, SQUARE_SIZE);
+
+		// Paint piece if exists (not null)
+		if (!board.isEmpty(col, row)) {
+		    Piece piece = board.getPiece(col, row);
+		    ImageIcon imageIcon = getImageForPiece(piece, piece.getColor());
+		    imageIcon.paintIcon(this, g, col * SQUARE_SIZE + OFFSET, row * SQUARE_SIZE + OFFSET);
+	    }
+	}
+    }
+}
+
+    // ------------------------------------------------ Private Methods --------------------------------------------------------------------
+
+    private void pressedSquare(int x, int y){
 	Point point = new Point(Math.floorDiv(x, SQUARE_SIZE), Math.floorDiv(y, SQUARE_SIZE)); // Finds what point on board
 	Point lastPressed = currentlyPressed;
 	this.currentlyPressed = point;
@@ -70,65 +122,15 @@ public class ChessComponent extends JComponent {
 	repaint();
     }
 
-    @Override public Dimension getPreferredSize() {
-	return new Dimension(width, height);
-    }
-
-    public Set<Point> getValidMoves(int x, int y){
+    private Set<Point> getValidMoves(int x, int y){
 	Piece selectedPiece = board.getPiece(x, y);
-	Set<Point> moveSet = new HashSet<>();
+	Set<Point> moves = new HashSet<>();
 
 	if (selectedPiece != null) {
-	    moveSet = selectedPiece.getMoves(board, x, y);
+	    moves = selectedPiece.getMoves(board, x, y);
 	}
-	return moveSet;
+	return moves;
     }
-
-    @Override protected void paintComponent(final Graphics g) {
-	super.paintComponent(g);
-	final Graphics2D g2d = (Graphics2D) g;
-	g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-
-	// For all coordinates in board
-	for (int col = 0; col < board.getWidth(); col++) {
-	    for (int row = 0; row < board.getHeight(); row++) {
-
-		// Determine color of square
-		Color color = ODD_COLOR;
-		Color color2 = new Color(0, 0, 0, 0);
-
-		// Normal case
-		if ((col + row) % 2 == 0) {
-		    color = EVEN_COLOR;
-		}
-		// If selected
-		if (currentlyPressed != null && currentlyPressed.equals(new Point(col, row))){
-		    color2 = SELECTED_COLOR;
-		}
-		// If valid move
-		if (currentlyPressed != null && getValidMoves(currentlyPressed.x, currentlyPressed.y).contains(new Point(col, row))){
-		    color2 = SELECTED_COLOR;
-		}
-		// Paint square
-		g2d.setColor(color);
-		g2d.fillRect(col * SQUARE_SIZE, row * SQUARE_SIZE, SQUARE_SIZE, SQUARE_SIZE);
-		g2d.setColor(color2);
-		g2d.fillRect(col * SQUARE_SIZE, row * SQUARE_SIZE, SQUARE_SIZE, SQUARE_SIZE);
-
-
-		// Paint piece if exists
-		if (!board.isEmpty(col, row)) {
-		    Piece piece = board.getPiece(col, row);
-		    ImageIcon imageIcon = getImageForPiece(piece, piece.getColor());
-		    imageIcon.paintIcon(this, g, col * SQUARE_SIZE + OFFSET, row * SQUARE_SIZE + OFFSET);
-	    }
-	}
-    }
-}
-
-    // ------------------------------------------------ Private Methods --------------------------------------------------------------------
-
-
 
     private ImageIcon loadIMG(String name){
 	return new ImageIcon(ClassLoader.getSystemResource("images/" + name + ".png"));

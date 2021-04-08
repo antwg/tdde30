@@ -4,7 +4,6 @@ import se.liu.chess.pieces.Piece;
 
 import java.awt.*;
 
-import se.liu.chess.pieces.PieceType;
 import se.liu.chess.pieces.Rook;
 import se.liu.chess.pieces.Knight;
 import se.liu.chess.pieces.Bishop;
@@ -37,11 +36,7 @@ public class Board
 	this.height = height;
 	this.pieces = new Piece[width][height];
 
-	for (int y = 0; y < height; y++) {
-	    for (int x = 0; x < width; x++) {
-		pieces[y][x] = null;
-	    }
-	}
+	clearBoard();
 
 	this.whitePlayer = new Player(TeamColor.WHITE, 300);
 	this.blackPlayer = new Player(TeamColor.BLACK, 300);
@@ -110,6 +105,18 @@ public class Board
 	return enPassantTarget;
     }
 
+    public Player getWhitePlayer() {
+	return whitePlayer;
+    }
+
+    public Player getBlackPlayer() {
+	return blackPlayer;
+    }
+
+    public int getActivePlayerIndex() {
+	return activePlayerIndex;
+    }
+
     // ----------------------------------------------------- Public Methods ----------------------------------------------------------------
 
     public void movePiece(Point p1, Point p2) {
@@ -121,7 +128,7 @@ public class Board
 	return (0 <= x && x < width && 0 <= y && y < height);
     }
 
-    public void printBoard() {
+    public void printBoard() { // temp
 	for (int y = 0; y < getWidth(); y++) {
 	    for (int x = 0; x < getHeight(); x++) {
 	        Piece piece = getPiece(x, y);
@@ -159,13 +166,9 @@ public class Board
 	return false;
     }
 
-    public void resetBoard() { // TODO Sätt alla andra till null?
-	for (int y = 0; y < height; y++) {
-	    for (int x = 0; x < width; x++) {
-		pieces[y][x] = null;
-	    }
-	}
-        boardFromFEN("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1");
+    public void resetBoard() {
+	clearBoard();
+        getBoardFromFEN("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1");
     }
     //TODO split into multiple smaller methods
 
@@ -173,7 +176,7 @@ public class Board
      * https://en.wikipedia.org/wiki/Forsyth%E2%80%93Edwards_Notation
      * @return
      */
-    public String boardToFEN() {
+    public String convertBoardToFEN() {
 	final StringBuilder builder = new StringBuilder();
 
 	// 1. Piece placement
@@ -226,7 +229,7 @@ public class Board
 	if (enPassantTarget == null) {
 	    builder.append("-");
 	} else {
-	    builder.append(positionToNotation(enPassantTarget));
+	    builder.append(convertPositionToNotation(enPassantTarget));
 	}
 	builder.append(" ");
 
@@ -241,7 +244,7 @@ public class Board
 	return builder.toString();
     }
 
-    public void boardFromFEN(final String fen) {
+    public void getBoardFromFEN(final String fen) {
         int x = 0;
         int y = 0;
 	for (int i = 0; i < fen.length(); i++) {
@@ -309,8 +312,17 @@ public class Board
 	}
     }
 
-    private String positionToNotation(final Point p) {
+    private String convertPositionToNotation(final Point p) {
 	final String alphas = "abcdefghijklmnopqrstuvwxyz?";
 	return alphas.substring(p.x, p.x + 1) + (p.y + 1);
     }
+
+    private void clearBoard(){
+	for (int y = 0; y < height; y++) {
+	    for (int x = 0; x < width; x++) {
+		pieces[y][x] = null;
+	    }
+	}
+    }
 }
+
