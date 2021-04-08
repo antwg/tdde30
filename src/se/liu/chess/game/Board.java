@@ -245,15 +245,27 @@ public class Board
     }
 
     public void getBoardFromFEN(final String fen) {
+        //TODO break into smaller functions
+
+	// Split fen string
+	String[] arrOfString = fen.split(" ");
+
+	String piecePositions = arrOfString[0];
+	String activePlayer = arrOfString[1];
+	String castlingAvailability = arrOfString[2];
+	String enPassantTarget = arrOfString[3];
+	String halfmoveClock = arrOfString[4];
+	String fullmoveNumber = arrOfString[5];
+
+
+	// Place pieces
         int x = 0;
         int y = 0;
-	for (int i = 0; i < fen.length(); i++) {
-	    char curr = fen.charAt(i);
+	for (int i = 0; i < piecePositions.length(); i++) {
+	    char curr = piecePositions.charAt(i);
 
 	    //TODO replace with piece construction method?
 	    switch (curr) {
-		case ' ':
-		    return;
 		case '/':
 		    y++;
 		    x = 0;
@@ -310,6 +322,25 @@ public class Board
 		    x += Character.getNumericValue(curr);
 	    }
 	}
+
+	// Set active player
+	if (activePlayer == "b") {
+	    this.activePlayerIndex = 1;
+	} else {
+	    this.activePlayerIndex = 0;
+	}
+
+	// Set castling availability
+	//TODO add functionality
+
+	// Set en passant target
+	//TODO add functionality
+
+	// Set halfmove clock
+	this.halfmoveClock = Integer.parseInt(halfmoveClock);
+
+	// Set fullmove number
+	this.fullmoveNumber = Integer.parseInt(fullmoveNumber);
     }
 
     private String convertPositionToNotation(final Point p) {
