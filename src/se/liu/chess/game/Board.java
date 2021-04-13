@@ -2,7 +2,9 @@ package se.liu.chess.game;
 
 import se.liu.chess.pieces.Piece;
 
-import java.awt.*;
+import java.awt.Point;
+import java.util.HashSet;
+import java.util.Set;
 
 import se.liu.chess.pieces.Rook;
 import se.liu.chess.pieces.Knight;
@@ -23,12 +25,15 @@ public class Board
     private Player whitePlayer;
     private Player blackPlayer;
 
+    private Set<Point> whitePossibleMoves = new HashSet<>();
+    private Set<Point> blackPossibleMoves = new HashSet<>();
+
     private int activePlayerIndex = 0;
 
     private Point enPassantTarget = null;
 
     //TODO implement halfmoveClock
-    private int halfmoveClock = 0;	// Used for 50 move rule
+    private int halfmoveClock = 0;        // Used for 50 move rule
     private int fullmoveNumber = 1; // It's called halfmove as one word
 
     public Board(final int width, final int height) {
@@ -54,7 +59,7 @@ public class Board
     }
 
     public Piece getPiece(int x, int y) {
-        return pieces[y][x];
+	return pieces[y][x];
     }
 
     public Piece getPiece(Point p) {
@@ -70,7 +75,7 @@ public class Board
     }
 
     public boolean isEmpty(int x, int y) {
-        return getPiece(x, y) == null;
+	return getPiece(x, y) == null;
     }
 
     public boolean isEmpty(Point p) {
@@ -117,13 +122,34 @@ public class Board
 	return activePlayerIndex;
     }
 
-    // ----------------------------------------------------- Public Methods ----------------------------------------------------------------
+    public Set<Point> getPossibleMoves(TeamColor teamColor) {
+	if (teamColor == TeamColor.WHITE) {
+	    return whitePossibleMoves;
+	}
+	return blackPossibleMoves;
+    }
+
+    public Set<Point> getWhitePossibleMoves() {
+	return whitePossibleMoves;
+    }
+
+    public Set<Point> getBlackPossibleMoves() {
+	return blackPossibleMoves;
+    }
+
+// ----------------------------------------------------- Public Methods ----------------------------------------------------------------
 
     public void movePiece(Point p1, Point p2) {
 	setPiece(p2, getPiece(p1));
 	setPiece(p1, null);
     }
 
+    /**
+     * Returns true if given coordinates lie within the board, otherwise false.
+     * @param x
+     * @param y
+     * @return
+     */
     public boolean isValidTile(int x, int y) {
 	return (0 <= x && x < width && 0 <= y && y < height);
     }
@@ -131,7 +157,7 @@ public class Board
     public void printBoard() { // temp
 	for (int y = 0; y < getWidth(); y++) {
 	    for (int x = 0; x < getHeight(); x++) {
-	        Piece piece = getPiece(x, y);
+		Piece piece = getPiece(x, y);
 		if (piece == null) {
 		    System.out.print("- ");
 		} else {
@@ -144,21 +170,35 @@ public class Board
     //TODO implement function
 
     public boolean isInCheck(Player player) {
+        TeamColor enemyColor;
+
+	if (player.getColor() == TeamColor.WHITE) {
+	    enemyColor = TeamColor.BLACK;
+	} else {
+	    enemyColor = TeamColor.WHITE;
+	}
+
+	for (Point threatenedSquare : getPossibleMoves(enemyColor)) {
+	    Piece pieceOnSquare = getPiece(threatenedSquare);
+	    if (pieceOnSquare != null && pieceOnSquare.equals(player.getKing())) {
+		return true;
+	    }
+	}
 	return false;
     }
     //TODO implement function
 
     public boolean hasLegalMoves(Player player) {
-        return true;
+	return true;
     }
 
     public boolean isGameOver(Player player) {
 	if (!hasLegalMoves(player)) {
 	    if (isInCheck(player)) {
-	        // Checkmate detected
+		// Checkmate detected
 		System.out.println("Checkmate!");
 	    } else {
-	        // Stalemate detected
+		// Stalemate detected
 		System.out.println("Stalemate!");
 	    }
 	    return true;
@@ -168,12 +208,13 @@ public class Board
 
     public void resetBoard() {
 	clearBoard();
-        getBoardFromFEN("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1");
+	getBoardFromFEN("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1");
     }
     //TODO split into multiple smaller methods
 
     /**
      * https://en.wikipedia.org/wiki/Forsyth%E2%80%93Edwards_Notation
+     *
      * @return
      */
     public String convertBoardToFEN() {
@@ -245,7 +286,7 @@ public class Board
     }
 
     public void getBoardFromFEN(final String fen) {
-        //TODO break into smaller functions
+	//TODO break into smaller functions
 
 	// Split fen string
 	String[] arrOfString = fen.split(" ");
@@ -259,8 +300,8 @@ public class Board
 
 
 	// Place pieces
-        int x = 0;
-        int y = 0;
+	int x = 0;
+	int y = 0;
 	for (int i = 0; i < piecePositions.length(); i++) {
 	    char curr = piecePositions.charAt(i);
 
@@ -295,11 +336,17 @@ public class Board
 		    x++;
 		    break;
 		case 'k':
-		    setPiece(x, y, new King(getBlackPlayer()));
+		    Piece blackKing = new King(getBlackPlayer());
+		    getBlackPlayer().setKing(blackKing);
+
+		    setPiece(x, y, blackKing);
 		    x++;
 		    break;
 		case 'K':
-		    setPiece(x, y, new King(getWhitePlayer()));
+		    Piece whiteKing = new King(getWhitePlayer());
+		    getWhitePlayer().setKing(whiteKing);
+
+		    setPiece(x, y, whiteKing);
 		    x++;
 		    break;
 		case 'q':
@@ -348,7 +395,7 @@ public class Board
 	return alphas.substring(p.x, p.x + 1) + (p.y + 1);
     }
 
-    private void clearBoard(){
+    private void clearBoard() {
 	for (int y = 0; y < height; y++) {
 	    for (int x = 0; x < width; x++) {
 		pieces[y][x] = null;
@@ -356,17 +403,42 @@ public class Board
 	}
     }
 
-    public void passTurn() {
-        int nextActivePlayerIndex = (activePlayerIndex + 1) % 2;
+    public void updatePossibleMoves() {
+        whitePossibleMoves.clear();
+        blackPossibleMoves.clear();
 
-        activePlayerIndex = nextActivePlayerIndex;
+	for (int y = 0; y < height; y++) {
+	    for (int x = 0; x < width; x++) {
+		Piece currPiece = getPiece(x, y);
+
+		if (currPiece == null) {
+		    continue;
+		} else if (currPiece.getColor() == TeamColor.WHITE) {
+		    whitePossibleMoves.addAll(currPiece.getMoves(this, x, y));
+		} else {
+		    blackPossibleMoves.addAll(currPiece.getMoves(this, x, y));
+		}
+	    }
+	}
+    }
+
+    public void passTurn() {
+	int nextActivePlayerIndex = (activePlayerIndex + 1) % 2;
+
+	activePlayerIndex = nextActivePlayerIndex;
 
 	if (nextActivePlayerIndex == 0) {
 	    fullmoveNumber++;
 	}
 
+	updatePossibleMoves();
+
 	//TODO remove debug prints when done
 	System.out.println("Turn number: " + getFullmoveNumber() + "	Active player: " + getActivePlayer().getColor());
+//	System.out.println("White threatens: " + getWhitePossibleMoves());
+//	System.out.println("Black threatens: " + getBlackPossibleMoves());
+	System.out.println("White in check: " + isInCheck(getWhitePlayer()));
+	System.out.println("Black in check: " + isInCheck(getBlackPlayer()));
     }
 }
 

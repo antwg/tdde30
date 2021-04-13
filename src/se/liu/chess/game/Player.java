@@ -1,5 +1,11 @@
 package se.liu.chess.game;
 
+import se.liu.chess.pieces.Piece;
+
+import java.awt.*;
+import java.util.HashSet;
+import java.util.Set;
+
 /**
  *
  */
@@ -12,6 +18,9 @@ public class Player
 
     private boolean kingsideCastleAvailable;
     private boolean queensideCastleAvailable;
+
+    // problematiskt med cirkelreferens?
+    private Piece king = null;
 
     // Constructor
     public Player(final TeamColor color, final double timeLeft) {
@@ -40,5 +49,13 @@ public class Player
 
     public int getScore() {
 	return score;
+    }
+
+    public void setKing(final Piece king) {
+        this.king = king;
+    }
+
+    public Piece getKing() {
+        return king;
     }
 }
