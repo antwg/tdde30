@@ -43,8 +43,8 @@ public class Board
 
 	clearBoard();
 
-	this.whitePlayer = new Player(TeamColor.WHITE, 300);
-	this.blackPlayer = new Player(TeamColor.BLACK, 300);
+	this.whitePlayer = new Player(TeamColor.WHITE, 300, 1);
+	this.blackPlayer = new Player(TeamColor.BLACK, 300, 1);
 
     }
 
@@ -198,19 +198,6 @@ public class Board
 	getBoardFromFEN("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1");
     }
 
-    public void passTurn() {
-	int nextActivePlayerIndex = (activePlayerIndex + 1) % 2;
-
-	activePlayerIndex = nextActivePlayerIndex;
-
-	if (nextActivePlayerIndex == 0) {
-	    fullmoveNumber++;
-	}
-
-	//TODO remove debug prints when done
-	System.out.println("Turn number: " + getFullmoveNumber() + "	Active player: " + getActivePlayer().getColor());
-    }
-
     /**
      * https://en.wikipedia.org/wiki/Forsyth%E2%80%93Edwards_Notation
      *
@@ -242,19 +229,6 @@ public class Board
 
     // ----------------------------------------------------- Private Methods ---------------------------------------------------------------
 
-
-    private String convertPositionToNotation(final Point p) {
-	final String alphas = "abcdefghijklmnopqrstuvwxyz?";
-	return alphas.substring(p.x, p.x + 1) + (p.y + 1);
-    }
-
-    private void clearBoard(){
-	for (int y = 0; y < height; y++) {
-	    for (int x = 0; x < width; x++) {
-		pieces[y][x] = null;
-	    }
-	}
-    }
 
     //                                                   --- Convert to FEN ---
 

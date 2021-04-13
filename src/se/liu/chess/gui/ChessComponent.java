@@ -117,6 +117,7 @@ public class ChessComponent extends JComponent {
 	    // Get legal moves
 	    if (getValidMoves(lastPressed.x, lastPressed.y).contains(currentlyPressed)) {
 		board.movePiece(lastPressed, currentlyPressed);
+		board.getActivePlayer().increaseTimeByIncrement();
 		board.getPiece(currentlyPressed).setHasMoved(true);
 		testForUpgrade();
 		board.passTurn();

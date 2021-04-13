@@ -24,17 +24,17 @@ public class TimeComponent extends JComponent {
 	double whiteTime = board.getWhitePlayer().getTimeLeft();
 
 	g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-
 	g.setColor(Color.BLACK);
 	g.setFont(new Font("serif", Font.PLAIN, fontSize));
 	g.drawString(Double.toString(blackTime), width / 2 - fontSize, middle - yOffset);
 	g.drawString(Double.toString(whiteTime), width / 2 - fontSize, middle + 3 * yOffset);
-
 	g.fillRect(xOffset, middle, width - doubleXOffset,3);
     }
 
     @Override public Dimension getPreferredSize() {
 	return new Dimension(width, height);
     }
+
+
 }
 
