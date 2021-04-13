@@ -2,7 +2,9 @@ package se.liu.chess.game;
 
 import se.liu.chess.pieces.Piece;
 
-import java.awt.*;
+import java.awt.Point;
+import java.util.HashSet;
+import java.util.Set;
 
 import se.liu.chess.pieces.Rook;
 import se.liu.chess.pieces.Knight;
@@ -22,6 +24,9 @@ public class Board
 
     private Player whitePlayer;
     private Player blackPlayer;
+
+    private Set<Point> whitePossibleMoves = new HashSet<>();
+    private Set<Point> blackPossibleMoves = new HashSet<>();
 
     private int activePlayerIndex = 0;
 
@@ -117,13 +122,34 @@ public class Board
 	return activePlayerIndex;
     }
 
-    // ----------------------------------------------------- Public Methods ----------------------------------------------------------------
+    public Set<Point> getPossibleMoves(TeamColor teamColor) {
+	if (teamColor == TeamColor.WHITE) {
+	    return whitePossibleMoves;
+	}
+	return blackPossibleMoves;
+    }
+
+    public Set<Point> getWhitePossibleMoves() {
+	return whitePossibleMoves;
+    }
+
+    public Set<Point> getBlackPossibleMoves() {
+	return blackPossibleMoves;
+    }
+
+// ----------------------------------------------------- Public Methods ----------------------------------------------------------------
 
     public void movePiece(Point p1, Point p2) {
 	setPiece(p2, getPiece(p1));
 	setPiece(p1, null);
     }
 
+    /**
+     * Returns true if given coordinates lie within the board, otherwise false.
+     * @param x
+     * @param y
+     * @return
+     */
     public boolean isValidTile(int x, int y) {
 	return (0 <= x && x < width && 0 <= y && y < height);
     }
@@ -131,6 +157,20 @@ public class Board
     //TODO implement function
 
     public boolean isInCheck(Player player) {
+        TeamColor enemyColor;
+
+	if (player.getColor() == TeamColor.WHITE) {
+	    enemyColor = TeamColor.BLACK;
+	} else {
+	    enemyColor = TeamColor.WHITE;
+	}
+
+	for (Point threatenedSquare : getPossibleMoves(enemyColor)) {
+	    Piece pieceOnSquare = getPiece(threatenedSquare);
+	    if (pieceOnSquare != null && pieceOnSquare.equals(player.getKing())) {
+		return true;
+	    }
+	}
 	return false;
     }
     //TODO implement function
@@ -173,6 +213,7 @@ public class Board
 
     /**
      * https://en.wikipedia.org/wiki/Forsyth%E2%80%93Edwards_Notation
+     *
      * @return
      */
     public String convertBoardToFEN() {
@@ -326,11 +367,17 @@ public class Board
 		    x++;
 		    break;
 		case 'k':
-		    setPiece(x, y, new King(getBlackPlayer()));
+		    Piece blackKing = new King(getBlackPlayer());
+		    getBlackPlayer().setKing(blackKing);
+
+		    setPiece(x, y, blackKing);
 		    x++;
 		    break;
 		case 'K':
-		    setPiece(x, y, new King(getWhitePlayer()));
+		    Piece whiteKing = new King(getWhitePlayer());
+		    getWhitePlayer().setKing(whiteKing);
+
+		    setPiece(x, y, whiteKing);
 		    x++;
 		    break;
 		case 'q':
@@ -377,6 +424,57 @@ public class Board
 
 	// Set fullmove number
 	this.fullmoveNumber = Integer.parseInt(fullmoveNumber);
+    }
+
+    private String convertPositionToNotation(final Point p) {
+	final String alphas = "abcdefghijklmnopqrstuvwxyz?";
+	return alphas.substring(p.x, p.x + 1) + (p.y + 1);
+    }
+
+    private void clearBoard() {
+	for (int y = 0; y < height; y++) {
+	    for (int x = 0; x < width; x++) {
+		pieces[y][x] = null;
+	    }
+	}
+    }
+
+    public void updatePossibleMoves() {
+        whitePossibleMoves.clear();
+        blackPossibleMoves.clear();
+
+	for (int y = 0; y < height; y++) {
+	    for (int x = 0; x < width; x++) {
+		Piece currPiece = getPiece(x, y);
+
+		if (currPiece == null) {
+		    continue;
+		} else if (currPiece.getColor() == TeamColor.WHITE) {
+		    whitePossibleMoves.addAll(currPiece.getMoves(this, x, y));
+		} else {
+		    blackPossibleMoves.addAll(currPiece.getMoves(this, x, y));
+		}
+	    }
+	}
+    }
+
+    public void passTurn() {
+	int nextActivePlayerIndex = (activePlayerIndex + 1) % 2;
+
+	activePlayerIndex = nextActivePlayerIndex;
+
+	if (nextActivePlayerIndex == 0) {
+	    fullmoveNumber++;
+	}
+
+	updatePossibleMoves();
+
+	//TODO remove debug prints when done
+	System.out.println("Turn number: " + getFullmoveNumber() + "	Active player: " + getActivePlayer().getColor());
+//	System.out.println("White threatens: " + getWhitePossibleMoves());
+//	System.out.println("Black threatens: " + getBlackPossibleMoves());
+	System.out.println("White in check: " + isInCheck(getWhitePlayer()));
+	System.out.println("Black in check: " + isInCheck(getBlackPlayer()));
     }
 }
 
