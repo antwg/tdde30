@@ -25,6 +25,11 @@ public class Board
     private Player whitePlayer;
     private Player blackPlayer;
 
+    private int whiteStartTime = 300;
+    private int blackStartTime = 300;
+    private int whiteIncrement = 1;
+    private int blackIncrement = 1;
+
     private Set<Point> whitePossibleMoves = new HashSet<>();
     private Set<Point> blackPossibleMoves = new HashSet<>();
 
@@ -43,8 +48,8 @@ public class Board
 
 	clearBoard();
 
-	this.whitePlayer = new Player(TeamColor.WHITE, 300, 1);
-	this.blackPlayer = new Player(TeamColor.BLACK, 300, 1);
+	this.whitePlayer = new Player(TeamColor.WHITE, whiteStartTime, whiteIncrement);
+	this.blackPlayer = new Player(TeamColor.BLACK, blackStartTime, blackIncrement);
 
     }
 
@@ -137,7 +142,23 @@ public class Board
 	return blackPossibleMoves;
     }
 
-// ----------------------------------------------------- Public Methods ----------------------------------------------------------------
+    public void setWhiteStartTime(final int whiteStartTime) {
+	this.whiteStartTime = whiteStartTime;
+    }
+
+    public void setBlackStartTime(final int blackStartTime) {
+	this.blackStartTime = blackStartTime;
+    }
+
+    public void setWhiteIncrement(final int whiteIncrement) {
+	this.whiteIncrement = whiteIncrement;
+    }
+
+    public void setBlackIncrement(final int blackIncrement) {
+	this.blackIncrement = blackIncrement;
+    }
+
+    // ----------------------------------------------------- Public Methods ----------------------------------------------------------------
 
     public void movePiece(Point p1, Point p2) {
 	setPiece(p2, getPiece(p1));
@@ -196,6 +217,8 @@ public class Board
     public void resetBoard() {
 	clearBoard();
 	getBoardFromFEN("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1");
+	getBlackPlayer().setTimeLeft(blackStartTime);
+	getWhitePlayer().setTimeLeft(whiteStartTime);
     }
 
     /**
