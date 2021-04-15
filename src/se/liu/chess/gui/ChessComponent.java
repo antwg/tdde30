@@ -108,9 +108,6 @@ public class ChessComponent extends JComponent {
 
     // ------------------------------------------------ Private Methods --------------------------------------------------------------------
 
-
-
-
     private ImageIcon loadIMG(String name){
 	return new ImageIcon(ClassLoader.getSystemResource("images/" + name + ".png"));
     }

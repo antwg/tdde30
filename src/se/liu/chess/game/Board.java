@@ -12,7 +12,6 @@ import se.liu.chess.pieces.Bishop;
 import se.liu.chess.pieces.King;
 import se.liu.chess.pieces.Queen;
 import se.liu.chess.pieces.Pawn;
-
 import javax.swing.*;
 
 /**
@@ -59,6 +58,7 @@ public class Board
 
     // ---------------------------------------------------- Getters/Setters ----------------------------------------------------------------
 
+    // Getters
     public int getWidth() {
 	return width;
     }
@@ -75,18 +75,6 @@ public class Board
 	return getPiece(p.x, p.y);
     }
 
-    public void setPiece(int x, int y, Piece piece) {
-	pieces[y][x] = piece;
-    }
-
-    public void setPiece(Point p, Piece piece) {
-	setPiece(p.x, p.y, piece);
-    }
-
-    public boolean isEmpty(int x, int y) {
-	return getPiece(x, y) == null;
-    }
-
     public Player getActivePlayer() {
 	if (activePlayerIndex == 0) {
 	    return whitePlayer;
@@ -99,13 +87,6 @@ public class Board
 	return fullmoveNumber;
     }
 
-    public void setEnPassantTarget(final Point enPassantTarget) {
-	this.enPassantTarget = enPassantTarget;
-    }
-
-    public void setEnPassantTarget(int x, int y) {
-	this.enPassantTarget = new Point(x, y);
-    }
 
     public Point getEnPassantTarget() {
 	return enPassantTarget;
@@ -126,14 +107,6 @@ public class Board
 	return blackPossibleMoves;
     }
 
-    public void setWhiteIncrement(final int whiteIncrement) {
-	this.whiteIncrement = whiteIncrement;
-    }
-
-    public void setBlackIncrement(final int blackIncrement) {
-	this.blackIncrement = blackIncrement;
-    }
-
     public Point getCurrentlyPressed() {
 	return currentlyPressed;
     }
@@ -144,6 +117,35 @@ public class Board
 
     public Set<Point> getBlackPossibleMoves() {
 	return blackPossibleMoves;
+    }
+
+    public boolean isEmpty(int x, int y) {
+	return getPiece(x, y) == null;
+    }
+
+    // Setters
+    public void setPiece(int x, int y, Piece piece) {
+	pieces[y][x] = piece;
+    }
+
+    public void setPiece(Point p, Piece piece) {
+	setPiece(p.x, p.y, piece);
+    }
+
+    public void setEnPassantTarget(final Point enPassantTarget) {
+	this.enPassantTarget = enPassantTarget;
+    }
+
+    public void setEnPassantTarget(int x, int y) {
+	this.enPassantTarget = new Point(x, y);
+    }
+
+    public void setWhiteIncrement(final int whiteIncrement) {
+	this.whiteIncrement = whiteIncrement;
+    }
+
+    public void setBlackIncrement(final int blackIncrement) {
+	this.blackIncrement = blackIncrement;
     }
 
     // ----------------------------------------------------- Public Methods ----------------------------------------------------------------
@@ -197,27 +199,6 @@ public class Board
 	}
     }
 
-    private void setEnPassant(Point lastPressed) {
-	if (getPiece(currentlyPressed) != null && getPiece(currentlyPressed) instanceof Pawn
-	    && Math.abs(currentlyPressed.y - lastPressed.y) == 2){
-	    setEnPassantTarget(lastPressed.x, (currentlyPressed.y + lastPressed.y) / 2);
-	}
-	else {
-	    setEnPassantTarget(null);
-	}
-    }
-
-    private void tryToKillEnPassant() {
-	if (getEnPassantTarget() != null && getPiece(getEnPassantTarget()) != null){
-	    Point ep = getEnPassantTarget();
-	    int previousY = ep.y + 1;
-	    if (getPiece(ep).getColor() == TeamColor.BLACK) {
-		previousY = ep.y - 1;
-	    }
-	    setPiece(ep.x, previousY, null);
-	}
-    }
-
     public Set<Point> getValidMoves(int x, int y){
 	Piece selectedPiece = getPiece(x, y);
 	Set<Point> moves = new HashSet<>();
@@ -227,6 +208,41 @@ public class Board
 	    moves = selectedPiece.getMoves(this, x, y);
 	}
 	return moves;
+    }
+
+
+    //TODO improve function, remove king field from player?
+    public boolean isInCheck(Player player) {
+        TeamColor enemyColor;
+
+	if (player.getColor() == TeamColor.WHITE) {
+	    enemyColor = TeamColor.BLACK;
+	} else {
+	    enemyColor = TeamColor.WHITE;
+	}
+
+	for (Point threatenedSquare : getPossibleMoves(enemyColor)) {
+	    Piece pieceOnSquare = getPiece(threatenedSquare);
+	    if (pieceOnSquare != null && pieceOnSquare.equals(player.getKing())) {
+		return true;
+	    }
+	}
+	return false;
+    }
+    //TODO implement function
+
+    public void resetBoard() {
+	clearBoard();
+	createBoardFromFEN("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1");
+	blackPlayer.setTimeLeft(blackStartTime);
+	whitePlayer.setTimeLeft(whiteStartTime);
+    }
+
+
+    // ----------------------------------------------------- Private Methods ---------------------------------------------------------------
+
+    private boolean hasLegalMoves(Player player) {
+	return true;
     }
 
     private void testForUpgrade(){
@@ -258,33 +274,47 @@ public class Board
 	}
     }
 
-    //TODO implement function
-
-    //TODO improve function, remove king field from player?
-    public boolean isInCheck(Player player) {
-        TeamColor enemyColor;
-
-	if (player.getColor() == TeamColor.WHITE) {
-	    enemyColor = TeamColor.BLACK;
-	} else {
-	    enemyColor = TeamColor.WHITE;
+    private void setEnPassant(Point lastPressed) {
+	if (getPiece(currentlyPressed) != null && getPiece(currentlyPressed) instanceof Pawn
+	    && Math.abs(currentlyPressed.y - lastPressed.y) == 2){
+	    setEnPassantTarget(lastPressed.x, (currentlyPressed.y + lastPressed.y) / 2);
 	}
+	else {
+	    setEnPassantTarget(null);
+	}
+    }
 
-	for (Point threatenedSquare : getPossibleMoves(enemyColor)) {
-	    Piece pieceOnSquare = getPiece(threatenedSquare);
-	    if (pieceOnSquare != null && pieceOnSquare.equals(player.getKing())) {
-		return true;
+    private void tryToKillEnPassant() {
+	if (enPassantTarget != null && getPiece(enPassantTarget) != null){
+	    Point ep = enPassantTarget;
+	    int previousY = ep.y + 1;
+	    if (getPiece(ep).getColor() == TeamColor.BLACK) {
+		previousY = ep.y - 1;
 	    }
+	    setPiece(ep.x, previousY, null);
 	}
-	return false;
-    }
-    //TODO implement function
-
-    public boolean hasLegalMoves(Player player) {
-	return true;
     }
 
-    public boolean isGameOver(Player player) {
+    private void passTurn() {
+	int nextActivePlayerIndex = (activePlayerIndex + 1) % 2;
+
+	activePlayerIndex = nextActivePlayerIndex;
+
+	if (nextActivePlayerIndex == 0) {
+	    fullmoveNumber++;
+	}
+
+	updatePossibleMoves();
+
+	//TODO remove debug prints when done
+	System.out.println("Turn number: " + fullmoveNumber + "	Active player: " + getActivePlayer().getColor());
+//	System.out.println("White threatens: " + getWhitePossibleMoves());
+//	System.out.println("Black threatens: " + getBlackPossibleMoves());
+	System.out.println("White in check: " + isInCheck(getWhitePlayer()));
+	System.out.println("Black in check: " + isInCheck(getBlackPlayer()));
+    }
+
+    private boolean isGameOver(Player player) {
 	if (!hasLegalMoves(player)) {
 	    if (isInCheck(player)) {
 		// Checkmate detected
@@ -298,12 +328,7 @@ public class Board
 	return false;
     }
 
-    public void resetBoard() {
-	clearBoard();
-	createBoardFromFEN("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1");
-	getBlackPlayer().setTimeLeft(blackStartTime);
-	getWhitePlayer().setTimeLeft(whiteStartTime);
-    }
+    //                                                   --- Convert to FEN ---
 
     /**
      * https://en.wikipedia.org/wiki/Forsyth%E2%80%93Edwards_Notation
@@ -321,24 +346,6 @@ public class Board
 
 	return builder.toString();
     }
-
-
-    public void createBoardFromFEN(final String fen) {
-	// Split fen string
-	String[] arrOfString = fen.split(" ");
-
-	placePiecesFromFEN(arrOfString[0]);
-	setActivePlayerFromFEN(arrOfString[1]);
-	setCastlingAvailabilityFromFEN(arrOfString[2]);
-	setEnPassantTargetFromFEN(arrOfString[3]);
-	setMovesFromFEN(arrOfString[4], arrOfString[5]);
-    }
-
-    // ----------------------------------------------------- Private Methods ---------------------------------------------------------------
-
-
-    //                                                   --- Convert to FEN ---
-
 
     private void convertPiecesToFEN(StringBuilder builder) {
 	for (int y = 0; y < height; y++) {
@@ -410,6 +417,16 @@ public class Board
 
     //                                                   --- Convert from FEN ---
 
+    public void createBoardFromFEN(final String fen) {
+	// Split fen string
+	String[] arrOfString = fen.split(" ");
+
+	placePiecesFromFEN(arrOfString[0]);
+	setActivePlayerFromFEN(arrOfString[1]);
+	setCastlingAvailabilityFromFEN(arrOfString[2]);
+	setEnPassantTargetFromFEN(arrOfString[3]);
+	setMovesFromFEN(arrOfString[4], arrOfString[5]);
+    }
 
     private void placePiecesFromFEN(String piecePositions){
 	int x = 0;
@@ -424,57 +441,57 @@ public class Board
 		    x = 0;
 		    break;
 		case 'r':
-		    setPiece(x, y, new Rook(getBlackPlayer()));
+		    setPiece(x, y, new Rook(blackPlayer));
 		    x++;
 		    break;
 		case 'R':
-		    setPiece(x, y, new Rook(getWhitePlayer()));
+		    setPiece(x, y, new Rook(whitePlayer));
 		    x++;
 		    break;
 		case 'n':
-		    setPiece(x, y, new Knight(getBlackPlayer()));
+		    setPiece(x, y, new Knight(blackPlayer));
 		    x++;
 		    break;
 		case 'N':
-		    setPiece(x, y, new Knight(getWhitePlayer()));
+		    setPiece(x, y, new Knight(whitePlayer));
 		    x++;
 		    break;
 		case 'b':
-		    setPiece(x, y, new Bishop(getBlackPlayer()));
+		    setPiece(x, y, new Bishop(blackPlayer));
 		    x++;
 		    break;
 		case 'B':
-		    setPiece(x, y, new Bishop(getWhitePlayer()));
+		    setPiece(x, y, new Bishop(whitePlayer));
 		    x++;
 		    break;
 		case 'k':
-		    Piece blackKing = new King(getBlackPlayer());
+		    Piece blackKing = new King(blackPlayer);
 		    getBlackPlayer().setKing(blackKing);
 
 		    setPiece(x, y, blackKing);
 		    x++;
 		    break;
 		case 'K':
-		    Piece whiteKing = new King(getWhitePlayer());
+		    Piece whiteKing = new King(whitePlayer);
 		    getWhitePlayer().setKing(whiteKing);
 
 		    setPiece(x, y, whiteKing);
 		    x++;
 		    break;
 		case 'q':
-		    setPiece(x, y, new Queen(getBlackPlayer()));
+		    setPiece(x, y, new Queen(blackPlayer));
 		    x++;
 		    break;
 		case 'Q':
-		    setPiece(x, y, new Queen(getWhitePlayer()));
+		    setPiece(x, y, new Queen(whitePlayer));
 		    x++;
 		    break;
 		case 'p':
-		    setPiece(x, y, new Pawn(getBlackPlayer()));
+		    setPiece(x, y, new Pawn(blackPlayer));
 		    x++;
 		    break;
 		case 'P':
-		    setPiece(x, y, new Pawn(getWhitePlayer()));
+		    setPiece(x, y, new Pawn(whitePlayer));
 		    x++;
 		    break;
 		default:
@@ -537,25 +554,6 @@ public class Board
 		}
 	    }
 	}
-    }
-
-    public void passTurn() {
-	int nextActivePlayerIndex = (activePlayerIndex + 1) % 2;
-
-	activePlayerIndex = nextActivePlayerIndex;
-
-	if (nextActivePlayerIndex == 0) {
-	    fullmoveNumber++;
-	}
-
-	updatePossibleMoves();
-
-	//TODO remove debug prints when done
-	System.out.println("Turn number: " + getFullmoveNumber() + "	Active player: " + getActivePlayer().getColor());
-//	System.out.println("White threatens: " + getWhitePossibleMoves());
-//	System.out.println("Black threatens: " + getBlackPossibleMoves());
-	System.out.println("White in check: " + isInCheck(getWhitePlayer()));
-	System.out.println("Black in check: " + isInCheck(getBlackPlayer()));
     }
 }
 
