@@ -141,8 +141,20 @@ public class Board
     // ----------------------------------------------------- Public Methods ----------------------------------------------------------------
 
     public void movePiece(Point p1, Point p2) {
-	setPiece(p2, getPiece(p1));
+        Piece pieceToMove = getPiece(p1);
+	setPiece(p2, pieceToMove);
 	setPiece(p1, null);
+	if (!getActivePlayer().canCastleQueenside() && !getActivePlayer().canCastleKingside()) {
+	    return;
+	}
+
+//	if (pieceToMove.getType() == PieceType.KING) {
+//	    getActivePlayer().setKingsideCastleAvailable(false);
+//	    getActivePlayer().setQueensideCastleAvailable(false);
+//	} else if (pieceToMove.getType() == PieceType.ROOK) {
+//	    if () {
+//	    }
+//	}
     }
 
     /**
@@ -240,6 +252,7 @@ public class Board
 
     //TODO implement function
 
+    //TODO improve function, remove king field from player?
     public boolean isInCheck(Player player) {
         TeamColor enemyColor;
 
