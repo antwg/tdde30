@@ -65,10 +65,6 @@ public class Player
         return king;
     }
 
-    public int getIncrement() {
-	return increment;
-    }
-
     public void increaseTimeByIncrement(){
         this.timeLeft += increment;
     }

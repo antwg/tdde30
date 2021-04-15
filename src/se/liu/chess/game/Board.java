@@ -13,6 +13,8 @@ import se.liu.chess.pieces.King;
 import se.liu.chess.pieces.Queen;
 import se.liu.chess.pieces.Pawn;
 
+import javax.swing.*;
+
 /**
  * Creates a board which handles all game logic and saves the position of pieces. Has methods for moving pieces.
  */
@@ -36,6 +38,8 @@ public class Board
     private int activePlayerIndex = 0;
 
     private Point enPassantTarget = null;
+
+    private Point currentlyPressed = null;
 
     //TODO implement halfmoveClock
     private int halfmoveClock = 0;        // Used for 50 move rule
@@ -83,20 +87,12 @@ public class Board
 	return getPiece(x, y) == null;
     }
 
-    public boolean isEmpty(Point p) {
-	return getPiece(p.x, p.y) == null;
-    }
-
     public Player getActivePlayer() {
 	if (activePlayerIndex == 0) {
 	    return whitePlayer;
 	} else {
 	    return blackPlayer;
 	}
-    }
-
-    public int getHalfmoveClock() {
-	return halfmoveClock;
     }
 
     public int getFullmoveNumber() {
@@ -123,31 +119,11 @@ public class Board
 	return blackPlayer;
     }
 
-    public int getActivePlayerIndex() {
-	return activePlayerIndex;
-    }
-
     public Set<Point> getPossibleMoves(TeamColor teamColor) {
 	if (teamColor == TeamColor.WHITE) {
 	    return whitePossibleMoves;
 	}
 	return blackPossibleMoves;
-    }
-
-    public Set<Point> getWhitePossibleMoves() {
-	return whitePossibleMoves;
-    }
-
-    public Set<Point> getBlackPossibleMoves() {
-	return blackPossibleMoves;
-    }
-
-    public void setWhiteStartTime(final int whiteStartTime) {
-	this.whiteStartTime = whiteStartTime;
-    }
-
-    public void setBlackStartTime(final int blackStartTime) {
-	this.blackStartTime = blackStartTime;
     }
 
     public void setWhiteIncrement(final int whiteIncrement) {
@@ -156,6 +132,10 @@ public class Board
 
     public void setBlackIncrement(final int blackIncrement) {
 	this.blackIncrement = blackIncrement;
+    }
+
+    public Point getCurrentlyPressed() {
+	return currentlyPressed;
     }
 
     // ----------------------------------------------------- Public Methods ----------------------------------------------------------------
@@ -173,6 +153,89 @@ public class Board
      */
     public boolean isValidTile(int x, int y) {
 	return (0 <= x && x < width && 0 <= y && y < height);
+    }
+
+    public void pressedSquare(Point point){
+	Point lastPressed = currentlyPressed;
+	this.currentlyPressed = point;
+
+	// Stop from moving empty pieces (null)
+	if(lastPressed != null && getPiece(lastPressed) != null){
+
+	    // Get legal moves
+	    if (getValidMoves(lastPressed.x, lastPressed.y).contains(currentlyPressed)) {
+		movePiece(lastPressed, currentlyPressed);
+		getActivePlayer().increaseTimeByIncrement();
+		getPiece(currentlyPressed).setHasMoved(true);
+		testForUpgrade();
+		passTurn();
+	    }
+	    tryToKillEnPassant();
+	    setEnPassant(lastPressed);
+
+	    this.currentlyPressed = null;
+	}
+    }
+
+    private void setEnPassant(Point lastPressed) {
+	if (getPiece(currentlyPressed) != null && getPiece(currentlyPressed) instanceof Pawn
+	    && Math.abs(currentlyPressed.y - lastPressed.y) == 2){
+	    setEnPassantTarget(lastPressed.x, (currentlyPressed.y + lastPressed.y) / 2);
+	}
+	else {
+	    setEnPassantTarget(null);
+	}
+    }
+
+    private void tryToKillEnPassant() {
+	if (getEnPassantTarget() != null && getPiece(getEnPassantTarget()) != null){
+	    Point ep = getEnPassantTarget();
+	    int previousY = ep.y + 1;
+	    if (getPiece(ep).getColor() == TeamColor.BLACK) {
+		previousY = ep.y - 1;
+	    }
+	    setPiece(ep.x, previousY, null);
+	}
+    }
+
+    public Set<Point> getValidMoves(int x, int y){
+	Piece selectedPiece = getPiece(x, y);
+	Set<Point> moves = new HashSet<>();
+
+	if (selectedPiece != null &&
+	    selectedPiece.getColor() == getActivePlayer().getColor()) {
+	    moves = selectedPiece.getMoves(this, x, y);
+	}
+	return moves;
+    }
+
+    private void testForUpgrade(){
+	if (getPiece(currentlyPressed) != null && getPiece(currentlyPressed) instanceof Pawn){
+	    int topRow = 0;
+	    int bottomRow = 7;
+	    if(currentlyPressed.y == topRow || currentlyPressed.y == bottomRow){
+		String[] options = {"Queen", "Rook", "Bishop", "Knight"};
+		int choice = JOptionPane.showOptionDialog(null, "Choose upgrade", "", JOptionPane.DEFAULT_OPTION,
+							  JOptionPane.INFORMATION_MESSAGE, null, options, options[0]);
+		final int queen = 0, rook = 1, bishop = 2, knight = 3;
+		switch(choice){
+		    case queen:
+			setPiece(currentlyPressed, new Queen(getActivePlayer()));
+			break;
+		    case rook:
+			setPiece(currentlyPressed, new Rook(getActivePlayer()));
+			break;
+		    case bishop:
+			setPiece(currentlyPressed, new Bishop(getActivePlayer()));
+			break;
+		    case knight:
+			setPiece(currentlyPressed, new Knight(getActivePlayer()));
+			break;
+		    default:
+			System.out.println("Error in testForUpgrade");
+		}
+	    }
+	}
     }
 
     //TODO implement function
@@ -216,7 +279,7 @@ public class Board
 
     public void resetBoard() {
 	clearBoard();
-	getBoardFromFEN("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1");
+	createBoardFromFEN("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1");
 	getBlackPlayer().setTimeLeft(blackStartTime);
 	getWhitePlayer().setTimeLeft(whiteStartTime);
     }
@@ -239,7 +302,7 @@ public class Board
     }
 
 
-    public void getBoardFromFEN(final String fen) {
+    public void createBoardFromFEN(final String fen) {
 	// Split fen string
 	String[] arrOfString = fen.split(" ");
 

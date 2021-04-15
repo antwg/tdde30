@@ -17,7 +17,6 @@ public class GameViewer
     private TimeComponent timeComponent;
 
     public GameViewer(ChessComponent chessComponent, TimeComponent timeComponent) {
-	this.frame = new JFrame("Chess");
 	this.chessComponent = chessComponent;
 	this.menuBar = new JMenuBar();
 	this.timeComponent = timeComponent;
@@ -26,6 +25,7 @@ public class GameViewer
     // ----------------------------------------------------- Public Methods ----------------------------------------------------------------
 
     public void show(){
+        this.frame = new JFrame("Chess");
 	frame.setLayout(new BorderLayout());
 	frame.add(chessComponent, BorderLayout.CENTER);
 	setUpMenu();

@@ -1,20 +1,13 @@
 package se.liu.chess.gui;
 
 import se.liu.chess.game.Board;
-import se.liu.chess.game.TeamColor;
-import se.liu.chess.pieces.Bishop;
-import se.liu.chess.pieces.Knight;
 import se.liu.chess.pieces.Piece;
-import se.liu.chess.pieces.PieceType;
-import se.liu.chess.pieces.Queen;
-import se.liu.chess.pieces.Rook;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.util.HashSet;
-import java.util.Set;
+
 
 /**
  * An extension of JComponent. Given a Board object, ChessComponent will be able to paint the board itself as well as the pieces on the board.
@@ -43,17 +36,25 @@ public class ChessComponent extends JComponent {
 
 	this.addMouseListener(new MouseAdapter(){
 	    @Override public void mousePressed(final MouseEvent e) {
-		pressedSquare(e.getX(), e.getY());
+		Point point = new Point(Math.floorDiv(e.getX(), SQUARE_SIZE), Math.floorDiv(e.getY(), SQUARE_SIZE)); // Finds what point on board
+		board.pressedSquare(point);
+		repaint();
 	    }
 	});
     }
-
-
 
     // ----------------------------------------------------- Public Methods ----------------------------------------------------------------
 
     public Board getBoard() {
 	return board;
+    }
+
+    public Point getCurrentlyPressed() {
+	return currentlyPressed;
+    }
+
+    public static int getSquareSize() {
+	return SQUARE_SIZE;
     }
 
     @Override public Dimension getPreferredSize() {
@@ -64,6 +65,7 @@ public class ChessComponent extends JComponent {
 
 
     @Override protected void paintComponent(final Graphics g) {
+        currentlyPressed = board.getCurrentlyPressed();
 	super.paintComponent(g);
 	final Graphics2D g2d = (Graphics2D) g;
 	g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
@@ -85,7 +87,7 @@ public class ChessComponent extends JComponent {
 		    color2 = SELECTED_COLOR;
 		}
 		// If valid move
-		if (currentlyPressed != null && getValidMoves(currentlyPressed.x, currentlyPressed.y).contains(new Point(col, row))){
+		if (currentlyPressed != null && board.getValidMoves(currentlyPressed.x, currentlyPressed.y).contains(new Point(col, row))){
 		    color2 = SELECTED_COLOR;
 		}
 		// Paint square
@@ -97,7 +99,7 @@ public class ChessComponent extends JComponent {
 		// Paint piece if exists (not null)
 		if (!board.isEmpty(col, row)) {
 		    Piece piece = board.getPiece(col, row);
-		    ImageIcon imageIcon = getImageForPiece(piece, piece.getColor());
+		    ImageIcon imageIcon = getImageForPiece(piece);
 		    imageIcon.paintIcon(this, g, col * SQUARE_SIZE + OFFSET, row * SQUARE_SIZE + OFFSET);
 	    }
 	}
@@ -106,93 +108,14 @@ public class ChessComponent extends JComponent {
 
     // ------------------------------------------------ Private Methods --------------------------------------------------------------------
 
-    private void pressedSquare(int x, int y){
-	Point point = new Point(Math.floorDiv(x, SQUARE_SIZE), Math.floorDiv(y, SQUARE_SIZE)); // Finds what point on board
-	Point lastPressed = currentlyPressed;
-	this.currentlyPressed = point;
 
-	// Stop from moving empty pieces (null)
-	if(lastPressed != null && board.getPiece(lastPressed) != null){
 
-	    // Get legal moves
-	    if (getValidMoves(lastPressed.x, lastPressed.y).contains(currentlyPressed)) {
-		board.movePiece(lastPressed, currentlyPressed);
-		board.getActivePlayer().increaseTimeByIncrement();
-		board.getPiece(currentlyPressed).setHasMoved(true);
-		testForUpgrade();
-		board.passTurn();
-	    }
-	    tryToKillEnPassant();
-	    setEnPassant(lastPressed);
-
-	    this.currentlyPressed = null;
-	}
-	repaint();
-    }
-
-    private Set<Point> getValidMoves(int x, int y){
-	Piece selectedPiece = board.getPiece(x, y);
-	Set<Point> moves = new HashSet<>();
-
-	if (selectedPiece != null &&
-	    selectedPiece.getColor() == board.getActivePlayer().getColor()) {
-	    moves = selectedPiece.getMoves(board, x, y);
-	}
-	return moves;
-    }
-
-    private void testForUpgrade(){
-        if (board.getPiece(currentlyPressed) != null && board.getPiece(currentlyPressed).getType() == PieceType.PAWN){
-            if(currentlyPressed.y == 0 || currentlyPressed.y == 7){
-                String[] options = {"Queen", "Rook", "Bishop", "Knight"};
-                int choise = JOptionPane.showOptionDialog(null, "Choose upgrade", "",JOptionPane.DEFAULT_OPTION,
-							  JOptionPane.INFORMATION_MESSAGE, null, options, options[0]);
-                switch(choise){
-		    case 0:
-		        board.setPiece(currentlyPressed, new Queen(board.getActivePlayer()));
-		        break;
-		    case 1:
-			board.setPiece(currentlyPressed, new Rook(board.getActivePlayer()));
-			break;
-		    case 2:
-		        board.setPiece(currentlyPressed, new Bishop(board.getActivePlayer()));
-			break;
-		    case 3:
-			board.setPiece(currentlyPressed, new Knight(board.getActivePlayer()));
-			break;
-		    default:
-			System.out.println("Error in testForUpgrade");
-		}
-	    }
-	}
-    }
 
     private ImageIcon loadIMG(String name){
 	return new ImageIcon(ClassLoader.getSystemResource("images/" + name + ".png"));
     }
 
-    private void setEnPassant(Point lastPressed) {
-	if (board.getPiece(currentlyPressed) != null && board.getPiece(currentlyPressed).getType() == PieceType.PAWN
-	    && Math.abs(currentlyPressed.y - lastPressed.y) == 2){
-	    board.setEnPassantTarget(lastPressed.x, (currentlyPressed.y + lastPressed.y) / 2);
-	}
-	else {
-	    board.setEnPassantTarget(null);
-	}
-    }
-
-    private void tryToKillEnPassant() {
-	if (board.getEnPassantTarget() != null && board.getPiece(board.getEnPassantTarget()) != null){
-	    Point ep = board.getEnPassantTarget();
-	    int previousY = ep.y + 1;
-	    if (board.getPiece(ep).getColor() == TeamColor.BLACK) {
-		 previousY = ep.y - 1;
-	    }
-	    board.setPiece(ep.x, previousY, null);
-	}
-    }
-
-    private ImageIcon getImageForPiece(Piece piece, TeamColor color){
+    private ImageIcon getImageForPiece(Piece piece){
 	ImageIcon image = null;
 	switch (piece.toString()){
 	    case "B":

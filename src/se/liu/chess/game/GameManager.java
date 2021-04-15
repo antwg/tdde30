@@ -27,7 +27,7 @@ public class GameManager
         this.board = new Board(8, 8);
     }
 
-    final Action countDown = new AbstractAction() {
+    private final Action countDown = new AbstractAction() {
 
         @Override public void actionPerformed(final ActionEvent e) {
             board.getActivePlayer().setTimeLeft(board.getActivePlayer().getTimeLeft() - 1);
