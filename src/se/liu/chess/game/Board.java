@@ -138,6 +138,14 @@ public class Board
 	return currentlyPressed;
     }
 
+    public Set<Point> getWhitePossibleMoves() {
+	return whitePossibleMoves;
+    }
+
+    public Set<Point> getBlackPossibleMoves() {
+	return blackPossibleMoves;
+    }
+
     // ----------------------------------------------------- Public Methods ----------------------------------------------------------------
 
     public void movePiece(Point p1, Point p2) {
