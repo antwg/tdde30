@@ -1,6 +1,7 @@
 package se.liu.chess.pieces;
 
 import se.liu.chess.game.Board;
+import se.liu.chess.game.Player;
 import se.liu.chess.game.TeamColor;
 
 import java.awt.*;
@@ -14,6 +15,8 @@ public interface Piece
     public Set<Point> getMoves(Board board, int x, int y);
 
     public TeamColor getColor();
+
+    public Player getOwner();
 
     public PieceType getType();
 

@@ -23,6 +23,10 @@ public abstract class AbstractPiece implements Piece
         return owner.getColor();
     }
 
+    public Player getOwner() {
+        return owner;
+    }
+
     public boolean hasMoved() {
         return hasMoved;
     }

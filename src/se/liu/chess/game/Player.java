@@ -45,6 +45,14 @@ public class Player
 	return queensideCastleAvailable;
     }
 
+    public void setKingsideCastleAvailable(final boolean kingsideCastleAvailable) {
+	this.kingsideCastleAvailable = kingsideCastleAvailable;
+    }
+
+    public void setQueensideCastleAvailable(final boolean queensideCastleAvailable) {
+	this.queensideCastleAvailable = queensideCastleAvailable;
+    }
+
     public double getTimeLeft() {
 	return timeLeft;
     }

@@ -120,7 +120,9 @@ public class ChessComponent extends JComponent {
 		board.getActivePlayer().increaseTimeByIncrement();
 		board.getPiece(currentlyPressed).setHasMoved(true);
 		testForUpgrade();
+		tryToCastle(lastPressed);
 		board.passTurn();
+
 	    }
 	    tryToKillEnPassant();
 	    setEnPassant(lastPressed);
@@ -139,6 +141,31 @@ public class ChessComponent extends JComponent {
 	    moves = selectedPiece.getMoves(board, x, y);
 	}
 	return moves;
+    }
+
+    //TODO le shitstorm of text, fix duplicate code
+    private void tryToCastle(Point lastPressed) {
+	if (board.getPiece(currentlyPressed) != null && board.getPiece(currentlyPressed).getType() == PieceType.KING){
+	    if (currentlyPressed.x - lastPressed.x == 2) {
+	        // Kingside
+		Point oldRookPos = new Point(currentlyPressed.x + 1, currentlyPressed.y);
+		Point newRookPos = new Point(currentlyPressed.x - 1, currentlyPressed.y);
+		board.movePiece(oldRookPos, newRookPos);
+		board.getPiece(newRookPos).setHasMoved(true);
+
+		board.getPiece(currentlyPressed).getOwner().setKingsideCastleAvailable(false);
+		board.getPiece(currentlyPressed).getOwner().setQueensideCastleAvailable(false);
+	    } else if (currentlyPressed.x - lastPressed.x == -2) {
+		// Queenside
+		Point oldRookPos = new Point(currentlyPressed.x - 2, currentlyPressed.y);
+		Point newRookPos = new Point(currentlyPressed.x + 1, currentlyPressed.y);
+		board.movePiece(oldRookPos, newRookPos);
+		board.getPiece(newRookPos).setHasMoved(true);
+
+		board.getPiece(currentlyPressed).getOwner().setKingsideCastleAvailable(false);
+		board.getPiece(currentlyPressed).getOwner().setQueensideCastleAvailable(false);
+	    }
+	}
     }
 
     private void testForUpgrade(){
