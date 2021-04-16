@@ -233,8 +233,8 @@ public class Board
     }
 
     private void testForUpgrade(){
-	if (getPiece(currentlyPressed) != null && getPiece(currentlyPressed) instanceof Pawn){
-	    int topRow = 0;
+	if (getPiece(currentlyPressed) != null && getPiece(currentlyPressed) instanceof Pawn){ // Seems excessive to use polymorphism here
+	    int topRow = 0;								       // since we're only interested in pawn
 	    int bottomRow = 7;
 	    if(currentlyPressed.y == topRow || currentlyPressed.y == bottomRow){
 		String[] options = {"Queen", "Rook", "Bishop", "Knight"};
@@ -352,7 +352,7 @@ public class Board
 		builder.append(emptySquaresInARow);
 		emptySquaresInARow = 0;
 	    }
-	    builder.append("/");
+	    builder.append("/"); // Inspection thinks it's used for file path
 	}
 	builder.append(" ");
     }
