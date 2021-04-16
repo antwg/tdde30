@@ -20,7 +20,6 @@ import java.awt.event.MouseEvent;
 public class ChessComponent extends JComponent {
     private Board board;
     private int width, height;
-    private Point currentlyPressed = null;
     private final static int SQUARE_SIZE = 72, IMG_SIZE = 64, OFFSET = (SQUARE_SIZE - IMG_SIZE) / 2;
     private final static Color ODD_COLOR = Color.DARK_GRAY, EVEN_COLOR = Color.WHITE, SELECTED_COLOR = new Color(0, 0, 255, 100);
     // Inspection doesn't like names (ex pieceb), the reason for having a lower case b is that thats how it's written in FEN
@@ -49,14 +48,6 @@ public class ChessComponent extends JComponent {
 	return board;
     }
 
-    public Point getCurrentlyPressed() {
-	return currentlyPressed;
-    }
-
-    public static int getSquareSize() {
-	return SQUARE_SIZE;
-    }
-
     @Override public Dimension getPreferredSize() {
 	return new Dimension(width, height);
     }
@@ -65,7 +56,7 @@ public class ChessComponent extends JComponent {
 
 
     @Override protected void paintComponent(final Graphics g) {
-        currentlyPressed = board.getCurrentlyPressed();
+        Point currentlyPressed = board.getCurrentlyPressed();
 	super.paintComponent(g);
 	final Graphics2D g2d = (Graphics2D) g;
 	g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
@@ -114,7 +105,7 @@ public class ChessComponent extends JComponent {
 
     private ImageIcon getImageForPiece(Piece piece){
 	ImageIcon image = null;
-	switch (piece.toString()){
+	switch (piece.toString()){ // Useful to keep as string, both because "/" can't be used in enum and the main purpose is to convert from/to string
 	    case "B":
 		image = pieceB;
 		break;

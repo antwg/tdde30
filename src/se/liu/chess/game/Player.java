@@ -11,8 +11,8 @@ public class Player
 {
     private TeamColor color;
     private double timeLeft;
-    private static final int SCORE = 0;
     private static final double START_TIME = 300;
+    private static final int SCORE = 0; // (Inspection) false alarm
     private static final int INCREMENT = 1;
 
     private boolean kingsideCastleAvailable;
@@ -21,7 +21,6 @@ public class Player
     // problematiskt med cirkelreferens?
     private Piece king = null;
 
-    // Constructor
     public Player(final TeamColor color) {
 	this.color = color;
 
@@ -31,7 +30,7 @@ public class Player
 
     // ----------------------------------------------------- Getters / Setters -------------------------------------------------------------
 
-
+    // --- Getters ---
     public TeamColor getColor() {
 	return color;
     }
@@ -44,6 +43,20 @@ public class Player
 	return queensideCastleAvailable;
     }
 
+    public double getTimeLeft() {
+	return timeLeft;
+    }
+
+    public int getScore() {
+    return SCORE;
+}
+
+    public Piece getKing() {
+    return king;
+}
+
+    // --- Setters ---
+
     public void setKingsideCastleAvailable(final boolean kingsideCastleAvailable) {
 	this.kingsideCastleAvailable = kingsideCastleAvailable;
     }
@@ -52,25 +65,15 @@ public class Player
 	this.queensideCastleAvailable = queensideCastleAvailable;
     }
 
-    public double getTimeLeft() {
-	return timeLeft;
-    }
-
     public void setTimeLeft(final double timeLeft) {
 	this.timeLeft = timeLeft;
-    }
-
-    public int getScore() {
-	return SCORE;
     }
 
     public void setKing(final Piece king) {
         this.king = king;
     }
 
-    public Piece getKing() {
-        return king;
-    }
+
 
 
     // ----------------------------------------------------- Public Methods ----------------------------------------------------------------

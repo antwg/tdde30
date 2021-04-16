@@ -1,6 +1,7 @@
 package se.liu.chess.gui;
 
 import se.liu.chess.game.Board;
+import se.liu.chess.game.TeamColor;
 
 import javax.swing.*;
 import java.awt.*;
@@ -23,8 +24,8 @@ public class TimeComponent extends JComponent {
 	super.paintComponent(g);
 	final Graphics2D g2d = (Graphics2D) g;
 	final int yOffset = 16, xOffset = 10, doubleXOffset = 2 * xOffset, middle = height / 2 + 2 * yOffset, fontSize = 50, rectHeight = 3;
-	double blackTime = board.getBlackPlayer().getTimeLeft();
-	double whiteTime = board.getWhitePlayer().getTimeLeft();
+	double blackTime = board.getPlayer(TeamColor.BLACK).getTimeLeft();
+	double whiteTime = board.getPlayer(TeamColor.WHITE).getTimeLeft();
 
 	g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 	g.setColor(Color.BLACK);

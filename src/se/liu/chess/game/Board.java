@@ -19,8 +19,8 @@ import javax.swing.*;
 public class Board
 {
     private Piece[][] pieces;
-    private int width;
-    private int height;
+    private final int width;
+    private final int height;
 
     private Player whitePlayer;
     private Player blackPlayer;
@@ -35,7 +35,7 @@ public class Board
     private Point currentlyPressed = null;
 
     //TODO implement halfmoveClock
-    private int halfmoveClock = 0;        // Used for 50 move rule
+    private int halfmoveClock = 0;  // Used for 50 move rule
     private int fullmoveNumber = 1; // It's called halfmove as one word
 
     public Board(final int width, final int height) {
@@ -52,7 +52,7 @@ public class Board
 
     // ---------------------------------------------------- Getters/Setters ----------------------------------------------------------------
 
-    // Getters
+    // --- Getters ---
 
     public int getWidth() {
 	return width;
@@ -78,21 +78,17 @@ public class Board
 	}
     }
 
-    public int getFullmoveNumber() {
-	return fullmoveNumber;
-    }
-
-
     public Point getEnPassantTarget() {
 	return enPassantTarget;
     }
 
-    public Player getWhitePlayer() {
-	return whitePlayer;
-    }
-
-    public Player getBlackPlayer() {
-	return blackPlayer;
+    public Player getPlayer(TeamColor color) {
+        if (color == TeamColor.WHITE){
+	    return whitePlayer;
+	}
+        else{
+            return blackPlayer;
+	}
     }
 
     public Set<Point> getPossibleMoves(TeamColor teamColor) {
@@ -106,19 +102,11 @@ public class Board
 	return currentlyPressed;
     }
 
-    public Set<Point> getWhitePossibleMoves() {
-	return whitePossibleMoves;
-    }
-
-    public Set<Point> getBlackPossibleMoves() {
-	return blackPossibleMoves;
-    }
-
     public boolean isEmpty(int x, int y) {
 	return getPiece(x, y) == null;
     }
 
-    // Setters
+    // --- Setters ---
 
     public void setPiece(int x, int y, Piece piece) {
 	pieces[y][x] = piece;
@@ -236,8 +224,8 @@ public class Board
 
     private void testForUpgrade(){
 	if (getPiece(currentlyPressed) != null && getPiece(currentlyPressed) instanceof Pawn){ // Seems excessive to use polymorphism here
-	    int topRow = 0;								       // since we're only interested in Pawn.
-	    int bottomRow = 7;								       // Creating a method for all Pieces to check
+	    final int topRow = 0;								       // since we're only interested in Pawn.
+	    final int bottomRow = 7;								       // Creating a method for all Pieces to check
 	    if(currentlyPressed.y == topRow || currentlyPressed.y == bottomRow){	       // if it's a pawn seems inefficient
 		String[] options = {"Queen", "Rook", "Bishop", "Knight"};
 		int choice = JOptionPane.showOptionDialog(null, "Choose upgrade", "", JOptionPane.DEFAULT_OPTION,
@@ -264,7 +252,7 @@ public class Board
     }
 
     private void setEnPassant(Point lastPressed) {
-        int doubleMove = 2;
+        final int doubleMove = 2;
 	if (getPiece(currentlyPressed) != null && getPiece(currentlyPressed) instanceof Pawn // Seems excessive to use polymorphism here
 	    && Math.abs(currentlyPressed.y - lastPressed.y) == doubleMove){		     // since we're only interested in pawn
 	    setEnPassantTarget(lastPressed.x, (currentlyPressed.y + lastPressed.y) / 2);  // Creating a method for all Pieces to check
@@ -300,8 +288,8 @@ public class Board
 	System.out.println("Turn number: " + fullmoveNumber + "	Active player: " + getActivePlayer().getColor());
 //	System.out.println("White threatens: " + getWhitePossibleMoves());
 //	System.out.println("Black threatens: " + getBlackPossibleMoves());
-	System.out.println("White in check: " + isInCheck(getWhitePlayer()));
-	System.out.println("Black in check: " + isInCheck(getBlackPlayer()));
+	System.out.println("White in check: " + isInCheck(getPlayer(TeamColor.WHITE)));
+	System.out.println("Black in check: " + isInCheck(getPlayer(TeamColor.BLACK)));
     }
 
     private boolean isGameOver(Player player) {
@@ -355,7 +343,7 @@ public class Board
 		builder.append(emptySquaresInARow);
 		emptySquaresInARow = 0;
 	    }
-	    builder.append("/"); // Inspection thinks it's used for file path
+	    builder.append("/"); // (Inspection) thinks it's used for file path
 	}
 	builder.append(" ");
     }
@@ -371,7 +359,7 @@ public class Board
     }
 
     private void convertCastlingAbilityToFEN(StringBuilder builder){
-	if (whitePlayer.canCastleKingside()) {
+	if (whitePlayer.canCastleKingside()) { // (Inspection) Not mutually exclusive
 	    builder.append("K");
 	}
 	if (whitePlayer.canCastleQueenside()) { // It's written as one word
@@ -410,7 +398,7 @@ public class Board
     public void createBoardFromFEN(final String fen) {
 	// Split fen string
 	String[] arrOfString = fen.split(" ");
-	int piecePart = 0, playerPart = 1, castlingPart = 2, enPassantPart = 3, halfMovePart = 4, fullMovePart = 5;
+	final int piecePart = 0, playerPart = 1, castlingPart = 2, enPassantPart = 3, halfMovePart = 4, fullMovePart = 5;
 
 	placePiecesFromFEN(arrOfString[piecePart]);
 	setActivePlayerFromFEN(arrOfString[playerPart]);
@@ -426,7 +414,7 @@ public class Board
 	    char curr = piecePositions.charAt(i);
 
 	    //TODO replace with piece construction method?
-	    switch (curr) {
+	    switch (curr) { // Useful to keep as string, both because "/" can't be used in enum and the main purpose is to convert from/to string
 		case '/':
 		    y++;
 		    x = 0;
@@ -457,14 +445,13 @@ public class Board
 		    break;
 		case 'k':
 		    Piece blackKing = new King(blackPlayer);
-		    getBlackPlayer().setKing(blackKing);
-
+		    getPlayer(TeamColor.BLACK).setKing(blackKing);
 		    setPiece(x, y, blackKing);
 		    x++;
 		    break;
 		case 'K':
 		    Piece whiteKing = new King(whitePlayer);
-		    getWhitePlayer().setKing(whiteKing);
+		    getPlayer(TeamColor.WHITE).setKing(whiteKing);
 
 		    setPiece(x, y, whiteKing);
 		    x++;

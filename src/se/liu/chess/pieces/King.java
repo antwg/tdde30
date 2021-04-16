@@ -35,18 +35,18 @@ public class King extends PointMovePiece {
 	    if (board.getPiece(1, 7) == null &&
 		board.getPiece(2, 7) == null &&
 		board.getPiece(3, 7) == null &&
-		!board.getBlackPossibleMoves().contains(new Point(1, 7)) &&
-		!board.getBlackPossibleMoves().contains(new Point(2, 7)) &&
-		!board.getBlackPossibleMoves().contains(new Point(3, 7))) {
+		!board.getPossibleMoves(TeamColor.BLACK).contains(new Point(1, 7)) &&
+		!board.getPossibleMoves(TeamColor.BLACK).contains(new Point(2, 7)) &&
+		!board.getPossibleMoves(TeamColor.BLACK).contains(new Point(3, 7))) {
 	        return true;
 	    }
 	} else {
 	    if (board.getPiece(1, 0) == null &&
 		board.getPiece(2, 0) == null &&
 		board.getPiece(3, 0) == null &&
-		!board.getWhitePossibleMoves().contains(new Point(1, 0)) &&
-		!board.getWhitePossibleMoves().contains(new Point(2, 0)) &&
-		!board.getWhitePossibleMoves().contains(new Point(3, 0))) {
+		!board.getPossibleMoves(TeamColor.WHITE).contains(new Point(1, 0)) &&
+		!board.getPossibleMoves(TeamColor.WHITE).contains(new Point(2, 0)) &&
+		!board.getPossibleMoves(TeamColor.WHITE).contains(new Point(3, 0))) {
 		return true;
 	    }
 	}
@@ -62,15 +62,15 @@ public class King extends PointMovePiece {
 	if (owner.getColor() == TeamColor.WHITE) {
 	    if (board.getPiece(5, 7) == null &&
 		board.getPiece(6, 7) == null &&
-		!board.getBlackPossibleMoves().contains(new Point(5, 7)) &&
-		!board.getBlackPossibleMoves().contains(new Point(6, 7))) {
+		!board.getPossibleMoves(TeamColor.BLACK).contains(new Point(5, 7)) &&
+		!board.getPossibleMoves(TeamColor.BLACK).contains(new Point(6, 7))) {
 		return true;
 	    }
 	} else {
 	    if (board.getPiece(5, 0) == null &&
 		board.getPiece(6, 0) == null &&
-		!board.getWhitePossibleMoves().contains(new Point(5, 0)) &&
-		!board.getWhitePossibleMoves().contains(new Point(6, 0))) {
+		!board.getPossibleMoves(TeamColor.WHITE).contains(new Point(5, 0)) &&
+		!board.getPossibleMoves(TeamColor.WHITE).contains(new Point(6, 0))) {
 		return true;
 	    }
 	}
