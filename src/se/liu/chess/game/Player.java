@@ -11,8 +11,8 @@ public class Player
 {
     private TeamColor color;
     private double timeLeft;
-    private static final double START_TIME = 300;
     private static final int SCORE = 0;
+    private static final double START_TIME = 300;
     private static final int INCREMENT = 1;
 
     private boolean kingsideCastleAvailable;

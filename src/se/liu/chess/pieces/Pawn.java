@@ -54,9 +54,10 @@ public class Pawn extends AbstractPiece {
 
 	// 2 steps first move
 	if (!hasMoved){
-	    int twoStepY = y - 2;
+	    int twoSteps = 2;
+	    int twoStepY = y - twoSteps;
 	    if (this.getColor() == TeamColor.BLACK) {
-		twoStepY = y + 2;
+		twoStepY = y + twoSteps;
 	    }
 	    if (isValidMoveToEmptyPiece(board, x, twoStepY)){
 	        legalMoves.add(new Point(x, twoStepY));

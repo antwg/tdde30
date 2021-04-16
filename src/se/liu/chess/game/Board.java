@@ -53,6 +53,7 @@ public class Board
     // ---------------------------------------------------- Getters/Setters ----------------------------------------------------------------
 
     // Getters
+
     public int getWidth() {
 	return width;
     }
@@ -118,6 +119,7 @@ public class Board
     }
 
     // Setters
+
     public void setPiece(int x, int y, Piece piece) {
 	pieces[y][x] = piece;
     }
@@ -234,9 +236,9 @@ public class Board
 
     private void testForUpgrade(){
 	if (getPiece(currentlyPressed) != null && getPiece(currentlyPressed) instanceof Pawn){ // Seems excessive to use polymorphism here
-	    int topRow = 0;								       // since we're only interested in pawn
-	    int bottomRow = 7;
-	    if(currentlyPressed.y == topRow || currentlyPressed.y == bottomRow){
+	    int topRow = 0;								       // since we're only interested in Pawn.
+	    int bottomRow = 7;								       // Creating a method for all Pieces to check
+	    if(currentlyPressed.y == topRow || currentlyPressed.y == bottomRow){	       // if it's a pawn seems inefficient
 		String[] options = {"Queen", "Rook", "Bishop", "Knight"};
 		int choice = JOptionPane.showOptionDialog(null, "Choose upgrade", "", JOptionPane.DEFAULT_OPTION,
 							  JOptionPane.INFORMATION_MESSAGE, null, options, options[0]);
@@ -262,10 +264,11 @@ public class Board
     }
 
     private void setEnPassant(Point lastPressed) {
+        int doubleMove = 2;
 	if (getPiece(currentlyPressed) != null && getPiece(currentlyPressed) instanceof Pawn // Seems excessive to use polymorphism here
-	    && Math.abs(currentlyPressed.y - lastPressed.y) == 2){			     // since we're only interested in pawn
-	    setEnPassantTarget(lastPressed.x, (currentlyPressed.y + lastPressed.y) / 2);
-	}
+	    && Math.abs(currentlyPressed.y - lastPressed.y) == doubleMove){		     // since we're only interested in pawn
+	    setEnPassantTarget(lastPressed.x, (currentlyPressed.y + lastPressed.y) / 2);  // Creating a method for all Pieces to check
+	}										     // if it's a pawn seems inefficient
 	else {
 	    setEnPassantTarget(null);
 	}
@@ -336,7 +339,7 @@ public class Board
 
     private void convertPiecesToFEN(StringBuilder builder) {
 	for (int y = 0; y < height; y++) {
-	    int emptySquaresInARow = 0;
+	    int emptySquaresInARow = 0; //(Inspection) variable used in both for-loop and if-statement below
 	    for (int x = 0; x < width; x++) {
 		if (isEmpty(x, y)) {
 		    emptySquaresInARow++;
@@ -407,12 +410,13 @@ public class Board
     public void createBoardFromFEN(final String fen) {
 	// Split fen string
 	String[] arrOfString = fen.split(" ");
+	int piecePart = 0, playerPart = 1, castlingPart = 2, enPassantPart = 3, halfMovePart = 4, fullMovePart = 5;
 
-	placePiecesFromFEN(arrOfString[0]);
-	setActivePlayerFromFEN(arrOfString[1]);
-	setCastlingAvailabilityFromFEN(arrOfString[2]);
-	setEnPassantTargetFromFEN(arrOfString[3]);
-	setMovesFromFEN(arrOfString[4], arrOfString[5]);
+	placePiecesFromFEN(arrOfString[piecePart]);
+	setActivePlayerFromFEN(arrOfString[playerPart]);
+	setCastlingAvailabilityFromFEN(arrOfString[castlingPart]);
+	setEnPassantTargetFromFEN(arrOfString[enPassantPart]);
+	setMovesFromFEN(arrOfString[halfMovePart], arrOfString[fullMovePart]);
     }
 
     private void placePiecesFromFEN(String piecePositions){
