@@ -532,12 +532,12 @@ public class Board
 	    for (int x = 0; x < width; x++) {
 		Piece currPiece = getPiece(x, y);
 
-		if (currPiece == null) {
-		    continue; //TODO vad gör vi med den här?
-		} else if (currPiece.getColor() == TeamColor.WHITE) {
-		    whitePossibleMoves.addAll(currPiece.getMoves(this, x, y));
-		} else {
-		    blackPossibleMoves.addAll(currPiece.getMoves(this, x, y));
+		if (currPiece != null) {
+		    if (currPiece.getColor() == TeamColor.WHITE) {
+			whitePossibleMoves.addAll(currPiece.getMoves(this, x, y));
+		    } else {
+			blackPossibleMoves.addAll(currPiece.getMoves(this, x, y));
+		    }
 		}
 	    }
 	}
