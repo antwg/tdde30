@@ -9,9 +9,7 @@ import java.awt.event.ActionEvent;
  * It also handles all needed settings for the JFrame.
  */
 
-public class GameViewer
-{
-    private JFrame frame;
+public class GameViewer {
     private ChessComponent chessComponent;
     private JMenuBar menuBar;
     private TimeComponent timeComponent;
@@ -25,7 +23,7 @@ public class GameViewer
     // ----------------------------------------------------- Public Methods ----------------------------------------------------------------
 
     public void show(){
-        this.frame = new JFrame("Chess");
+        JFrame frame = new JFrame("Chess");
 	frame.setLayout(new BorderLayout());
 	frame.add(chessComponent, BorderLayout.CENTER);
 	setUpMenu();

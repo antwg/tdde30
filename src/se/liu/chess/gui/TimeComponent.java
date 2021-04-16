@@ -5,6 +5,9 @@ import se.liu.chess.game.Board;
 import javax.swing.*;
 import java.awt.*;
 
+/**
+ * A TimeComponent object extends JComponent. It is used to paint a timer that shows the time both players have left.
+ */
 public class TimeComponent extends JComponent {
     private int width;
     private int height;

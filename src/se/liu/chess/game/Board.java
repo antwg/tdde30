@@ -1,11 +1,10 @@
 package se.liu.chess.game;
 
-import se.liu.chess.pieces.Piece;
-
 import java.awt.Point;
 import java.util.HashSet;
 import java.util.Set;
 
+import se.liu.chess.pieces.Piece;
 import se.liu.chess.pieces.Rook;
 import se.liu.chess.pieces.Knight;
 import se.liu.chess.pieces.Bishop;
@@ -25,11 +24,6 @@ public class Board
 
     private Player whitePlayer;
     private Player blackPlayer;
-
-    private int whiteStartTime = 300;
-    private int blackStartTime = 300;
-    private int whiteIncrement = 1;
-    private int blackIncrement = 1;
 
     private Set<Point> whitePossibleMoves = new HashSet<>();
     private Set<Point> blackPossibleMoves = new HashSet<>();
@@ -51,8 +45,8 @@ public class Board
 
 	clearBoard();
 
-	this.whitePlayer = new Player(TeamColor.WHITE, whiteStartTime, whiteIncrement);
-	this.blackPlayer = new Player(TeamColor.BLACK, blackStartTime, blackIncrement);
+	this.whitePlayer = new Player(TeamColor.WHITE);
+	this.blackPlayer = new Player(TeamColor.BLACK);
 
     }
 
@@ -140,13 +134,6 @@ public class Board
 	this.enPassantTarget = new Point(x, y);
     }
 
-    public void setWhiteIncrement(final int whiteIncrement) {
-	this.whiteIncrement = whiteIncrement;
-    }
-
-    public void setBlackIncrement(final int blackIncrement) {
-	this.blackIncrement = blackIncrement;
-    }
 
     // ----------------------------------------------------- Public Methods ----------------------------------------------------------------
 
@@ -234,8 +221,8 @@ public class Board
     public void resetBoard() {
 	clearBoard();
 	createBoardFromFEN("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1");
-	blackPlayer.setTimeLeft(blackStartTime);
-	whitePlayer.setTimeLeft(whiteStartTime);
+	blackPlayer.resetTime();
+	whitePlayer.resetTime();
     }
 
 
@@ -275,8 +262,8 @@ public class Board
     }
 
     private void setEnPassant(Point lastPressed) {
-	if (getPiece(currentlyPressed) != null && getPiece(currentlyPressed) instanceof Pawn
-	    && Math.abs(currentlyPressed.y - lastPressed.y) == 2){
+	if (getPiece(currentlyPressed) != null && getPiece(currentlyPressed) instanceof Pawn // Seems excessive to use polymorphism here
+	    && Math.abs(currentlyPressed.y - lastPressed.y) == 2){			     // since we're only interested in pawn
 	    setEnPassantTarget(lastPressed.x, (currentlyPressed.y + lastPressed.y) / 2);
 	}
 	else {
@@ -295,7 +282,7 @@ public class Board
 	}
     }
 
-    private void passTurn() {
+    private void passTurn() { // Pass is used as a verb (inspection)
 	int nextActivePlayerIndex = (activePlayerIndex + 1) % 2;
 
 	activePlayerIndex = nextActivePlayerIndex;
@@ -546,7 +533,7 @@ public class Board
 		Piece currPiece = getPiece(x, y);
 
 		if (currPiece == null) {
-		    continue;
+		    continue; //TODO vad gör vi med den här?
 		} else if (currPiece.getColor() == TeamColor.WHITE) {
 		    whitePossibleMoves.addAll(currPiece.getMoves(this, x, y));
 		} else {

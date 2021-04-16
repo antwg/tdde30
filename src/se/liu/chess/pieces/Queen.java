@@ -8,7 +8,8 @@ import java.awt.*;
 import java.util.Set;
 
 /**
- *
+ * The Queen class extends VectorMovePiece and in turn AbstractPiece and Piece.
+ * Overrides getMoves, getType and toString.
  */
 public class Queen extends VectorMovePiece
 {

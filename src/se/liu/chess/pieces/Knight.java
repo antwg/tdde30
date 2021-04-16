@@ -9,7 +9,8 @@ import java.util.Set;
 
 
 /**
- *
+ * The Knight class extends PointMovePiece and in turn AbstractPiece and Piece.
+ * Overrides getMoves, getType and toString.
  */
 public class Knight extends PointMovePiece
 {

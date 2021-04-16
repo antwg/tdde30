@@ -27,14 +27,19 @@ public class GameManager
         this.board = new Board(8, 8);
     }
 
+
+    // ----------------------------------------------------- Private Methods ---------------------------------------------------------------
+
     private final Action countDown = new AbstractAction() {
 
         @Override public void actionPerformed(final ActionEvent e) {
-            board.getActivePlayer().setTimeLeft(board.getActivePlayer().getTimeLeft() - 1);
+            Player activePlayer = board.getActivePlayer();
+            activePlayer.setTimeLeft(activePlayer.getTimeLeft() - 1);
             timeComponent.repaint();
         }
     };
 
+    // ------------------------------------------------------- Main Method -----------------------------------------------------------------
 
     public static void main(String[] args) {
         // Testing

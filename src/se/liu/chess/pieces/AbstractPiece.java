@@ -7,7 +7,8 @@ import se.liu.chess.game.TeamColor;
 import java.awt.*;
 
 /**
- *
+ * AbstractPiece is an abstract class that implements the Piece class.
+ * AbstractPiece is extended by all PieceTypes.
  */
 
 public abstract class AbstractPiece implements Piece

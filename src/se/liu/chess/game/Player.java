@@ -2,20 +2,18 @@ package se.liu.chess.game;
 
 import se.liu.chess.pieces.Piece;
 
-import java.awt.*;
-import java.util.HashSet;
-import java.util.Set;
-
 /**
- *
+ * A player object contains all the information specific to said player as well as methods to access that information.
+ * A player object keeps track of its color, timeLeft, score, increment and castling ability.
  */
 
 public class Player
 {
     private TeamColor color;
     private double timeLeft;
-    private int score = 0;
-    private int increment;
+    private static final double START_TIME = 300;
+    private static final int SCORE = 0;
+    private static final int INCREMENT = 1;
 
     private boolean kingsideCastleAvailable;
     private boolean queensideCastleAvailable;
@@ -24,14 +22,15 @@ public class Player
     private Piece king = null;
 
     // Constructor
-    public Player(final TeamColor color, final double timeLeft, final int increment) {
+    public Player(final TeamColor color) {
 	this.color = color;
-	this.timeLeft = timeLeft;
-	this.increment = increment;
 
 	this.kingsideCastleAvailable = true;
 	this.queensideCastleAvailable = true;
     }
+
+    // ----------------------------------------------------- Getters / Setters -------------------------------------------------------------
+
 
     public TeamColor getColor() {
 	return color;
@@ -62,7 +61,7 @@ public class Player
     }
 
     public int getScore() {
-	return score;
+	return SCORE;
     }
 
     public void setKing(final Piece king) {
@@ -73,7 +72,14 @@ public class Player
         return king;
     }
 
+
+    // ----------------------------------------------------- Public Methods ----------------------------------------------------------------
+
+    public void resetTime(){
+        timeLeft = START_TIME;
+    }
+
     public void increaseTimeByIncrement(){
-        this.timeLeft += increment;
+        this.timeLeft += INCREMENT;
     }
 }

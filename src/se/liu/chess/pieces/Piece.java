@@ -8,7 +8,7 @@ import java.awt.*;
 import java.util.Set;
 
 /**
- *
+ * Piece is an interface for all different PieceTypes.
  */
 public interface Piece
 {

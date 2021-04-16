@@ -2,12 +2,15 @@ package se.liu.chess.pieces;
 
 import se.liu.chess.game.Board;
 import se.liu.chess.game.Player;
-import se.liu.chess.game.TeamColor;
 
 import java.awt.*;
 import java.util.HashSet;
 import java.util.Set;
 
+/**
+ * VectorMovePiece is an abstract class that extends AbstractPiece. It's used by PieceTypes that can move
+ * to Points in a given direction (by a vector).
+ */
 public abstract class VectorMovePiece extends AbstractPiece{
 
     protected Point[] allMoveDirections = null;
@@ -34,7 +37,7 @@ public abstract class VectorMovePiece extends AbstractPiece{
 		    legalMoves.add(new Point(combinedX, combinedY));
 		    break;
 		} else {
-		    System.out.println("Code should not get here");
+		    System.out.println("Code should not get here (in VectorMovePiece)");
 		}
 		combinedX += direction.x;
 		combinedY += direction.y;

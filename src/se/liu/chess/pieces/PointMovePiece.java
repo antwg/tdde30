@@ -2,12 +2,15 @@ package se.liu.chess.pieces;
 
 import se.liu.chess.game.Board;
 import se.liu.chess.game.Player;
-import se.liu.chess.game.TeamColor;
 
 import java.awt.*;
 import java.util.HashSet;
 import java.util.Set;
 
+/**
+ * PointMovePiece is an abstract class that extends AbstractPiece. It's used by PieceTypes that can move to specfic
+ * points on the board in relation to itself rather than all moves in a direction. (see VectorMovePiece)
+ */
 public abstract class PointMovePiece extends AbstractPiece{
 
     protected Point[] allMoves = null;

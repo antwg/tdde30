@@ -8,7 +8,8 @@ import java.awt.*;
 import java.util.Set;
 
 /**
- *
+ * The King class extends PointMovePiece and in turn AbstractPiece and Piece.
+ * Overrides getMoves, getType and toString. Also has methods related to castling.
  */
 public class King extends PointMovePiece {
     private Point[] kingMoves = { new Point(0, 1),

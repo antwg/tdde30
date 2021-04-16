@@ -9,7 +9,8 @@ import java.util.HashSet;
 import java.util.Set;
 
 /**
- *
+ * The Pawn class extends AbstractPiece.
+ * Overrides getMoves, getType and toString.
  */
 public class Pawn extends AbstractPiece {
 
