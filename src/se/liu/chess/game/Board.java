@@ -8,7 +8,6 @@ import se.liu.chess.pieces.Piece;
 import se.liu.chess.pieces.Rook;
 import se.liu.chess.pieces.Knight;
 import se.liu.chess.pieces.Bishop;
-import se.liu.chess.pieces.King;
 import se.liu.chess.pieces.Queen;
 import se.liu.chess.pieces.Pawn;
 import javax.swing.*;
@@ -30,6 +29,8 @@ public class Board
 
     private int activePlayerIndex = 0;
 
+    private FenConverter fenConverter;
+
     private Point enPassantTarget = null;
 
     private Point currentlyPressed = null;
@@ -42,6 +43,7 @@ public class Board
 	this.width = width;
 	this.height = height;
 	this.pieces = new Piece[width][height];
+	this.fenConverter = new FenConverter(this);
 
 	clearBoard();
 
@@ -106,6 +108,18 @@ public class Board
 	return getPiece(x, y) == null;
     }
 
+    public int getHalfmoveClock() {
+	return halfmoveClock;
+    }
+
+    public int getFullmoveNumber() {
+	return fullmoveNumber;
+    }
+
+    public FenConverter getFenConverter() {
+	return fenConverter;
+    }
+
     // --- Setters ---
 
     public void setPiece(int x, int y, Piece piece) {
@@ -124,6 +138,17 @@ public class Board
 	this.enPassantTarget = new Point(x, y);
     }
 
+    public void setActivePlayerIndex(final int activePlayerIndex) {
+	this.activePlayerIndex = activePlayerIndex;
+    }
+
+    public void setHalfmoveClock(final int halfmoveClock) {
+	this.halfmoveClock = halfmoveClock;
+    }
+
+    public void setFullmoveNumber(final int fullmoveNumber) {
+	this.fullmoveNumber = fullmoveNumber;
+    }
 
     // ----------------------------------------------------- Public Methods ----------------------------------------------------------------
 
@@ -210,7 +235,7 @@ public class Board
 
     public void resetBoard() {
 	clearBoard();
-	createBoardFromFEN("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1");
+	fenConverter.createBoardFromFEN("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1");
 	blackPlayer.resetTime();
 	whitePlayer.resetTime();
     }
@@ -224,13 +249,15 @@ public class Board
 
     private void testForUpgrade(){
 	if (getPiece(currentlyPressed) != null && getPiece(currentlyPressed) instanceof Pawn){ // Seems excessive to use polymorphism here
-	    final int topRow = 0;								       // since we're only interested in Pawn.
-	    final int bottomRow = 7;								       // Creating a method for all Pieces to check
-	    if(currentlyPressed.y == topRow || currentlyPressed.y == bottomRow){	       // if it's a pawn seems inefficient
+	    final int topRow = 0, bottomRow = 7;					       // since we're only interested in Pawn.
+	    										       // Creating a method for all Pieces to check
+	    if (currentlyPressed.y == topRow || currentlyPressed.y == bottomRow) {	       // if it's a pawn seems inefficient
 		String[] options = {"Queen", "Rook", "Bishop", "Knight"};
 		int choice = JOptionPane.showOptionDialog(null, "Choose upgrade", "", JOptionPane.DEFAULT_OPTION,
 							  JOptionPane.INFORMATION_MESSAGE, null, options, options[0]);
+
 		final int queen = 0, rook = 1, bishop = 2, knight = 3;
+
 		switch(choice){
 		    case queen:
 			setPiece(currentlyPressed, new Queen(getActivePlayer()));
@@ -253,8 +280,9 @@ public class Board
 
     private void setEnPassant(Point lastPressed) {
         final int doubleMove = 2;
-	if (getPiece(currentlyPressed) != null && getPiece(currentlyPressed) instanceof Pawn // Seems excessive to use polymorphism here
-	    && Math.abs(currentlyPressed.y - lastPressed.y) == doubleMove){		     // since we're only interested in pawn
+	if (getPiece(currentlyPressed) != null &&
+	    getPiece(currentlyPressed) instanceof Pawn &&			             // Seems excessive to use polymorphism here
+	    Math.abs(currentlyPressed.y - lastPressed.y) == doubleMove){		     // since we're only interested in pawn
 	    setEnPassantTarget(lastPressed.x, (currentlyPressed.y + lastPressed.y) / 2);  // Creating a method for all Pieces to check
 	}										     // if it's a pawn seems inefficient
 	else {
@@ -264,12 +292,12 @@ public class Board
 
     private void tryToKillEnPassant() {
 	if (enPassantTarget != null && getPiece(enPassantTarget) != null){
-	    Point ep = enPassantTarget;
-	    int previousY = ep.y + 1;
-	    if (getPiece(ep).getColor() == TeamColor.BLACK) {
-		previousY = ep.y - 1;
+	    int previousY = enPassantTarget.y + 1;
+
+	    if (getPiece(enPassantTarget).getColor() == TeamColor.BLACK) {
+		previousY = enPassantTarget.y - 1;
 	    }
-	    setPiece(ep.x, previousY, null);
+	    setPiece(enPassantTarget.x, previousY, null);
 	}
     }
 
@@ -306,207 +334,6 @@ public class Board
 	return false;
     }
 
-    //                                                   --- Convert to FEN ---
-
-    /**
-     * https://en.wikipedia.org/wiki/Forsyth%E2%80%93Edwards_Notation
-     *
-     * @return
-     */
-    public String convertBoardToFEN() {
-	final StringBuilder builder = new StringBuilder();
-
-	convertPiecesToFEN(builder);
-	convertActivePlayerToFEN(builder);
-	convertCastlingAbilityToFEN(builder); //TODO add castling availability
-	convertEnPassantAvailabilityToFEN(builder);
-	convertMoveToFEN(builder);
-
-	return builder.toString();
-    }
-
-    private void convertPiecesToFEN(StringBuilder builder) {
-	for (int y = 0; y < height; y++) {
-	    int emptySquaresInARow = 0; //(Inspection) variable used in both for-loop and if-statement below
-	    for (int x = 0; x < width; x++) {
-		if (isEmpty(x, y)) {
-		    emptySquaresInARow++;
-		} else {
-		    if (emptySquaresInARow != 0) {
-			builder.append(emptySquaresInARow);
-			emptySquaresInARow = 0;
-		    }
-		    builder.append(getPiece(x, y));
-		}
-	    }
-	    if (emptySquaresInARow != 0) {
-		builder.append(emptySquaresInARow);
-		emptySquaresInARow = 0;
-	    }
-	    builder.append("/"); // (Inspection) thinks it's used for file path
-	}
-	builder.append(" ");
-    }
-
-    private void convertActivePlayerToFEN(StringBuilder builder) {
-	if(getActivePlayer().getColor() ==TeamColor.WHITE) {
-	    builder.append("w");
-	}
-	else {
-	    builder.append("b");
-	}
-	builder.append(" ");
-    }
-
-    private void convertCastlingAbilityToFEN(StringBuilder builder){
-	if (whitePlayer.canCastleKingside()) { // (Inspection) Not mutually exclusive
-	    builder.append("K");
-	}
-	if (whitePlayer.canCastleQueenside()) { // It's written as one word
-	    builder.append("Q");
-	}
-	if (blackPlayer.canCastleKingside()) {
-	    builder.append("k");
-	}
-	if (blackPlayer.canCastleQueenside()) {
-	    builder.append("q");
-	}
-	builder.append(" ");
-    }
-
-    private void convertEnPassantAvailabilityToFEN(StringBuilder builder){
-	if (enPassantTarget == null) {
-	    builder.append("-");
-	} else {
-	    builder.append(convertPositionToNotation(enPassantTarget));
-	}
-	builder.append(" ");
-    }
-
-    private void convertMoveToFEN(StringBuilder builder){
-	// 5. Halfmove clock
-	builder.append(halfmoveClock);
-	builder.append(" ");
-
-	// 6. Fullmove number
-	builder.append(fullmoveNumber);
-	builder.append(" ");
-    }
-
-    //                                                   --- Convert from FEN ---
-
-    public void createBoardFromFEN(final String fen) {
-	// Split fen string
-	String[] arrOfString = fen.split(" ");
-	final int piecePart = 0, playerPart = 1, castlingPart = 2, enPassantPart = 3, halfMovePart = 4, fullMovePart = 5;
-
-	placePiecesFromFEN(arrOfString[piecePart]);
-	setActivePlayerFromFEN(arrOfString[playerPart]);
-	setCastlingAvailabilityFromFEN(arrOfString[castlingPart]);
-	setEnPassantTargetFromFEN(arrOfString[enPassantPart]);
-	setMovesFromFEN(arrOfString[halfMovePart], arrOfString[fullMovePart]);
-    }
-
-    private void placePiecesFromFEN(String piecePositions){
-	int x = 0;
-	int y = 0;
-	for (int i = 0; i < piecePositions.length(); i++) {
-	    char curr = piecePositions.charAt(i);
-
-	    //TODO replace with piece construction method?
-	    switch (curr) { // Useful to keep as string, both because "/" can't be used in enum and the main purpose is to convert from/to string
-		case '/':
-		    y++;
-		    x = 0;
-		    break;
-		case 'r':
-		    setPiece(x, y, new Rook(blackPlayer));
-		    x++;
-		    break;
-		case 'R':
-		    setPiece(x, y, new Rook(whitePlayer));
-		    x++;
-		    break;
-		case 'n':
-		    setPiece(x, y, new Knight(blackPlayer));
-		    x++;
-		    break;
-		case 'N':
-		    setPiece(x, y, new Knight(whitePlayer));
-		    x++;
-		    break;
-		case 'b':
-		    setPiece(x, y, new Bishop(blackPlayer));
-		    x++;
-		    break;
-		case 'B':
-		    setPiece(x, y, new Bishop(whitePlayer));
-		    x++;
-		    break;
-		case 'k':
-		    Piece blackKing = new King(blackPlayer);
-		    getPlayer(TeamColor.BLACK).setKing(blackKing);
-		    setPiece(x, y, blackKing);
-		    x++;
-		    break;
-		case 'K':
-		    Piece whiteKing = new King(whitePlayer);
-		    getPlayer(TeamColor.WHITE).setKing(whiteKing);
-
-		    setPiece(x, y, whiteKing);
-		    x++;
-		    break;
-		case 'q':
-		    setPiece(x, y, new Queen(blackPlayer));
-		    x++;
-		    break;
-		case 'Q':
-		    setPiece(x, y, new Queen(whitePlayer));
-		    x++;
-		    break;
-		case 'p':
-		    setPiece(x, y, new Pawn(blackPlayer));
-		    x++;
-		    break;
-		case 'P':
-		    setPiece(x, y, new Pawn(whitePlayer));
-		    x++;
-		    break;
-		default:
-		    x += Character.getNumericValue(curr);
-	    }
-	}
-    }
-
-    private void setActivePlayerFromFEN(String activePlayer){
-	if (activePlayer.equals("b")) {
-	    this.activePlayerIndex = 1;
-	} else {
-	    this.activePlayerIndex = 0;
-	}
-    }
-
-    private void setCastlingAvailabilityFromFEN(String str){
-	//TODO add functionality
-    }
-
-    private void setEnPassantTargetFromFEN(String str){
-	//TODO add functionality
-    }
-
-    private void setMovesFromFEN(String halfmoveClock, String fullmoveNumber){
-	// Set halfmove clock
-	this.halfmoveClock = Integer.parseInt(halfmoveClock);
-
-	// Set fullmove number
-	this.fullmoveNumber = Integer.parseInt(fullmoveNumber);
-    }
-
-    private String convertPositionToNotation(final Point p) {
-	final String alphas = "abcdefghijklmnopqrstuvwxyz?";
-	return alphas.substring(p.x, p.x + 1) + (p.y + 1);
-    }
-
     private void clearBoard() {
 	for (int y = 0; y < height; y++) {
 	    for (int x = 0; x < width; x++) {
@@ -515,7 +342,7 @@ public class Board
 	}
     }
 
-    public void updatePossibleMoves() {
+    private void updatePossibleMoves() {
         whitePossibleMoves.clear();
         blackPossibleMoves.clear();
 
