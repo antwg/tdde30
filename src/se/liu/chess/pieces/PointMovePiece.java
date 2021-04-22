@@ -58,6 +58,9 @@ public abstract class PointMovePiece extends AbstractPiece{
 		}
 	    }
 	}
+
+	legalMoves = limitMovesToThreatSquares(board, legalMoves);
+	legalMoves = limitMovesToPinSquares(board, legalMoves);
 	return legalMoves;
     }
 }

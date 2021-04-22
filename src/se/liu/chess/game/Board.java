@@ -373,26 +373,12 @@ public class Board
      * Returns a list of threats.
      * @return
      */
-    public List<Set<Point>> getThreats() {
-	Point[] threatVectors = { new Point(0, 1),
-		new Point(0, -1),
-		new Point(1, 0),
-		new Point(1, 1),
-		new Point(1, -1),
-		new Point(-1, 0),
-		new Point(-1, 1),
-		new Point(-1, -1) };
+    public List<Set<Point>> getAllDirectThreats() {
+	return allDirectThreats;
+    }
 
-	Point[] pointThreats = { new Point(1, 2),
-		new Point(2, 1),
-		new Point(1, -2),
-		new Point(2, -1),
-		new Point(-1, 2),
-		new Point(-2, 1),
-		new Point(-1, -2),
-		new Point(-2, -1) };
-
-	return null;
+    public List<Set<Point>> getAllPins() {
+	return allPins;
     }
 
 
@@ -505,7 +491,6 @@ public class Board
 	updateAvailableMoves(getInctivePlayer());
 
 	updateThreats(getActivePlayer());
-	updatePins(getActivePlayer());
 
 	updateAvailableMoves(getActivePlayer());
 
@@ -616,9 +601,6 @@ public class Board
 	} else if (isPin) {
 	    allPins.add(threat);
 	}
-    }
-
-    private void updatePins(final Player player) {
     }
 
     private void updateAvailableMoves(final Player player) {

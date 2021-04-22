@@ -21,8 +21,6 @@ public abstract class AbstractPiece implements Piece
     protected Point position;
 
     protected boolean hasMoved = false;
-    protected boolean pinned = false;
-    protected Set<Point> pinRestrictedSquares = null;
 
     protected AbstractPiece(final Player owner, final Point position) {
 	this.owner = owner;
@@ -53,12 +51,8 @@ public abstract class AbstractPiece implements Piece
         this.hasMoved = hasMoved;
     }
 
-    @Override public boolean isPinned() {
-        return pinned;
-    }
-
     protected Set<Move> limitMovesToThreatSquares(Board board, Set<Move> initialMoveSet) {
-        List<Set<Point>> threats = board.getThreats();
+        List<Set<Point>> threats = board.getAllDirectThreats();
         if (threats.isEmpty()) {
             return initialMoveSet;
         }
@@ -78,8 +72,16 @@ public abstract class AbstractPiece implements Piece
         return restrictedMoveSet;
     }
 
-    protected Set<Move> limitMovesToPinSquares(Set<Move> initialMoveSet) {
-        if (!pinned) {
+    protected Set<Move> limitMovesToPinSquares(Board board, Set<Move> initialMoveSet) {
+        Set<Point> pinRestrictedSquares = null;
+
+        for (Set<Point> pin : board.getAllPins()) {
+            if (pin.contains(this.position)) {
+                pinRestrictedSquares = pin;
+            }
+        }
+
+        if (pinRestrictedSquares == null) {
             return initialMoveSet;
         }
 
