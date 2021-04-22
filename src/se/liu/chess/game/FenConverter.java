@@ -128,63 +128,63 @@ public class FenConverter {
 	for (int i = 0; i < piecePositions.length(); i++) {
 	    char curr = piecePositions.charAt(i);
 
-	    //TODO replace with piece construction method?
+	    //TODO replace with piece construction method? Also duplicate code
 	    switch (curr) { // Useful to keep as string, both because "/" can't be used in enum and the main purpose is to convert from/to string
 		case '/':
 		    y++;
 		    x = 0;
 		    break;
 		case 'r':
-		    board.setPiece(x, y, new Rook(board.getPlayer(TeamColor.BLACK)));
+		    board.setPiece(x, y, new Rook(board.getPlayer(TeamColor.BLACK), new Point(x, y)));
 		    x++;
 		    break;
 		case 'R':
-		    board.setPiece(x, y, new Rook(board.getPlayer(TeamColor.WHITE)));
+		    board.setPiece(x, y, new Rook(board.getPlayer(TeamColor.WHITE), new Point(x, y)));
 		    x++;
 		    break;
 		case 'n':
-		    board.setPiece(x, y, new Knight(board.getPlayer(TeamColor.BLACK)));
+		    board.setPiece(x, y, new Knight(board.getPlayer(TeamColor.BLACK), new Point(x, y)));
 		    x++;
 		    break;
 		case 'N':
-		    board.setPiece(x, y, new Knight(board.getPlayer(TeamColor.WHITE)));
+		    board.setPiece(x, y, new Knight(board.getPlayer(TeamColor.WHITE), new Point(x, y)));
 		    x++;
 		    break;
 		case 'b':
-		    board.setPiece(x, y, new Bishop(board.getPlayer(TeamColor.BLACK)));
+		    board.setPiece(x, y, new Bishop(board.getPlayer(TeamColor.BLACK), new Point(x, y)));
 		    x++;
 		    break;
 		case 'B':
-		    board.setPiece(x, y, new Bishop(board.getPlayer(TeamColor.WHITE)));
+		    board.setPiece(x, y, new Bishop(board.getPlayer(TeamColor.WHITE), new Point(x, y)));
 		    x++;
 		    break;
 		case 'k':
-		    Piece blackKing = new King(board.getPlayer(TeamColor.BLACK));
+		    Piece blackKing = new King(board.getPlayer(TeamColor.BLACK), new Point(x, y));
 		    board.getPlayer(TeamColor.BLACK).setKing(blackKing);
 		    board.setPiece(x, y, blackKing);
 		    x++;
 		    break;
 		case 'K':
-		    Piece whiteKing = new King(board.getPlayer(TeamColor.WHITE));
+		    Piece whiteKing = new King(board.getPlayer(TeamColor.WHITE), new Point(x, y));
 		    board.getPlayer(TeamColor.WHITE).setKing(whiteKing);
 
 		    board.setPiece(x, y, whiteKing);
 		    x++;
 		    break;
 		case 'q':
-		    board.setPiece(x, y, new Queen(board.getPlayer(TeamColor.BLACK)));
+		    board.setPiece(x, y, new Queen(board.getPlayer(TeamColor.BLACK), new Point(x, y)));
 		    x++;
 		    break;
 		case 'Q':
-		    board.setPiece(x, y, new Queen(board.getPlayer(TeamColor.WHITE)));
+		    board.setPiece(x, y, new Queen(board.getPlayer(TeamColor.WHITE), new Point(x, y)));
 		    x++;
 		    break;
 		case 'p':
-		    board.setPiece(x, y, new Pawn(board.getPlayer(TeamColor.BLACK)));
+		    board.setPiece(x, y, new Pawn(board.getPlayer(TeamColor.BLACK), new Point(x, y)));
 		    x++;
 		    break;
 		case 'P':
-		    board.setPiece(x, y, new Pawn(board.getPlayer(TeamColor.WHITE)));
+		    board.setPiece(x, y, new Pawn(board.getPlayer(TeamColor.WHITE), new Point(x, y)));
 		    x++;
 		    break;
 		default:

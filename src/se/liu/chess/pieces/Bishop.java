@@ -1,6 +1,7 @@
 package se.liu.chess.pieces;
 
 import se.liu.chess.game.Board;
+import se.liu.chess.game.Move;
 import se.liu.chess.game.Player;
 import se.liu.chess.game.TeamColor;
 
@@ -18,13 +19,17 @@ public class Bishop extends VectorMovePiece
 	    				    new Point(-1, 1),
 	    				    new Point(-1, -1)};
 
-    public Bishop(final Player owner) {
-	super(owner);
+    public Bishop(final Player owner, final Point position) {
+	super(owner, position);
     }
 
-    @Override public Set<Point> getMoves(Board board, int x, int y) {
+    @Override public Set<Move> getMoves(Board board, int x, int y) {
+	/*
 	allMoveDirections = bishopMoveDirections;
 	return super.getMoves(board, x, y);
+	 */
+	//TODO add special conditions
+	return getVectorMoves(board, x, y, bishopMoveDirections);
     }
 
     @Override public PieceType getType() {

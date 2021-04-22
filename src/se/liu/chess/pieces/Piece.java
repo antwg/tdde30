@@ -1,6 +1,7 @@
 package se.liu.chess.pieces;
 
 import se.liu.chess.game.Board;
+import se.liu.chess.game.Move;
 import se.liu.chess.game.Player;
 import se.liu.chess.game.TeamColor;
 
@@ -12,18 +13,23 @@ import java.util.Set;
  */
 public interface Piece
 {
-    public Set<Point> getMoves(Board board, int x, int y);
-
-    public TeamColor getColor();
+    public Set<Move> getMoves(Board board, int x, int y);
 
     public Player getOwner();
 
+    public TeamColor getColor();
+
     public PieceType getType();
 
+    public boolean hasMoved();
+
+    public void setHasMoved(boolean b);
+
+    public Point getPosition();
+
+    public void setPosition(Point p);
+
+    public boolean isPinned();
+
     public String toString();
-
-    void setHasMoved(boolean b);
-
-    boolean hasMoved();
-
 }

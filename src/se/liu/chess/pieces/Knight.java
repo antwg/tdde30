@@ -1,6 +1,7 @@
 package se.liu.chess.pieces;
 
 import se.liu.chess.game.Board;
+import se.liu.chess.game.Move;
 import se.liu.chess.game.Player;
 import se.liu.chess.game.TeamColor;
 
@@ -23,13 +24,17 @@ public class Knight extends PointMovePiece
 	    			    new Point(-1, -2),
 	    			    new Point(-2, -1) };
 
-    public Knight(final Player owner) {
-	super(owner);
+    public Knight(final Player owner, final Point position) {
+	super(owner, position);
     }
 
-    @Override public Set<Point> getMoves(final Board board, final int x, final int y) {
+    @Override public Set<Move> getMoves(final Board board, final int x, final int y) {
+        /*
 	allMoves = knightMoves;
 	return super.getMoves(board, x, y);
+         */
+	//TODO add special conditions
+	return getPointMoves(board, x, y, knightMoves);
     }
 
     @Override public PieceType getType() {

@@ -1,6 +1,7 @@
 package se.liu.chess.pieces;
 
 import se.liu.chess.game.Board;
+import se.liu.chess.game.Move;
 import se.liu.chess.game.Player;
 import se.liu.chess.game.TeamColor;
 
@@ -18,17 +19,21 @@ public class Rook extends VectorMovePiece
 	    				  new Point(-1, 0),
 	    				  new Point(0, -1)};
 
-    public Rook(final Player owner) {
-	super(owner);
+    public Rook(final Player owner, final Point position) {
+	super(owner, position);
     }
 
     @Override public PieceType getType() {
 	return PieceType.ROOK;
     }
 
-    @Override public Set<Point> getMoves(Board board, int x, int y) {
+    @Override public Set<Move> getMoves(Board board, int x, int y) {
+        /*
 	allMoveDirections = rookMoveDirections;
 	return super.getMoves(board, x, y);
+         */
+	//TODO add special conditions
+	return getVectorMoves(board, x, y, rookMoveDirections);
     }
 
     @Override public String toString() {

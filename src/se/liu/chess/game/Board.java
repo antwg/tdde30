@@ -1,15 +1,18 @@
 package se.liu.chess.game;
 
 import java.awt.Point;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import se.liu.chess.pieces.Piece;
+import se.liu.chess.pieces.PieceType;
 import se.liu.chess.pieces.Rook;
 import se.liu.chess.pieces.Knight;
 import se.liu.chess.pieces.Bishop;
 import se.liu.chess.pieces.Queen;
-import se.liu.chess.pieces.Pawn;
+
 import javax.swing.*;
 
 /**
@@ -24,20 +27,42 @@ public class Board
     private Player whitePlayer;
     private Player blackPlayer;
 
-    private Set<Point> whitePossibleMoves = new HashSet<>();
-    private Set<Point> blackPossibleMoves = new HashSet<>();
-
     private int activePlayerIndex = 0;
 
     private FenConverter fenConverter;
 
     private Point enPassantTarget = null;
+    private List<Point> threatenedSquares = null;
 
     private Point currentlyPressed = null;
 
     //TODO implement halfmoveClock
     private int halfmoveClock = 0;  // Used for 50 move rule
-    private int fullmoveNumber = 1; // It's called halfmove as one word
+    private int fullmoveNumber = 1; // It's called halfmove and fullmove as one word
+
+    Point[] vectorThreatDirections = { new Point(1, 1),
+	    			       new Point(1, -1),
+	    			       new Point(-1, 1),
+	    			       new Point(-1, -1),
+	    			       new Point(1, 0),
+	    			       new Point(0, 1),
+	    			       new Point(-1, 0),
+	    			       new Point(0, -1) };
+
+    Point[] knightThreatDirections = { new Point(1, 2),
+	    			       new Point(2, 1),
+	    			       new Point(1, -2),
+	    			       new Point(2, -1),
+	    			       new Point(-1, 2),
+	    			       new Point(-2, 1),
+	    			       new Point(-1, -2),
+	    			       new Point(-2, -1) };
+
+    Point[] pawnThreatDirections = { new Point(-1, -1),	// Pawn threats for white, can be inverted to get pawn threats for black.
+	    			     new Point(1, -1) };
+
+    List<Set<Point>> allDirectThreats = new ArrayList<>();
+    List<Set<Point>> allPins = new ArrayList<>();
 
     public Board(final int width, final int height) {
 	this.width = width;
@@ -80,6 +105,22 @@ public class Board
 	}
     }
 
+    public Player getInctivePlayer() {
+	if (activePlayerIndex == 0) {
+	    return blackPlayer;
+	} else {
+	    return whitePlayer;
+	}
+    }
+
+    public Player getOpponentPlayer(Player friendlyPlayer) {
+	if (friendlyPlayer == whitePlayer) {
+	    return blackPlayer;
+	} else {
+	    return whitePlayer;
+	}
+    }
+
     public Point getEnPassantTarget() {
 	return enPassantTarget;
     }
@@ -93,12 +134,26 @@ public class Board
 	}
     }
 
-    public Set<Point> getPossibleMoves(TeamColor teamColor) {
+    public Set<Move> getMoves(int x,int y) {
+        Set<Move> moves = new HashSet<>();
+
+	for (Move move : getActivePlayer().getAvailableMoves()) {
+	    if (move.getOriginSquare().x == x && move.getOriginSquare().y == y) {
+	        moves.add(move);
+	    }
+	}
+
+	return moves;
+    }
+
+    /*
+    public Set<Move> getPossibleMoves(TeamColor teamColor) {
 	if (teamColor == TeamColor.WHITE) {
 	    return whitePossibleMoves;
 	}
 	return blackPossibleMoves;
     }
+     */
 
     public Point getCurrentlyPressed() {
 	return currentlyPressed;
@@ -152,21 +207,120 @@ public class Board
 
     // ----------------------------------------------------- Public Methods ----------------------------------------------------------------
 
-    public void movePiece(Point p1, Point p2) {
-        Piece pieceToMove = getPiece(p1);
-	setPiece(p2, pieceToMove);
-	setPiece(p1, null);
-	if (!getActivePlayer().canCastleQueenside() && !getActivePlayer().canCastleKingside()) {
-	    return;
+    /**
+     * Moves the piece on the origin square of the move to the target square
+     * and performs promotion. (not yet implemented)
+     * Updates castling availability and en passant square.
+     * @param move
+     */
+    public void performMove(Move move){
+        // These cases are mutually exclusive
+	if (move.isCastling()) {
+	    castle(move);
+	} else if (getPiece(move.getOriginSquare()).getType() == PieceType.ROOK &&
+		   move.getOriginSquare().y == 7 * activePlayerIndex) { //TODO replace with ex. activePlayerBackrank ?
+	    disableCastlingOnMoveSide(move);
+	} else if (move.isPawnDoubleStep()) {
+	    setEnPassantTargetSquare(move); // TODO rename similarly named functions?
+	} else {
+	    setEnPassantTarget(null);
 	}
 
-//	if (pieceToMove.getType() == PieceType.KING) {
-//	    getActivePlayer().setKingsideCastleAvailable(false);
-//	    getActivePlayer().setQueensideCastleAvailable(false);
-//	} else if (pieceToMove.getType() == PieceType.ROOK) {
-//	    if () {
-//	    }
-//	}
+	if (move.isHarmless()) {
+	    System.out.println("Piece captured on " + move.getTargetSquare());
+	}
+
+	movePiece(move.getOriginSquare(), move.getTargetSquare());
+
+	if (move.isPromoting()) {
+	    promote(move);
+	}
+
+	passTurn();
+    }
+
+    private void promote(final Move move) {
+	//TODO implement
+	String[] options = {"Queen", "Rook", "Bishop", "Knight"};
+	int choice = JOptionPane.showOptionDialog(null, "Choose upgrade", "", JOptionPane.DEFAULT_OPTION,
+						  JOptionPane.INFORMATION_MESSAGE, null, options, options[0]);
+
+	final int queen = 0, rook = 1, bishop = 2, knight = 3;
+
+	switch(choice){
+	    case queen:
+		setPiece(move.getTargetSquare(), new Queen(getActivePlayer(), move.getTargetSquare()));
+		break;
+	    case rook:
+		setPiece(move.getTargetSquare(), new Rook(getActivePlayer(), move.getTargetSquare()));
+		break;
+	    case bishop:
+		setPiece(move.getTargetSquare(), new Bishop(getActivePlayer(), move.getTargetSquare()));
+		break;
+	    case knight:
+		setPiece(move.getTargetSquare(), new Knight(getActivePlayer(), move.getTargetSquare()));
+		break;
+	    default:
+		System.out.println("Error in testForUpgrade");
+	}
+    }
+
+    private void setEnPassantTargetSquare(final Move move) {
+	if (activePlayerIndex == 0) {
+	    setEnPassantTarget(move.getOriginSquare().x, 2);
+	} else {
+	    setEnPassantTarget(move.getOriginSquare().x, 5);
+	}
+    }
+
+    private void disableCastlingOnMoveSide(final Move move) {
+	if (move.getOriginSquare().x == 0) {
+	    getActivePlayer().setQueensideCastleAvailable(false);
+	} else if (move.getOriginSquare().x == 7) {
+	    getActivePlayer().setKingsideCastleAvailable(false);
+	}
+    }
+
+    /**
+     * Removes castling availability and moves the rooks for castling.
+     * @param move
+     */
+    private void castle(final Move move) {
+	getActivePlayer().setKingsideCastleAvailable(false);
+	getActivePlayer().setQueensideCastleAvailable(false);
+	//TODO split up into castle methods
+	if (move.getTargetSquare().x == 2) {
+	    if (getActivePlayer().getColor() == TeamColor.WHITE) {
+		movePiece(new Point(0, 7), new Point(3, 7));
+	    } else {
+		movePiece(new Point(0, 0), new Point(3, 0));
+	    }
+	} else if (move.getTargetSquare().x == 6) {
+	    if (getActivePlayer().getColor() == TeamColor.WHITE) {
+		movePiece(new Point(7, 7), new Point(5, 7));
+	    } else {
+		movePiece(new Point(7, 0), new Point(5, 0));
+	    }
+
+	} else {
+	    System.out.println("CODE SHOULD NOT GET HERE! (method castle() in Board)");
+	    // TODO throw exception
+	}
+    }
+
+    /**
+     * Replaces the piece on the target square with the piece on the origin square
+     * and sets the origin square to empty.
+     * @param originSquare
+     * @param targetSquare
+     */
+    public void movePiece(Point originSquare, Point targetSquare) {
+        Piece pieceToMove = getPiece(originSquare);
+	setPiece(targetSquare, pieceToMove);
+	setPiece(originSquare, null);
+
+	pieceToMove.setHasMoved(true);
+	pieceToMove.setPosition(targetSquare);
     }
 
     /**
@@ -179,6 +333,7 @@ public class Board
 	return (0 <= x && x < width && 0 <= y && y < height);
     }
 
+    /*
     public void pressedSquare(Point point){
 	Point lastPressed = currentlyPressed;
 	this.currentlyPressed = point;
@@ -201,9 +356,9 @@ public class Board
 	}
     }
 
-    public Set<Point> getValidMoves(int x, int y){
+    public Set<Move> getValidMoves(int x, int y){
 	Piece selectedPiece = getPiece(x, y);
-	Set<Point> moves = new HashSet<>();
+	Set<Move> moves = new HashSet<>();
 
 	if (selectedPiece != null &&
 	    selectedPiece.getColor() == getActivePlayer().getColor()) {
@@ -212,9 +367,38 @@ public class Board
 	return moves;
     }
 
+     */
+
+    /**
+     * Returns a list of threats.
+     * @return
+     */
+    public List<Set<Point>> getThreats() {
+	Point[] threatVectors = { new Point(0, 1),
+		new Point(0, -1),
+		new Point(1, 0),
+		new Point(1, 1),
+		new Point(1, -1),
+		new Point(-1, 0),
+		new Point(-1, 1),
+		new Point(-1, -1) };
+
+	Point[] pointThreats = { new Point(1, 2),
+		new Point(2, 1),
+		new Point(1, -2),
+		new Point(2, -1),
+		new Point(-1, 2),
+		new Point(-2, 1),
+		new Point(-1, -2),
+		new Point(-2, -1) };
+
+	return null;
+    }
+
 
     //TODO improve function, remove king field from player?
     public boolean isInCheck(Player player) {
+        /*
         TeamColor enemyColor;
 
 	if (player.getColor() == TeamColor.WHITE) {
@@ -229,6 +413,8 @@ public class Board
 		return true;
 	    }
 	}
+	*/
+
 	return false;
     }
     //TODO implement function
@@ -243,10 +429,14 @@ public class Board
 
     // ----------------------------------------------------- Private Methods ---------------------------------------------------------------
 
+    /*
     private boolean hasLegalMoves(Player player) {
-	return true;
+	return !getPossibleMoves(player.getColor()).isEmpty();
     }
 
+    */
+
+    /*
     private void testForUpgrade(){
 	if (getPiece(currentlyPressed) != null && getPiece(currentlyPressed) instanceof Pawn){ // Seems excessive to use polymorphism here
 	    final int topRow = 0, bottomRow = 7;					       // since we're only interested in Pawn.
@@ -301,16 +491,23 @@ public class Board
 	}
     }
 
-    private void passTurn() { // Pass is used as a verb (inspection)
-	int nextActivePlayerIndex = (activePlayerIndex + 1) % 2;
+     */
 
+    private void passTurn() { // Pass is used as a verb (inspection)
+	// Update active player
+	int nextActivePlayerIndex = (activePlayerIndex + 1) % 2;
 	activePlayerIndex = nextActivePlayerIndex;
 
 	if (nextActivePlayerIndex == 0) {
 	    fullmoveNumber++;
 	}
 
-	updatePossibleMoves();
+	updateAvailableMoves(getInctivePlayer());
+
+	updateThreats(getActivePlayer());
+	updatePins(getActivePlayer());
+
+	updateAvailableMoves(getActivePlayer());
 
 	//TODO remove debug prints when done
 	System.out.println("Turn number: " + fullmoveNumber + "	Active player: " + getActivePlayer().getColor());
@@ -320,6 +517,131 @@ public class Board
 	System.out.println("Black in check: " + isInCheck(getPlayer(TeamColor.BLACK)));
     }
 
+    //TODO split into smaller functions
+    private void updateThreats(final Player player) {
+        Point kingPos = player.getKing().getPosition();
+
+        allDirectThreats = new ArrayList<>();
+        allPins = new ArrayList<>();
+
+        // Check vector threats. These can be blocked by friendly pieces. (queen, bishop, rook)
+	for (Point moveVector : vectorThreatDirections) {
+	    updateVectorThreats(kingPos, moveVector);
+	}
+
+	// Check point threats. These are unblockable. (knight and pawn)
+	for (Point movePoint : knightThreatDirections) {
+	    updatePointThreats(kingPos, movePoint, PieceType.KNIGHT);
+	}
+
+	// Point moves are for white pieces by default. Can be inverted along the
+	// y-axis to get threats for black.
+	for (Point movePoint : pawnThreatDirections) {
+	    int inversionFactor = 1 - 2 * activePlayerIndex;
+
+	    updatePointThreats(kingPos, new Point(movePoint.x, movePoint.y * inversionFactor), PieceType.PAWN);
+	}
+    }
+
+    private void updatePointThreats(final Point kingPos, final Point movePoint, final PieceType pieceType) {
+	int combinedX = kingPos.x + movePoint.x;
+	int combinedY = kingPos.y + movePoint.y;
+
+	if (!isValidTile(combinedX, combinedY)) {
+	    return;
+	}
+
+	Piece piece = getPiece(combinedX, combinedY);
+
+	if (piece != null && piece.getOwner().equals(getInctivePlayer()) &&
+	    piece.getType() == pieceType) {
+	    Set<Point> threat = new HashSet<>();
+	    threat.add(new Point(combinedX, combinedY));
+	    allDirectThreats.add(threat);
+	}
+    }
+
+    private void updateVectorThreats(final Point kingPos, final Point moveVector) {
+	Set<Point> threat = new HashSet<>();
+
+	boolean checkingDiagonal = (moveVector.x != 0 && moveVector.y != 0);
+	boolean isDirectThreat = true;
+	boolean isPin = false;
+
+	int combinedX = kingPos.x + moveVector.x;
+	int combinedY = kingPos.y + moveVector.y;
+
+	while (true) {
+	    if (!isValidTile(combinedX, combinedY)) {
+		break;
+	    }
+
+	    Piece piece = getPiece(combinedX, combinedY);
+
+	    if (piece == null) {
+		threat.add(new Point(combinedX, combinedY));
+	    } else if (piece.getOwner().equals(getActivePlayer())) {
+		// Friendly piece encountered
+
+		if (isPin) {
+		    isPin = false;
+		    break;
+		} else {
+		    isPin = true;
+		    isDirectThreat = false;
+		    threat.add(new Point(combinedX, combinedY));
+		}
+
+	    } else if (piece.getOwner().equals(getInctivePlayer())) {
+		// Hostile piece encountered
+
+		// The queen, bishop and rook captures along a vector.
+		if (piece.getType() != PieceType.QUEEN &&
+		    !(checkingDiagonal && piece.getType() == PieceType.BISHOP) &&
+		    !(!checkingDiagonal && piece.getType() == PieceType.ROOK)) {
+		    isDirectThreat = false;
+		    isPin = false;
+		}
+		break;
+
+	    } else {
+		System.out.println("Code should not get here! (method updateThreats() in Board)");
+	    }
+	    combinedX += moveVector.x;
+	    combinedY += moveVector.y;
+	}
+
+	if (isDirectThreat) {
+	    allDirectThreats.add(threat);
+	} else if (isPin) {
+	    allPins.add(threat);
+	}
+    }
+
+    private void updatePins(final Player player) {
+    }
+
+    private void updateAvailableMoves(final Player player) {
+        Set<Move> availableMoves = new HashSet<>();
+
+	for (int y = 0; y < height; y++) {
+	    for (int x = 0; x < width; x++) {
+	        Piece currentPiece = getPiece(x, y);
+
+		if (currentPiece == null || !currentPiece.getOwner().equals(player)) {
+		    continue;
+		}
+
+		Set<Move> currentPieceMoves = currentPiece.getMoves(this, x, y);
+
+		availableMoves.addAll(currentPieceMoves);
+	    }
+	}
+
+	player.setAvailableMoves(availableMoves);
+    }
+
+    /*
     private boolean isGameOver(Player player) {
 	if (!hasLegalMoves(player)) {
 	    if (isInCheck(player)) {
@@ -333,6 +655,7 @@ public class Board
 	}
 	return false;
     }
+     */
 
     private void clearBoard() {
 	for (int y = 0; y < height; y++) {
@@ -342,6 +665,13 @@ public class Board
 	}
     }
 
+
+    /**
+     * Updates whitePossibleMoves and blackPossibleMoves with the currently
+     * available moves for both players. Sets threatenedSquares to squares
+     * threatened by inactive player.
+     */
+    /*
     private void updatePossibleMoves() {
         whitePossibleMoves.clear();
         blackPossibleMoves.clear();
@@ -360,5 +690,9 @@ public class Board
 	    }
 	}
     }
+
+    */
+
+
 }
 

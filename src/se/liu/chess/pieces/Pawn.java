@@ -1,6 +1,7 @@
 package se.liu.chess.pieces;
 
 import se.liu.chess.game.Board;
+import se.liu.chess.game.Move;
 import se.liu.chess.game.Player;
 import se.liu.chess.game.TeamColor;
 
@@ -16,14 +17,15 @@ public class Pawn extends AbstractPiece {
 
     private Point[] attackingMoves = {new Point(1,1), new Point(-1, 1)};
 
-    public Pawn(final Player owner) {
-	super(owner);
+    public Pawn(final Player owner, final Point position) {
+	super(owner, position);
     }
 
     @Override public PieceType getType() {
 	return PieceType.PAWN;
     }
 
+    /*
     @Override public Set<Point> getMoves(Board board, int x, int y) {
 	Set<Point> legalMoves = new HashSet<>();
 
@@ -64,6 +66,11 @@ public class Pawn extends AbstractPiece {
 	    }
 	}
 	return legalMoves;
+    }
+    */
+
+    @Override public Set<Move> getMoves(final Board board, final int x, final int y) {
+	return null;
     }
 
     @Override public String toString() {

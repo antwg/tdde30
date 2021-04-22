@@ -1,6 +1,7 @@
 package se.liu.chess.pieces;
 
 import se.liu.chess.game.Board;
+import se.liu.chess.game.Move;
 import se.liu.chess.game.Player;
 import se.liu.chess.game.TeamColor;
 
@@ -22,17 +23,21 @@ public class Queen extends VectorMovePiece
 	    				   new Point(-1, 0),
 	    				   new Point(0, -1)};
 
-    public Queen(final Player owner) {
-	super(owner);
+    public Queen(final Player owner, final Point position) {
+	super(owner, position);
     }
 
     @Override public PieceType getType() {
 	return PieceType.QUEEN;
     }
 
-    @Override public Set<Point> getMoves(Board board, int x, int y) {
+    @Override public Set<Move> getMoves(Board board, int x, int y) {
+        /*
 	allMoveDirections = queenMoveDirections;
         return super.getMoves(board, x, y);
+         */
+	//TODO add special conditions
+	return getVectorMoves(board, x, y, queenMoveDirections);
     }
 
     @Override public String toString() {
