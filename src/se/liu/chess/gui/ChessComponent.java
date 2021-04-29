@@ -1,12 +1,15 @@
 package se.liu.chess.gui;
 
 import se.liu.chess.game.Board;
+import se.liu.chess.game.Move;
 import se.liu.chess.pieces.Piece;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.util.HashSet;
+import java.util.Set;
 
 
 /**
@@ -20,6 +23,7 @@ import java.awt.event.MouseEvent;
 public class ChessComponent extends JComponent {
     private Board board;
     private int width, height;
+    private Point currentlyPressed = null;
     private final static int SQUARE_SIZE = 72, IMG_SIZE = 64, OFFSET = (SQUARE_SIZE - IMG_SIZE) / 2;
     private final static Color ODD_COLOR = Color.DARK_GRAY, EVEN_COLOR = Color.WHITE, SELECTED_COLOR = new Color(0, 0, 255, 100);
     // Inspection doesn't like names (ex pieceb), the reason for having a lower case b is that thats how it's written in FEN
@@ -36,7 +40,10 @@ public class ChessComponent extends JComponent {
 	this.addMouseListener(new MouseAdapter(){
 	    @Override public void mousePressed(final MouseEvent e) {
 		Point point = new Point(Math.floorDiv(e.getX(), SQUARE_SIZE), Math.floorDiv(e.getY(), SQUARE_SIZE)); // Finds what point on board
-		board.pressedSquare(point);
+		board.getMoves(point.x, point.y);//pressedSquare(point);
+		currentlyPressed = point;
+		// getMoves() behöver inte kallas på här, kalla på perform move
+		// board.performMove(move);
 		repaint();
 	    }
 	});
@@ -56,7 +63,7 @@ public class ChessComponent extends JComponent {
 
 
     @Override protected void paintComponent(final Graphics g) {
-        Point currentlyPressed = board.getCurrentlyPressed();
+        Point currentlyPressed = this.currentlyPressed;//board.getCurrentlyPressed();
 	super.paintComponent(g);
 	final Graphics2D g2d = (Graphics2D) g;
 	g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
@@ -77,10 +84,13 @@ public class ChessComponent extends JComponent {
 		if (currentlyPressed != null && currentlyPressed.equals(new Point(col, row))){
 		    color2 = SELECTED_COLOR;
 		}
-		// If valid move
-		if (currentlyPressed != null && board.getValidMoves(currentlyPressed.x, currentlyPressed.y).contains(new Point(col, row))){
+		if (currentlyPressed != null && getCurrentlyPressedMoves(currentlyPressed.x, currentlyPressed.y).contains(new Point(col, row))){
 		    color2 = SELECTED_COLOR;
 		}
+		// If valid move
+		//if (currentlyPressed != null && board.getActivePlayer().getAvailableMoves().contains(move)){//board.getValidMoves(currentlyPressed.x, currentlyPressed.y).contains(new Point(col, row))){
+		//    color2 = SELECTED_COLOR;
+		//}
 		// Paint square
 		g2d.setColor(color);
 		g2d.fillRect(col * SQUARE_SIZE, row * SQUARE_SIZE, SQUARE_SIZE, SQUARE_SIZE);
@@ -99,8 +109,23 @@ public class ChessComponent extends JComponent {
 
     // ------------------------------------------------ Private Methods --------------------------------------------------------------------
 
+    //private Move getChosenMove(Point point){
+    //    Set<Move> allMoves = board.getMoves(point.x, point.y);
+    //
+    //}
+
     private ImageIcon loadIMG(String name){
 	return new ImageIcon(ClassLoader.getSystemResource("images/" + name + ".png"));
+    }
+
+    private Set<Point> getCurrentlyPressedMoves(int x, int y){
+        Set<Point> pointSet = new HashSet<>();
+	for (Move move: board.getActivePlayer().getAvailableMoves()){
+	    if (move.getOriginSquare().equals(new Point(x, y))){
+		pointSet.add(move.getTargetSquare());
+	    }
+	}
+	return pointSet;
     }
 
     private ImageIcon getImageForPiece(Piece piece){

@@ -53,6 +53,7 @@ public class GameManager
         gm.timeComponent = new TimeComponent(gm.board, 180, 512);
         GameViewer gameViewer = new GameViewer(new ChessComponent(gm.board), gm.timeComponent);
         gameViewer.show();
+        gm.board.updateAvailableMoves(gm.board.getActivePlayer());
 
         final Timer clockTimer = new Timer(CLOCK_DELAY, gm.countDown);
         clockTimer.setCoalesce(true);

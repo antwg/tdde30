@@ -11,6 +11,7 @@ import java.util.Set;
 /**
  * The Bishop class extends VectorMovePiece and in turn AbstractPiece and Piece.
  * Overrides getMoves, getType and toString.
+ * Can move diagonally.
  */
 public class Bishop extends VectorMovePiece
 {

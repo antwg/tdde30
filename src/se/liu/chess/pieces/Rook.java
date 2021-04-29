@@ -11,6 +11,7 @@ import java.util.Set;
 /**
  * The Rook class extends VectorMovePiece and in turn AbstractPiece and Piece.
  * Overrides getMoves, getType and toString.
+ * Can move in cardinal directions.
  */
 public class Rook extends VectorMovePiece
 {

@@ -13,6 +13,7 @@ import java.util.Set;
 /**
  * The King class extends PointMovePiece and in turn AbstractPiece and Piece.
  * Overrides getMoves, getType and toString. Also has methods related to castling.
+ * Overrides superclass GetMoves method to filter special cases.
  */
 public class King extends PointMovePiece {
     private Point[] kingMoves = { new Point(0, 1),

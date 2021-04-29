@@ -603,7 +603,7 @@ public class Board
 	}
     }
 
-    private void updateAvailableMoves(final Player player) {
+    public void updateAvailableMoves(final Player player) {
         Set<Move> availableMoves = new HashSet<>();
 
 	for (int y = 0; y < height; y++) {

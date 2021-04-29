@@ -45,7 +45,7 @@ public abstract class PointMovePiece extends AbstractPiece{
 
 	Set<MoveCharacteristics> moveCharacteristics = new HashSet<>();
 
-	for (Point move: allMoves) {
+	for (Point move: moveVectors) {
 	    int combinedX = x + move.x;
 	    int combinedY = y + move.y;
 

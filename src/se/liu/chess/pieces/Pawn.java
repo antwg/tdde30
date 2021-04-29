@@ -2,6 +2,7 @@ package se.liu.chess.pieces;
 
 import se.liu.chess.game.Board;
 import se.liu.chess.game.Move;
+import se.liu.chess.game.MoveCharacteristics;
 import se.liu.chess.game.Player;
 import se.liu.chess.game.TeamColor;
 
@@ -12,6 +13,7 @@ import java.util.Set;
 /**
  * The Pawn class extends AbstractPiece.
  * Overrides getMoves, getType and toString.
+ * Has three types of moves: normal, attacking and first move and a special case for en passant
  */
 public class Pawn extends AbstractPiece {
 
@@ -70,7 +72,11 @@ public class Pawn extends AbstractPiece {
     */
 
     @Override public Set<Move> getMoves(final Board board, final int x, final int y) {
-	return null;
+        Set<Move> s = new HashSet<>();
+        Set<MoveCharacteristics> m = new HashSet<>();
+        m.add(MoveCharacteristics.HARMLESS);
+        s.add(new Move(new Point(x,y), new Point(x+1, y+1), this, m));
+	return s;
     }
 
     @Override public String toString() {

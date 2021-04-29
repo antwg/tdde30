@@ -29,7 +29,5 @@ public interface Piece
 
     public void setPosition(Point p);
 
-    public boolean isPinned();
-
     public String toString();
 }
