@@ -382,7 +382,7 @@ public class Board
     }
 
 
-    //TODO improve function, remove king field from player?
+    //TODO implement properly? Right now only works for active player?
     public boolean isInCheck(Player player) {
         /*
         TeamColor enemyColor;
@@ -401,9 +401,8 @@ public class Board
 	}
 	*/
 
-	return false;
+	return !allDirectThreats.isEmpty();
     }
-    //TODO implement function
 
     public void resetBoard() {
 	clearBoard();
@@ -495,11 +494,13 @@ public class Board
 	updateAvailableMoves(getActivePlayer());
 
 	//TODO remove debug prints when done
-	System.out.println("Turn number: " + fullmoveNumber + "	Active player: " + getActivePlayer().getColor());
+	System.out.println("New turn! Turn number: " + fullmoveNumber + "	Active player: " + getActivePlayer().getColor());
 //	System.out.println("White threatens: " + getWhitePossibleMoves());
 //	System.out.println("Black threatens: " + getBlackPossibleMoves());
 	System.out.println("White in check: " + isInCheck(getPlayer(TeamColor.WHITE)));
 	System.out.println("Black in check: " + isInCheck(getPlayer(TeamColor.BLACK)));
+	System.out.println("Direct threats: " + allDirectThreats);
+	System.out.println("Pins: " + allPins);
     }
 
     //TODO split into smaller functions
@@ -511,24 +512,25 @@ public class Board
 
         // Check vector threats. These can be blocked by friendly pieces. (queen, bishop, rook)
 	for (Point moveVector : vectorThreatDirections) {
-	    updateVectorThreats(kingPos, moveVector);
+	    updateThreatsAlongVector(kingPos, moveVector);
 	}
 
 	// Check point threats. These are unblockable. (knight and pawn)
 	for (Point movePoint : knightThreatDirections) {
-	    updatePointThreats(kingPos, movePoint, PieceType.KNIGHT);
+	    updateThreatsOnPoint(kingPos, movePoint, PieceType.KNIGHT);
 	}
 
 	// Point moves are for white pieces by default. Can be inverted along the
 	// y-axis to get threats for black.
+	//TODO go over this
 	for (Point movePoint : pawnThreatDirections) {
 	    int inversionFactor = 1 - 2 * activePlayerIndex;
 
-	    updatePointThreats(kingPos, new Point(movePoint.x, movePoint.y * inversionFactor), PieceType.PAWN);
+	    updateThreatsOnPoint(kingPos, new Point(movePoint.x, movePoint.y * inversionFactor), PieceType.PAWN);
 	}
     }
 
-    private void updatePointThreats(final Point kingPos, final Point movePoint, final PieceType pieceType) {
+    private void updateThreatsOnPoint(final Point kingPos, final Point movePoint, final PieceType pieceType) {
 	int combinedX = kingPos.x + movePoint.x;
 	int combinedY = kingPos.y + movePoint.y;
 
@@ -546,10 +548,10 @@ public class Board
 	}
     }
 
-    private void updateVectorThreats(final Point kingPos, final Point moveVector) {
+    private void updateThreatsAlongVector(final Point kingPos, final Point moveVector) {
 	Set<Point> threat = new HashSet<>();
 
-	boolean checkingDiagonal = (moveVector.x != 0 && moveVector.y != 0);
+	boolean isCheckingDiagonals = (moveVector.x != 0 && moveVector.y != 0);
 	boolean isDirectThreat = true;
 	boolean isPin = false;
 
@@ -581,11 +583,12 @@ public class Board
 		// Hostile piece encountered
 
 		// The queen, bishop and rook captures along a vector.
-		if (piece.getType() != PieceType.QUEEN &&
-		    !(checkingDiagonal && piece.getType() == PieceType.BISHOP) &&
-		    !(!checkingDiagonal && piece.getType() == PieceType.ROOK)) {
+		if (piece.getType() != PieceType.QUEEN && !(isCheckingDiagonals && piece.getType() == PieceType.BISHOP) &&
+		    !(!isCheckingDiagonals && piece.getType() == PieceType.ROOK)) {
 		    isDirectThreat = false;
 		    isPin = false;
+		} else {
+		    threat.add(new Point(combinedX, combinedY));
 		}
 		break;
 
@@ -596,9 +599,11 @@ public class Board
 	    combinedY += moveVector.y;
 	}
 
-	if (isDirectThreat) {
+	if (isDirectThreat &&
+	    !threat.isEmpty()) {
 	    allDirectThreats.add(threat);
-	} else if (isPin) {
+	} else if (isPin &&
+		   !threat.isEmpty()) {
 	    allPins.add(threat);
 	}
     }

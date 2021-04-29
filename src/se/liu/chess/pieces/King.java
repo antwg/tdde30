@@ -104,6 +104,7 @@ public class King extends PointMovePiece {
 	return possibleMoves;
     }
 
+    // TODO not working properly
     private Set<Move> limitMovesToSafeSquares(final Board board, final Set<Move> initialMoveSet) {
 	Set<Move> possibleMoves = new HashSet<>();
 
