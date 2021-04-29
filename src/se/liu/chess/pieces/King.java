@@ -108,7 +108,7 @@ public class King extends PointMovePiece {
 	Set<Move> possibleMoves = new HashSet<>();
 
 	for (Move move : initialMoveSet) {
-	    if (!board.getInctivePlayer().getAttackedSquares().contains(move.getTargetSquare())) {
+	    if (!board.getInactivePlayer().getAttackedSquares().contains(move.getTargetSquare())) { //TODO breaks if king can move first move
 		possibleMoves.add(move);
 	    }
 	}

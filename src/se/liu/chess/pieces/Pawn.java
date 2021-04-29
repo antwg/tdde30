@@ -72,10 +72,11 @@ public class Pawn extends AbstractPiece {
     */
 
     @Override public Set<Move> getMoves(final Board board, final int x, final int y) {
+        int dir = board.getActivePlayer().getForwardDirection();
         Set<Move> s = new HashSet<>();
         Set<MoveCharacteristics> m = new HashSet<>();
         m.add(MoveCharacteristics.HARMLESS);
-        s.add(new Move(new Point(x,y), new Point(x+1, y+1), this, m));
+        s.add(new Move(new Point(x,y), new Point(x, y+dir), this, m));
 	return s;
     }
 

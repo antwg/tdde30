@@ -56,6 +56,13 @@ public abstract class AbstractPiece implements Piece
         if (threats.isEmpty()) {
             return initialMoveSet;
         }
+        else { //TODO kan vara fel
+            for (Set<Point> threat : threats){
+                if (threat.isEmpty()){
+                    return initialMoveSet;
+                }
+            }
+        }
 
         Set<Move> restrictedMoveSet = new HashSet<>();
 

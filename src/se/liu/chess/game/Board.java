@@ -105,7 +105,7 @@ public class Board
 	}
     }
 
-    public Player getInctivePlayer() {
+    public Player getInactivePlayer() {
 	if (activePlayerIndex == 0) {
 	    return blackPlayer;
 	} else {
@@ -488,7 +488,7 @@ public class Board
 	    fullmoveNumber++;
 	}
 
-	updateAvailableMoves(getInctivePlayer());
+	updateAvailableMoves(getInactivePlayer());
 
 	updateThreats(getActivePlayer());
 
@@ -538,7 +538,7 @@ public class Board
 
 	Piece piece = getPiece(combinedX, combinedY);
 
-	if (piece != null && piece.getOwner().equals(getInctivePlayer()) &&
+	if (piece != null && piece.getOwner().equals(getInactivePlayer()) &&
 	    piece.getType() == pieceType) {
 	    Set<Point> threat = new HashSet<>();
 	    threat.add(new Point(combinedX, combinedY));
@@ -577,7 +577,7 @@ public class Board
 		    threat.add(new Point(combinedX, combinedY));
 		}
 
-	    } else if (piece.getOwner().equals(getInctivePlayer())) {
+	    } else if (piece.getOwner().equals(getInactivePlayer())) {
 		// Hostile piece encountered
 
 		// The queen, bishop and rook captures along a vector.
