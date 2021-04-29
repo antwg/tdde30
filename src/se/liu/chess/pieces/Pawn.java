@@ -17,67 +17,72 @@ import java.util.Set;
  */
 public class Pawn extends AbstractPiece {
 
-    private Point[] attackingMoves = {new Point(1,1), new Point(-1, 1)};
+    private Point[] attackingMoves = {new Point(1, owner.getForwardDirection()), new Point(-1, owner.getForwardDirection())};
+    //private Point[] forwardMoves = {new Point(0, owner.getForwardDirection())};
+    //private Point[] doubleMoves = {new Point(0, 2 * owner.getForwardDirection())};
+
 
     public Pawn(final Player owner, final Point position) {
 	super(owner, position);
+
     }
 
     @Override public PieceType getType() {
 	return PieceType.PAWN;
     }
 
-    /*
-    @Override public Set<Point> getMoves(Board board, int x, int y) {
-	Set<Point> legalMoves = new HashSet<>();
+    @Override public Set<Move> getMoves(final Board board, final int x, final int y) {
 
-	// Normal move
-	int normalMoveY = y - 1;
-	if (this.getColor() == TeamColor.BLACK){
-	    normalMoveY = y + 1;
-	}
-	if (isValidMoveToEmptyPiece(board, x, normalMoveY)) {
-	    legalMoves.add(new Point(x, normalMoveY));
-	}
+	Set<Move> possibleMoves = new HashSet<>();
+	Set<MoveCharacteristics> moveCharacteristics = new HashSet<>();
 
 	// Attacking moves
+
 	for (Point move: attackingMoves) {
-	    int combinedAttackX = x - move.x;
-	    int combinedAttackY = y - move.y;
-	    if (this.getColor() == TeamColor.BLACK) {
-		combinedAttackX = x + move.x;
-		combinedAttackY = y + move.y;
-	    }
-	    if (board.isValidTile(combinedAttackX, combinedAttackY)) {
-	        Piece piece = board.getPiece(combinedAttackX, combinedAttackY);
-		if (new Point(combinedAttackX, combinedAttackY).equals(board.getEnPassantTarget()) || (piece != null && piece.getColor() != this.getColor())) {
-		    legalMoves.add(new Point(combinedAttackX, combinedAttackY));
+	    int combinedX = x + move.x;
+	    int combinedY = y + move.y;
+
+	    if (board.isValidTile(combinedX, combinedY)) {
+		Piece piece = board.getPiece(combinedX, combinedY);
+		if (piece != null && piece.getColor() != this.getColor()) {
+		    Move moveToAdd = new Move(new Point(x, y), new Point(combinedX, combinedY),
+					      this, moveCharacteristics);
+		    possibleMoves.add(moveToAdd);
 		}
 	    }
 	}
 
-	// 2 steps first move
-	if (!hasMoved){
-	    final int twoSteps = 2;
-	    int twoStepY = y - twoSteps;
-	    if (this.getColor() == TeamColor.BLACK) {
-		twoStepY = y + twoSteps;
-	    }
-	    if (isValidMoveToEmptyPiece(board, x, twoStepY)){
-	        legalMoves.add(new Point(x, twoStepY));
+	// Harmless moves
+
+	int yForward = y + owner.getForwardDirection();
+	int yDoubleForward = y + 2 * owner.getForwardDirection();
+
+	if (board.isValidTile(x, yForward) &&
+	    board.getPiece(x, yForward) == null) {
+	    moveCharacteristics.add(MoveCharacteristics.HARMLESS);
+
+	    Move moveToAdd = new Move(new Point(x, y), new Point(x, yForward),
+					  this, moveCharacteristics);
+	    possibleMoves.add(moveToAdd);
+
+	    if (!hasMoved &&
+		board.isValidTile(x, yDoubleForward) &&
+		board.getPiece(x, yDoubleForward) == null) {
+		moveCharacteristics.add(MoveCharacteristics.DOUBLESTEP);
+
+		moveToAdd = new Move(new Point(x, y), new Point(x, yDoubleForward),
+					  this, moveCharacteristics);
+		possibleMoves.add(moveToAdd);
 	    }
 	}
-	return legalMoves;
-    }
-    */
 
-    @Override public Set<Move> getMoves(final Board board, final int x, final int y) {
-        int dir = board.getActivePlayer().getForwardDirection();
-        Set<Move> s = new HashSet<>();
-        Set<MoveCharacteristics> m = new HashSet<>();
-        m.add(MoveCharacteristics.HARMLESS);
-        s.add(new Move(new Point(x,y), new Point(x, y+dir), this, m));
-	return s;
+	// Limit moves
+
+	possibleMoves = limitMovesToThreatSquares(board, possibleMoves);
+
+	possibleMoves = limitMovesToPinSquares(board, possibleMoves);
+
+	return possibleMoves;
     }
 
     @Override public String toString() {

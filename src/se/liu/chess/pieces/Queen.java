@@ -33,12 +33,15 @@ public class Queen extends VectorMovePiece
     }
 
     @Override public Set<Move> getMoves(Board board, int x, int y) {
-        /*
-	allMoveDirections = queenMoveDirections;
-        return super.getMoves(board, x, y);
-         */
-	//TODO add special conditions
-	return getVectorMoves(board, x, y, queenMoveDirections);
+	Set<Move> possibleMoves = getVectorMoves(board, x, y, queenMoveDirections);
+
+	// Limit moves
+
+	possibleMoves = limitMovesToThreatSquares(board, possibleMoves);
+
+	possibleMoves = limitMovesToPinSquares(board, possibleMoves);
+
+	return possibleMoves;
     }
 
     @Override public String toString() {

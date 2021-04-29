@@ -6,6 +6,7 @@ import se.liu.chess.game.Player;
 import se.liu.chess.game.TeamColor;
 
 import java.awt.*;
+import java.util.HashSet;
 import java.util.Set;
 
 /**
@@ -25,12 +26,15 @@ public class Bishop extends VectorMovePiece
     }
 
     @Override public Set<Move> getMoves(Board board, int x, int y) {
-	/*
-	allMoveDirections = bishopMoveDirections;
-	return super.getMoves(board, x, y);
-	 */
-	//TODO add special conditions
-	return getVectorMoves(board, x, y, bishopMoveDirections);
+	Set<Move> possibleMoves = getVectorMoves(board, x, y, bishopMoveDirections);
+
+	// Limit moves
+
+	possibleMoves = limitMovesToThreatSquares(board, possibleMoves);
+
+	possibleMoves = limitMovesToPinSquares(board, possibleMoves);
+
+	return possibleMoves;
     }
 
     @Override public PieceType getType() {

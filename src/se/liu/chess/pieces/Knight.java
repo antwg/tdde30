@@ -29,12 +29,15 @@ public class Knight extends PointMovePiece
     }
 
     @Override public Set<Move> getMoves(final Board board, final int x, final int y) {
-        /*
-	allMoves = knightMoves;
-	return super.getMoves(board, x, y);
-         */
-	//TODO add special conditions
-	return getPointMoves(board, x, y, knightMoves);
+	Set<Move> possibleMoves = getPointMoves(board, x, y, knightMoves);
+
+	// Limit moves
+
+	possibleMoves = limitMovesToThreatSquares(board, possibleMoves);
+
+	possibleMoves = limitMovesToPinSquares(board, possibleMoves);
+
+	return possibleMoves;
     }
 
     @Override public PieceType getType() {
