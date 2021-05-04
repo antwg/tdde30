@@ -6,7 +6,6 @@ import se.liu.chess.game.Player;
 import se.liu.chess.game.TeamColor;
 
 import java.awt.*;
-import java.util.HashSet;
 import java.util.Set;
 
 /**

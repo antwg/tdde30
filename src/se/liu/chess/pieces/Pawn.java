@@ -7,6 +7,7 @@ import se.liu.chess.game.Player;
 import se.liu.chess.game.TeamColor;
 
 import java.awt.*;
+import java.util.EnumSet;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -34,7 +35,7 @@ public class Pawn extends AbstractPiece {
     @Override public Set<Move> getMoves(final Board board, final int x, final int y) {
 
 	Set<Move> possibleMoves = new HashSet<>();
-	Set<MoveCharacteristics> moveCharacteristics = new HashSet<>();
+	Set<MoveCharacteristics> moveCharacteristics = EnumSet.noneOf(MoveCharacteristics.class);
 
 	// Attacking moves
 

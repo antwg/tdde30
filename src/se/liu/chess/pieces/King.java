@@ -7,6 +7,7 @@ import se.liu.chess.game.Player;
 import se.liu.chess.game.TeamColor;
 
 import java.awt.*;
+import java.util.EnumSet;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -124,7 +125,7 @@ public class King extends PointMovePiece {
 	    return possibleMoves;
 	}
 
-	Set<MoveCharacteristics> moveCharacteristics = new HashSet<>();
+	Set<MoveCharacteristics> moveCharacteristics = EnumSet.noneOf(MoveCharacteristics.class);
 	moveCharacteristics.add(MoveCharacteristics.HARMLESS);
 	moveCharacteristics.add(MoveCharacteristics.CASTLING);
 

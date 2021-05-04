@@ -251,23 +251,22 @@ public class Board
     }
 
     public void displayGameOver(GameOverCauses cause){
-        String message = " ";
+        String message = "Game Over";
         switch (cause){
             case TIME:
-                message = getActivePlayer() + " ran out of time";
+                message = "Game Over: " + getActivePlayer() + " ran out of time";
                 break;
 	    case CHECKMATE:
-	        message = "Checkmate";
+	        message = "Game Over: " + getActivePlayer() + " is Checkmated";
 	        break;
 	    case STALEMATE:
-	        message = "Stalemate";
+	        message = "Game Over: Stalemate";
 	        break;
 	}
 	JOptionPane.showMessageDialog(null, message);
     }
 
     private void promote(final Move move) {
-	//TODO implement
 	String[] options = {"Queen", "Rook", "Bishop", "Knight"};
 	int choice = JOptionPane.showOptionDialog(null, "Choose upgrade", "", JOptionPane.DEFAULT_OPTION,
 						  JOptionPane.INFORMATION_MESSAGE, null, options, options[0]);

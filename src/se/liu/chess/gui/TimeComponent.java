@@ -23,16 +23,17 @@ public class TimeComponent extends JComponent {
     @Override protected void paintComponent(final Graphics g) {
 	super.paintComponent(g);
 	final Graphics2D g2d = (Graphics2D) g;
-	final int yOffset = 16, xOffset = 10, doubleXOffset = 2 * xOffset, middle = height / 2 + 2 * yOffset, fontSize = 50, rectHeight = 3;
+	final int yOffset = 16, xOffset = 16, doubleXOffset = 2 * xOffset, middle = height / 2 + 2 * yOffset, fontSize = 50, rectHeight = 3,
+		  lineLenght = 145;
 	double blackTime = board.getPlayer(TeamColor.BLACK).getTimeLeft();
 	double whiteTime = board.getPlayer(TeamColor.WHITE).getTimeLeft();
 
 	g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 	g.setColor(Color.BLACK);
 	g.setFont(new Font("serif", Font.PLAIN, fontSize));
-	g.drawString(Double.toString(blackTime), width / 2 - fontSize + xOffset, middle - yOffset);
-	g.drawString(Double.toString(whiteTime), width / 2 - fontSize + xOffset, middle + yOffset + yOffset + yOffset);
-	g.fillRect(xOffset, middle, width - doubleXOffset,rectHeight);
+	g.drawString(Double.toString(blackTime), doubleXOffset, middle - yOffset);
+	g.drawString(Double.toString(whiteTime), doubleXOffset, middle + yOffset + yOffset + yOffset);
+	g.fillRect(xOffset, middle, lineLenght, rectHeight);
     }
 
     @Override public Dimension getPreferredSize() {

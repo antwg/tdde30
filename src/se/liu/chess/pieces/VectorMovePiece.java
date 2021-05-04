@@ -6,6 +6,7 @@ import se.liu.chess.game.MoveCharacteristics;
 import se.liu.chess.game.Player;
 
 import java.awt.*;
+import java.util.EnumSet;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -53,7 +54,7 @@ public abstract class VectorMovePiece extends AbstractPiece{
     public Set<Move> getVectorMoves(final Board board, final int x, final int y, Point[] moveVectors) {
 	Set<Move> legalMoves = new HashSet<>();
 
-	Set<MoveCharacteristics> moveCharacteristics = new HashSet<>();
+	Set<MoveCharacteristics> moveCharacteristics = EnumSet.noneOf(MoveCharacteristics.class);
 
 	for (Point moveVector : moveVectors) {
 	    int combinedX = x + moveVector.x;
