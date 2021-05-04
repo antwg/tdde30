@@ -406,9 +406,13 @@ public class Board
 
     public void resetBoard() {
 	clearBoard();
+	blackPlayer = new Player(TeamColor.BLACK);
+	whitePlayer = new Player(TeamColor.WHITE);
 	fenConverter.createBoardFromFEN("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1");
 	blackPlayer.resetTime();
 	whitePlayer.resetTime();
+	updateThreats(getActivePlayer());
+	updateAvailableMoves(getActivePlayer());
     }
 
 
@@ -560,7 +564,9 @@ public class Board
 
 	while (true) {
 	    if (!isValidTile(combinedX, combinedY)) {
-		break;
+		isDirectThreat = false;
+		isPin = false;
+	    	break;
 	    }
 
 	    Piece piece = getPiece(combinedX, combinedY);
@@ -579,7 +585,7 @@ public class Board
 		    threat.add(new Point(combinedX, combinedY));
 		}
 
-	    } else if (piece.getOwner().equals(getInactivePlayer())) {
+	    } else if (!piece.getOwner().equals(getActivePlayer())) {
 		// Hostile piece encountered
 
 		// The queen, bishop and rook captures along a vector.

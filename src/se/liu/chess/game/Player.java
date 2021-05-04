@@ -23,8 +23,8 @@ public class Player
     private int homeRank;
     private int forwardDirection;
 
-    private Set<Move> availableMoves;
-    private Set<Point> attackedSquares;
+    private Set<Move> availableMoves = new HashSet<>();
+    private Set<Point> attackedSquares = new HashSet<>();
 
     //TODO problematiskt med cirkelreferens?
     private Piece king = null;
