@@ -28,6 +28,7 @@ public class Board
     private Player blackPlayer;
 
     private int activePlayerIndex = 0;
+    private boolean gameOver;
 
     private FenConverter fenConverter;
 
@@ -63,6 +64,7 @@ public class Board
 
     List<Set<Point>> allDirectThreats = new ArrayList<>();
     List<Set<Point>> allPins = new ArrayList<>();
+
 
     public Board(final int width, final int height) {
 	this.width = width;
@@ -381,27 +383,8 @@ public class Board
 	return allPins;
     }
 
-
-    //TODO implement properly? Right now only works for active player?
     public boolean isInCheck(Player player) {
-        /*
-        TeamColor enemyColor;
-
-	if (player.getColor() == TeamColor.WHITE) {
-	    enemyColor = TeamColor.BLACK;
-	} else {
-	    enemyColor = TeamColor.WHITE;
-	}
-
-	for (Point threatenedSquare : getPossibleMoves(enemyColor)) {
-	    Piece pieceOnSquare = getPiece(threatenedSquare);
-	    if (pieceOnSquare != null && pieceOnSquare.equals(player.getKing())) {
-		return true;
-	    }
-	}
-	*/
-
-	return !allDirectThreats.isEmpty();
+	return !allDirectThreats.isEmpty() && player.equals(getActivePlayer());
     }
 
     public void resetBoard() {
@@ -413,6 +396,7 @@ public class Board
 	whitePlayer.resetTime();
 	updateThreats(getActivePlayer());
 	updateAvailableMoves(getActivePlayer());
+	gameOver = false;
     }
 
 
@@ -497,14 +481,19 @@ public class Board
 
 	updateAvailableMoves(getActivePlayer());
 
+	detectGameOver();
+
 	//TODO remove debug prints when done
-	System.out.println("New turn! Turn number: " + fullmoveNumber + "	Active player: " + getActivePlayer().getColor());
-//	System.out.println("White threatens: " + getWhitePossibleMoves());
-//	System.out.println("Black threatens: " + getBlackPossibleMoves());
-	System.out.println("White in check: " + isInCheck(getPlayer(TeamColor.WHITE)));
-	System.out.println("Black in check: " + isInCheck(getPlayer(TeamColor.BLACK)));
-	System.out.println("Direct threats: " + allDirectThreats);
-	System.out.println("Pins: " + allPins);
+	if (!gameOver) {
+	    System.out.println("New turn! Turn number: " + fullmoveNumber + "	Active player: " + getActivePlayer().getColor());
+	    //System.out.println("White threatens: " + getWhitePossibleMoves());
+	    //System.out.println("Black threatens: " + getBlackPossibleMoves());
+	    System.out.println("White in check: " + isInCheck(getPlayer(TeamColor.WHITE)));
+	    System.out.println("Black in check: " + isInCheck(getPlayer(TeamColor.BLACK)));
+	    System.out.println("Direct threats: " + allDirectThreats);
+	    System.out.println("Pins: " + allPins);
+	}
+
     }
 
     //TODO split into smaller functions
@@ -634,21 +623,18 @@ public class Board
 	player.setAvailableMoves(availableMoves);
     }
 
-    /*
-    private boolean isGameOver(Player player) {
-	if (!hasLegalMoves(player)) {
-	    if (isInCheck(player)) {
+    private void detectGameOver() {
+	if (getActivePlayer().getAvailableMoves().isEmpty()) {
+	    if (isInCheck(getActivePlayer())) {
 		// Checkmate detected
-		System.out.println("Checkmate!");
+		System.out.println("Checkmate detected!");
 	    } else {
 		// Stalemate detected
-		System.out.println("Stalemate!");
+		System.out.println("Stalemate detected!");
 	    }
-	    return true;
+	    gameOver = true;
 	}
-	return false;
     }
-     */
 
     private void clearBoard() {
 	for (int y = 0; y < height; y++) {
