@@ -10,18 +10,18 @@ public class Move
 {
     private Point originSquare;
     private Point targetSquare;
-    private Piece attackingPiece;
+    private Piece movingPiece;
     private boolean harmless;
     private boolean castling;
     private boolean pawnDoubleStep;
     //private boolean promoting;
     private boolean enPassant;
 
-    public Move(final Point originSquare, final Point targetSquare, final Piece attackingPiece, Set<MoveCharacteristics> moveCharacteristics)
+    public Move(final Point originSquare, final Point targetSquare, final Piece movingPiece, Set<MoveCharacteristics> moveCharacteristics)
     {
 	this.originSquare = originSquare;
 	this.targetSquare = targetSquare;
-	this.attackingPiece = attackingPiece;
+	this.movingPiece = movingPiece;
 
 	this.harmless = moveCharacteristics.contains(MoveCharacteristics.HARMLESS);
 	this.castling = moveCharacteristics.contains(MoveCharacteristics.CASTLING);
@@ -38,6 +38,10 @@ public class Move
 	return targetSquare;
     }
 
+    public Piece getMovingPiece() {
+	return movingPiece;
+    }
+
     public boolean isHarmless() {
 	return harmless;
     }
@@ -51,8 +55,8 @@ public class Move
     }
 
     public boolean isPromoting() {
-        return (targetSquare.y == attackingPiece.getOwner().getPromotionRank()) &&
-	       (attackingPiece.getType() == PieceType.PAWN);
+        return (targetSquare.y == movingPiece.getOwner().getPromotionRank()) &&
+	       (movingPiece.getType() == PieceType.PAWN);
 	//return promoting;
     }
 

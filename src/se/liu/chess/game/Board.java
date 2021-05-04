@@ -224,21 +224,33 @@ public class Board
      * Updates castling availability and en passant square.
      * @param move
      */
-    public void performMove(Move move){
-        // These cases are mutually exclusive
+    public void performMove(Move move) {
+	// These cases are mutually exclusive
 	if (move.isCastling()) {
 	    castle(move);
-	} else if (getPiece(move.getOriginSquare()).getType() == PieceType.ROOK &&
-		   move.getOriginSquare().y == 7 * activePlayerIndex) { //TODO replace with ex. activePlayerBackrank ?
-	    disableCastlingOnMoveSide(move);
-	} else if (move.isPawnDoubleStep()) {
+	} else if (getPiece(move.getOriginSquare()).getType() == PieceType.ROOK) { //TODO replace with ex. activePlayerBackrank ?
+	    if (move.getOriginSquare().equals(getActivePlayer().getKingsideRookHomePosition())) {
+		getActivePlayer().setKingsideCastleAvailable(false);
+	    } else if (move.getOriginSquare().equals(getActivePlayer().getQueensideRookHomePosition())) {
+	        getActivePlayer().setQueensideCastleAvailable(false);
+	    }
+	    //disableCastlingOnMoveSide(move);
+	} else if (move.getMovingPiece().getType() == PieceType.KING) {
+	    getActivePlayer().setQueensideCastleAvailable(false);
+	    getActivePlayer().setKingsideCastleAvailable(false);
+	}
+
+	// Disable castling if rook is captured
+	if (move.getTargetSquare().equals(getInactivePlayer().getKingsideRookHomePosition())) {
+	    getInactivePlayer().setKingsideCastleAvailable(false);
+	} else if (move.getTargetSquare().equals(getInactivePlayer().getQueensideRookHomePosition())) {
+	    getInactivePlayer().setQueensideCastleAvailable(false);
+	}
+
+	if (move.isPawnDoubleStep()) {
 	    setEnPassantTargetSquare(move); // TODO rename similarly named functions?
 	} else {
 	    setEnPassantTarget(null);
-	}
-
-	if (move.isHarmless()) {
-	    System.out.println("Piece captured on " + move.getTargetSquare());
 	}
 
 	movePiece(move.getOriginSquare(), move.getTargetSquare());
@@ -299,6 +311,7 @@ public class Board
 	}
     }
 
+    /*
     private void disableCastlingOnMoveSide(final Move move) {
 	if (move.getOriginSquare().x == 0) {
 	    getActivePlayer().setQueensideCastleAvailable(false);
@@ -306,6 +319,8 @@ public class Board
 	    getActivePlayer().setKingsideCastleAvailable(false);
 	}
     }
+
+     */
 
     /**
      * Removes castling availability and moves the rooks for castling.
