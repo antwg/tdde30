@@ -130,7 +130,8 @@ public class ChessComponent extends JComponent {
     private Move getMadeMove(){
         if (lastPressed != null){
             for (Move move : getMovesForCoordinate(lastPressed.x, lastPressed.y)){
-                if (move.getTargetSquare().x == currentlyPressed.x && move.getTargetSquare().y == currentlyPressed.y){
+                Point targetSqure = move.getTargetSquare();
+                if (targetSqure.x == currentlyPressed.x && targetSqure.y == currentlyPressed.y){
 		    return move;
 		}
 	    }

@@ -116,7 +116,7 @@ public class Board
     }
 
     public Player getOpponentPlayer(Player friendlyPlayer) {
-	if (friendlyPlayer == whitePlayer) {
+	if (friendlyPlayer.equals(whitePlayer)) {
 	    return blackPlayer;
 	} else {
 	    return whitePlayer;
@@ -177,7 +177,16 @@ public class Board
 	return fenConverter;
     }
 
+    public boolean isGameOver() {
+	return gameOver;
+    }
+
     // --- Setters ---
+
+
+    public void setGameOver(boolean gameOver) {
+	this.gameOver = gameOver;
+    }
 
     public void setPiece(int x, int y, Piece piece) {
 	pieces[y][x] = piece;
@@ -239,6 +248,22 @@ public class Board
 	}
 
 	passTurn();
+    }
+
+    public void displayGameOver(GameOverCauses cause){
+        String message = " ";
+        switch (cause){
+            case TIME:
+                message = getActivePlayer() + " ran out of time";
+                break;
+	    case CHECKMATE:
+	        message = "Checkmate";
+	        break;
+	    case STALEMATE:
+	        message = "Stalemate";
+	        break;
+	}
+	JOptionPane.showMessageDialog(null, message);
     }
 
     private void promote(final Move move) {
@@ -627,9 +652,11 @@ public class Board
 	if (getActivePlayer().getAvailableMoves().isEmpty()) {
 	    if (isInCheck(getActivePlayer())) {
 		// Checkmate detected
+		displayGameOver(GameOverCauses.CHECKMATE);
 		System.out.println("Checkmate detected!");
 	    } else {
 		// Stalemate detected
+		displayGameOver(GameOverCauses.STALEMATE);
 		System.out.println("Stalemate detected!");
 	    }
 	    gameOver = true;

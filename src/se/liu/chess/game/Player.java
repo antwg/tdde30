@@ -37,6 +37,7 @@ public class Player
 
     public Player(final TeamColor color) {
 	this.color = color;
+	this.timeLeft = START_TIME;
 
 	if (color == TeamColor.WHITE) {
 	    this.queensideRookHomePosition = new Point(0, 7);
@@ -154,5 +155,12 @@ public class Player
 
     public void increaseTimeByIncrement(){
         this.timeLeft += INCREMENT;
+    }
+
+    @Override public String toString() {
+	if (color  == TeamColor.WHITE){
+	    return "White player";
+	}
+	return "Black player";
     }
 }

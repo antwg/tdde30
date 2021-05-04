@@ -34,7 +34,14 @@ public class GameManager
 
         @Override public void actionPerformed(final ActionEvent e) {
             Player activePlayer = board.getActivePlayer();
-            activePlayer.setTimeLeft(activePlayer.getTimeLeft() - 1);
+            if (!board.isGameOver()) {
+                if (activePlayer.getTimeLeft() <= 0) {
+                    board.setGameOver(true);
+                    board.displayGameOver(GameOverCauses.TIME);
+                } else {
+                    activePlayer.setTimeLeft(activePlayer.getTimeLeft() - 1);
+                }
+            }
             timeComponent.repaint();
         }
     };
