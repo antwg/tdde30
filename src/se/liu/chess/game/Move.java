@@ -1,6 +1,7 @@
 package se.liu.chess.game;
 
 import se.liu.chess.pieces.Piece;
+import se.liu.chess.pieces.PieceType;
 
 import java.awt.*;
 import java.util.Set;
@@ -13,7 +14,7 @@ public class Move
     private boolean harmless;
     private boolean castling;
     private boolean pawnDoubleStep;
-    private boolean promoting;
+    //private boolean promoting;
     private boolean enPassant;
 
     public Move(final Point originSquare, final Point targetSquare, final Piece attackingPiece, Set<MoveCharacteristics> moveCharacteristics)
@@ -25,7 +26,7 @@ public class Move
 	this.harmless = moveCharacteristics.contains(MoveCharacteristics.HARMLESS);
 	this.castling = moveCharacteristics.contains(MoveCharacteristics.CASTLING);
 	this.pawnDoubleStep = moveCharacteristics.contains(MoveCharacteristics.DOUBLESTEP);
-	this.promoting = moveCharacteristics.contains(MoveCharacteristics.PROMOTING);
+	//this.promoting = moveCharacteristics.contains(MoveCharacteristics.PROMOTING);
 	this.enPassant = moveCharacteristics.contains(MoveCharacteristics.ENPASSANT);
     }
 
@@ -50,7 +51,9 @@ public class Move
     }
 
     public boolean isPromoting() {
-	return promoting;
+        return (targetSquare.y == attackingPiece.getOwner().getPromotionRank()) &&
+	       (attackingPiece.getType() == PieceType.PAWN);
+	//return promoting;
     }
 
     public boolean isEnPassant() {
