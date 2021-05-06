@@ -6,6 +6,12 @@ import se.liu.chess.pieces.PieceType;
 import java.awt.*;
 import java.util.Set;
 
+/**
+ * Class used to move Piece on Board.
+ * Specifies what kind of movement a move is eg. attacking, harmless etc.
+ * Contains information about origin and target.
+ */
+
 public class Move
 {
     private Point originSquare;
@@ -25,9 +31,9 @@ public class Move
 
 	this.harmless = moveCharacteristics.contains(MoveCharacteristics.HARMLESS);
 	this.castling = moveCharacteristics.contains(MoveCharacteristics.CASTLING);
-	this.pawnDoubleStep = moveCharacteristics.contains(MoveCharacteristics.DOUBLESTEP);
+	this.pawnDoubleStep = moveCharacteristics.contains(MoveCharacteristics.DOUBLE_STEP);
 	//this.promoting = moveCharacteristics.contains(MoveCharacteristics.PROMOTING);
-	this.enPassant = moveCharacteristics.contains(MoveCharacteristics.ENPASSANT);
+	this.enPassant = moveCharacteristics.contains(MoveCharacteristics.EN_PASSANT);
     }
 
     public Point getOriginSquare() {

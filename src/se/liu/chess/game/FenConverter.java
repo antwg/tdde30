@@ -10,6 +10,9 @@ import se.liu.chess.pieces.Rook;
 
 import java.awt.*;
 
+/**
+ * Object that converts a given Board object to and from FEN
+ */
 public class FenConverter {
     private Board board;
     private int height;
@@ -100,11 +103,11 @@ public class FenConverter {
 
     private void convertMoveToFEN(StringBuilder builder){
 	// 5. Halfmove clock
-	builder.append(board.getHalfmoveClock());
+	builder.append(board.getHalfMoveClock());
 	builder.append(" ");
 
 	// 6. Fullmove number
-	builder.append(board.getFullmoveNumber());
+	builder.append(board.getFullMoveNumber());
 	builder.append(" ");
     }
 
@@ -125,6 +128,9 @@ public class FenConverter {
     private void placePiecesFromFEN(String piecePositions){
 	int x = 0;
 	int y = 0;
+	Player black = board.getPlayer(TeamColor.BLACK);
+	Player white = board.getPlayer(TeamColor.WHITE);
+
 	for (int i = 0; i < piecePositions.length(); i++) {
 	    char curr = piecePositions.charAt(i);
 
@@ -135,56 +141,55 @@ public class FenConverter {
 		    x = 0;
 		    break;
 		case 'r':
-		    board.setPiece(x, y, new Rook(board.getPlayer(TeamColor.BLACK), new Point(x, y)));
+		    board.setPiece(x, y, new Rook(black, new Point(x, y)));
 		    x++;
 		    break;
 		case 'R':
-		    board.setPiece(x, y, new Rook(board.getPlayer(TeamColor.WHITE), new Point(x, y)));
+		    board.setPiece(x, y, new Rook(white, new Point(x, y)));
 		    x++;
 		    break;
 		case 'n':
-		    board.setPiece(x, y, new Knight(board.getPlayer(TeamColor.BLACK), new Point(x, y)));
+		    board.setPiece(x, y, new Knight(black, new Point(x, y)));
 		    x++;
 		    break;
 		case 'N':
-		    board.setPiece(x, y, new Knight(board.getPlayer(TeamColor.WHITE), new Point(x, y)));
+		    board.setPiece(x, y, new Knight(white, new Point(x, y)));
 		    x++;
 		    break;
 		case 'b':
-		    board.setPiece(x, y, new Bishop(board.getPlayer(TeamColor.BLACK), new Point(x, y)));
+		    board.setPiece(x, y, new Bishop(black, new Point(x, y)));
 		    x++;
 		    break;
 		case 'B':
-		    board.setPiece(x, y, new Bishop(board.getPlayer(TeamColor.WHITE), new Point(x, y)));
+		    board.setPiece(x, y, new Bishop(white, new Point(x, y)));
 		    x++;
 		    break;
 		case 'k':
-		    Piece blackKing = new King(board.getPlayer(TeamColor.BLACK), new Point(x, y));
-		    board.getPlayer(TeamColor.BLACK).setKing(blackKing);
+		    Piece blackKing = new King(black, new Point(x, y));
+		    black.setKing(blackKing);
 		    board.setPiece(x, y, blackKing);
 		    x++;
 		    break;
 		case 'K':
-		    Piece whiteKing = new King(board.getPlayer(TeamColor.WHITE), new Point(x, y));
-		    board.getPlayer(TeamColor.WHITE).setKing(whiteKing);
-
+		    Piece whiteKing = new King(white, new Point(x, y));
+		    white.setKing(whiteKing);
 		    board.setPiece(x, y, whiteKing);
 		    x++;
 		    break;
 		case 'q':
-		    board.setPiece(x, y, new Queen(board.getPlayer(TeamColor.BLACK), new Point(x, y)));
+		    board.setPiece(x, y, new Queen(black, new Point(x, y)));
 		    x++;
 		    break;
 		case 'Q':
-		    board.setPiece(x, y, new Queen(board.getPlayer(TeamColor.WHITE), new Point(x, y)));
+		    board.setPiece(x, y, new Queen(white, new Point(x, y)));
 		    x++;
 		    break;
 		case 'p':
-		    board.setPiece(x, y, new Pawn(board.getPlayer(TeamColor.BLACK), new Point(x, y)));
+		    board.setPiece(x, y, new Pawn(black, new Point(x, y)));
 		    x++;
 		    break;
 		case 'P':
-		    board.setPiece(x, y, new Pawn(board.getPlayer(TeamColor.WHITE), new Point(x, y)));
+		    board.setPiece(x, y, new Pawn(white, new Point(x, y)));
 		    x++;
 		    break;
 		default:
@@ -211,10 +216,10 @@ public class FenConverter {
 
     private void setMovesFromFEN(String halfmoveClock, String fullmoveNumber){
 	// Set halfmove clock
-	board.setHalfmoveClock(Integer.parseInt(halfmoveClock));
+	board.setHalfMoveClock(Integer.parseInt(halfmoveClock));
 
 	// Set fullmove number
-	board.setFullmoveNumber(Integer.parseInt(fullmoveNumber));
+	board.setFullMoveNumber(Integer.parseInt(fullmoveNumber));
     }
 
     private String convertPositionToNotation(final Point p) {

@@ -15,10 +15,10 @@ public class Player
 {
     private TeamColor color;
 
-    private boolean kingsideCastleAvailable = true;
-    private boolean queensideCastleAvailable = true;
-    private Point queensideRookHomePosition;
-    private Point kingsideRookHomePosition;
+    private boolean kingSideCastleAvailable = true;
+    private boolean queenSideCastleAvailable = true;
+    private Point queenSideRookHomePosition;
+    private Point kingSideRookHomePosition;
     private int promotionRank;
     private int homeRank;
     private int forwardDirection;
@@ -40,14 +40,14 @@ public class Player
 	this.timeLeft = START_TIME;
 
 	if (color == TeamColor.WHITE) {
-	    this.queensideRookHomePosition = new Point(0, 7);
-	    this.kingsideRookHomePosition = new Point(7, 7);
+	    this.queenSideRookHomePosition = new Point(0, 7);
+	    this.kingSideRookHomePosition = new Point(7, 7);
 	    this.promotionRank = 0;
 	    this.homeRank = 7;
 	    this.forwardDirection = -1;
 	} else {
-	    this.queensideRookHomePosition = new Point(0, 0);
-	    this.kingsideRookHomePosition = new Point(7, 0);
+	    this.queenSideRookHomePosition = new Point(0, 0);
+	    this.kingSideRookHomePosition = new Point(7, 0);
 	    this.promotionRank = 7;
 	    this.homeRank = 0;
 	    this.forwardDirection = 1;
@@ -63,19 +63,19 @@ public class Player
     }
 
     public boolean canCastleKingside() {
-	return kingsideCastleAvailable;
+	return kingSideCastleAvailable;
     }
 
     public boolean canCastleQueenside() {
-	return queensideCastleAvailable;
+	return queenSideCastleAvailable;
     }
 
-    public Point getQueensideRookHomePosition() {
-	return queensideRookHomePosition;
+    public Point getQueenSideRookHomePosition() {
+	return queenSideRookHomePosition;
     }
 
-    public Point getKingsideRookHomePosition() {
-	return kingsideRookHomePosition;
+    public Point getKingSideRookHomePosition() {
+	return kingSideRookHomePosition;
     }
 
     public int getPromotionRank() {
@@ -112,12 +112,21 @@ public class Player
 
     // --- Setters ---
 
-    public void setKingsideCastleAvailable(final boolean kingsideCastleAvailable) {
-	this.kingsideCastleAvailable = kingsideCastleAvailable;
+    public void setKingSideCastleAvailable(final boolean kingSideCastleAvailable) {
+	this.kingSideCastleAvailable = kingSideCastleAvailable;
     }
 
-    public void setQueensideCastleAvailable(final boolean queensideCastleAvailable) {
-	this.queensideCastleAvailable = queensideCastleAvailable;
+    public void setQueenSideCastleAvailable(final boolean queenSideCastleAvailable) {
+	this.queenSideCastleAvailable = queenSideCastleAvailable;
+    }
+
+    public void setCastleUnavailable(boolean queenSide){
+        if (queenSide){
+	    this.queenSideCastleAvailable = false;
+	}
+        else {
+	    this.kingSideCastleAvailable = false;
+	}
     }
 
     /**

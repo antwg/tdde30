@@ -51,35 +51,35 @@ public abstract class AbstractPiece implements Piece
         this.hasMoved = hasMoved;
     }
 
-    protected Set<Move> limitMovesToThreatSquares(Board board, Set<Move> initialMoveSet) {
+    protected Set<Move> limitMovesToThreatSquares(Board board, Set<Move> initialMoves) {
         List<Set<Point>> threats = board.getAllDirectThreats();
         if (threats.isEmpty()) {
-            return initialMoveSet;
+            return initialMoves;
         }
         else { //TODO kan vara fel
             for (Set<Point> threat : threats){
                 if (threat.isEmpty()){
-                    return initialMoveSet;
+                    return initialMoves;
                 }
             }
         }
 
-        Set<Move> restrictedMoveSet = new HashSet<>();
+        Set<Move> restrictedMoves = new HashSet<>();
 
         if (threats.size() > 1) {
-            return restrictedMoveSet;
+            return restrictedMoves;
         } else {
-            for (Move move : initialMoveSet) {
+            for (Move move : initialMoves) {
                 if (threats.get(0).contains(move.getTargetSquare())) {
-                    restrictedMoveSet.add(move);
+                    restrictedMoves.add(move);
                 }
             }
         }
 
-        return restrictedMoveSet;
+        return restrictedMoves;
     }
 
-    protected Set<Move> limitMovesToPinSquares(Board board, Set<Move> initialMoveSet) {
+    protected Set<Move> limitMovesToPinSquares(Board board, Set<Move> initialMoves) {
         Set<Point> pinRestrictedSquares = null;
 
         for (Set<Point> pin : board.getAllPins()) {
@@ -89,12 +89,12 @@ public abstract class AbstractPiece implements Piece
         }
 
         if (pinRestrictedSquares == null) {
-            return initialMoveSet;
+            return initialMoves;
         }
 
         Set<Move> restrictedMoveSet = new HashSet<>();
 
-        for (Move move : initialMoveSet) {
+        for (Move move : initialMoves) {
             if (pinRestrictedSquares.contains(move.getTargetSquare())) {
                 restrictedMoveSet.add(move);
             }

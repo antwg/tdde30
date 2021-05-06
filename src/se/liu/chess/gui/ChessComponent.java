@@ -111,27 +111,27 @@ public class ChessComponent extends JComponent {
     }
 
     private Set<Move> getMovesForCoordinate(int x, int y){
-        Set<Move> moveSet = new HashSet<>();
+        Set<Move> moves = new HashSet<>();
 	for (Move move: board.getActivePlayer().getAvailableMoves()){
 	    if (move.getOriginSquare().equals(new Point(x, y))){
-		moveSet.add(move);
+		moves.add(move);
 	    }
 	}
-	return moveSet;
+	return moves;
     }
     private Set<Point> getTargetPointsFromMoveSet(int x, int y){
-	Set<Point> pointSet = new HashSet<>();
+	Set<Point> points = new HashSet<>();
 	for (Move move: getMovesForCoordinate(x, y)){
-		pointSet.add(move.getTargetSquare());
+		points.add(move.getTargetSquare());
 	}
-	return pointSet;
+	return points;
     }
 
     private Move getMadeMove(){
         if (lastPressed != null){
             for (Move move : getMovesForCoordinate(lastPressed.x, lastPressed.y)){
-                Point targetSqure = move.getTargetSquare();
-                if (targetSqure.x == currentlyPressed.x && targetSqure.y == currentlyPressed.y){
+                Point targetSquare = move.getTargetSquare();
+                if (targetSquare.x == currentlyPressed.x && targetSquare.y == currentlyPressed.y){
 		    return move;
 		}
 	    }

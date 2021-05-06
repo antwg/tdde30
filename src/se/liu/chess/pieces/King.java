@@ -38,12 +38,13 @@ public class King extends PointMovePiece {
 	    return false;
 	}
 
-	if (board.getPiece(1, owner.getHomeRank()) == null &&
-	    board.getPiece(2, owner.getHomeRank()) == null &&
-	    board.getPiece(3, owner.getHomeRank()) == null &&
-	    !opponent.getAttackedSquares().contains(new Point(2, owner.getHomeRank())) &&
-	    !opponent.getAttackedSquares().contains(new Point(3, owner.getHomeRank())) &&
-	    !opponent.getAttackedSquares().contains(new Point(4, owner.getHomeRank()))) {
+	int homeRank = owner.getHomeRank();
+	if (board.getPiece(1, homeRank) == null &&
+	    board.getPiece(2, homeRank) == null &&
+	    board.getPiece(3, homeRank) == null &&
+	    !opponent.getAttackedSquares().contains(new Point(2, homeRank)) &&
+	    !opponent.getAttackedSquares().contains(new Point(3, homeRank)) &&
+	    !opponent.getAttackedSquares().contains(new Point(4, homeRank))) {
 	    return true;
 	}
 	return false;
@@ -179,7 +180,6 @@ public class King extends PointMovePiece {
 		possibleMoves.add(moveToAdd);
 	    }*/
 	}
-
 	return possibleMoves;
     }
 

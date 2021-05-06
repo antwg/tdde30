@@ -38,8 +38,8 @@ public class Board
     //private Point currentlyPressed = null;
 
     //TODO implement halfmoveClock
-    private int halfmoveClock = 0;  // Used for 50 move rule
-    private int fullmoveNumber = 1; // It's called halfmove and fullmove as one word
+    private int halfMoveClock = 0;  // Used for 50 move rule
+    private int fullMoveNumber = 1; // It's called halfmove and fullmove as one word
 
     private final Point[] vectorThreatDirections = { new Point(1, 1),
 	    					     new Point(1, -1),
@@ -167,12 +167,12 @@ public class Board
 	return getPiece(x, y) == null;
     }
 
-    public int getHalfmoveClock() {
-	return halfmoveClock;
+    public int getHalfMoveClock() {
+	return halfMoveClock;
     }
 
-    public int getFullmoveNumber() {
-	return fullmoveNumber;
+    public int getFullMoveNumber() {
+	return fullMoveNumber;
     }
 
     public FenConverter getFenConverter() {
@@ -210,12 +210,12 @@ public class Board
 	this.activePlayerIndex = activePlayerIndex;
     }
 
-    public void setHalfmoveClock(final int halfmoveClock) {
-	this.halfmoveClock = halfmoveClock;
+    public void setHalfMoveClock(final int halfMoveClock) {
+	this.halfMoveClock = halfMoveClock;
     }
 
-    public void setFullmoveNumber(final int fullmoveNumber) {
-	this.fullmoveNumber = fullmoveNumber;
+    public void setFullMoveNumber(final int fullMoveNumber) {
+	this.fullMoveNumber = fullMoveNumber;
     }
 
     // ----------------------------------------------------- Public Methods ----------------------------------------------------------------
@@ -227,32 +227,41 @@ public class Board
      * @param move
      */
     public void performMove(Move move) {
+        Player activePlayer = getActivePlayer();
 	// These cases are mutually exclusive
 	if (move.isCastling()) {
-	    castle(move);
-	} else if (getPiece(move.getOriginSquare()).getType() == PieceType.ROOK) { //TODO replace with ex. activePlayerBackrank ?
-	    if (move.getOriginSquare().equals(getActivePlayer().getKingsideRookHomePosition())) {
-		getActivePlayer().setKingsideCastleAvailable(false);
-	    } else if (move.getOriginSquare().equals(getActivePlayer().getQueensideRookHomePosition())) {
-	        getActivePlayer().setQueensideCastleAvailable(false);
+	    performCastling(move);
+	}
+	// Disable castle availability on side where rook moved
+	else if (getPiece(move.getOriginSquare()).getType() == PieceType.ROOK) { //TODO replace with ex. activePlayerBackrank ?
+	    boolean onQueenSide = true;
+	    if (move.getOriginSquare().equals(activePlayer.getKingSideRookHomePosition())) {
+		onQueenSide = false;
 	    }
+	    activePlayer.setCastleUnavailable(onQueenSide);
+
 	    //disableCastlingOnMoveSide(move);
-	} else if (move.getMovingPiece().getType() == PieceType.KING) {
-	    getActivePlayer().setQueensideCastleAvailable(false);
-	    getActivePlayer().setKingsideCastleAvailable(false);
+	}
+	// If king moved, disable castling on both sides
+	else if (move.getMovingPiece().getType() == PieceType.KING) {
+	    activePlayer.setQueenSideCastleAvailable(false);
+	    activePlayer.setKingSideCastleAvailable(false);
 	}
 
+	Point targetSquare = move.getTargetSquare();
+	Player inactivePlayer = getInactivePlayer();
+
 	// Disable castling if rook is captured
-	if (move.getTargetSquare().equals(getInactivePlayer().getKingsideRookHomePosition())) {
-	    getInactivePlayer().setKingsideCastleAvailable(false);
-	} else if (move.getTargetSquare().equals(getInactivePlayer().getQueensideRookHomePosition())) {
-	    getInactivePlayer().setQueensideCastleAvailable(false);
+	if (targetSquare.equals(inactivePlayer.getKingSideRookHomePosition())) {
+	    inactivePlayer.setKingSideCastleAvailable(false);
+	} else if (targetSquare.equals(inactivePlayer.getQueenSideRookHomePosition())) {
+	    inactivePlayer.setQueenSideCastleAvailable(false);
 	}
 
 	// Capture en passant target
-	if (move.getMovingPiece().getType().equals(PieceType.PAWN) && move.getTargetSquare().equals(enPassantTarget)) {
-	    int captureX = move.getTargetSquare().x;
-	    int captureY = move.getTargetSquare().y + getInactivePlayer().getForwardDirection();
+	if (move.getMovingPiece().getType().equals(PieceType.PAWN) && targetSquare.equals(enPassantTarget)) {
+	    int captureX = targetSquare.x;
+	    int captureY = targetSquare.y + inactivePlayer.getForwardDirection();
 
 	    setPiece(captureX, captureY, null);
 	}
@@ -264,7 +273,7 @@ public class Board
 	    setEnPassantTarget(null);
 	}
 
-	movePiece(move.getOriginSquare(), move.getTargetSquare());
+	movePiece(move.getOriginSquare(), targetSquare);
 
 	if (move.isPromoting()) {
 	    promote(move);
@@ -274,19 +283,20 @@ public class Board
     }
 
     public void displayGameOver(GameOverCauses cause){
-        String message = "Game Over";
+        StringBuilder message = new StringBuilder();
+        message.append("Game Over: ");
         switch (cause){
             case TIME:
-                message = "Game Over: " + getActivePlayer() + " ran out of time";
+                message.append(getActivePlayer()).append(" ran out of time");
                 break;
 	    case CHECKMATE:
-	        message = "Game Over: " + getActivePlayer() + " is Checkmated";
+		message.append(getActivePlayer()).append(" is Checkmated");
 	        break;
 	    case STALEMATE:
-	        message = "Game Over: Stalemate";
+	        message.append("Game Over: Stalemate");
 	        break;
 	}
-	JOptionPane.showMessageDialog(null, message);
+	JOptionPane.showMessageDialog(null, message.toString());
     }
 
     private void promote(final Move move) {
@@ -295,19 +305,20 @@ public class Board
 						  JOptionPane.INFORMATION_MESSAGE, null, options, options[0]);
 
 	final int queen = 0, rook = 1, bishop = 2, knight = 3;
+	Point targetSquare = move.getTargetSquare();
 
 	switch(choice){
 	    case queen:
-		setPiece(move.getTargetSquare(), new Queen(getActivePlayer(), move.getTargetSquare()));
+		setPiece(targetSquare, new Queen(getActivePlayer(), targetSquare));
 		break;
 	    case rook:
-		setPiece(move.getTargetSquare(), new Rook(getActivePlayer(), move.getTargetSquare()));
+		setPiece(targetSquare, new Rook(getActivePlayer(), targetSquare));
 		break;
 	    case bishop:
-		setPiece(move.getTargetSquare(), new Bishop(getActivePlayer(), move.getTargetSquare()));
+		setPiece(targetSquare, new Bishop(getActivePlayer(), targetSquare));
 		break;
 	    case knight:
-		setPiece(move.getTargetSquare(), new Knight(getActivePlayer(), move.getTargetSquare()));
+		setPiece(targetSquare, new Knight(getActivePlayer(), targetSquare));
 		break;
 	    default:
 		System.out.println("Error in testForUpgrade");
@@ -315,11 +326,12 @@ public class Board
     }
 
     private void setEnPassantTargetSquare(final Move move) {
-	if (activePlayerIndex == 0) {
-	    setEnPassantTarget(move.getOriginSquare().x, 5);
-	} else {
-	    setEnPassantTarget(move.getOriginSquare().x, 2);
+	int enPassantRow = 2;
+        if (activePlayerIndex == 0) {
+	    enPassantRow = 5;
 	}
+        setEnPassantTarget(move.getOriginSquare().x, enPassantRow);
+
     }
 
     /*
@@ -337,18 +349,19 @@ public class Board
      * Removes castling availability and moves the rooks for castling.
      * @param move
      */
-    private void castle(final Move move) {
-	getActivePlayer().setKingsideCastleAvailable(false);
-	getActivePlayer().setQueensideCastleAvailable(false);
+    private void performCastling(final Move move) {
+	getActivePlayer().setKingSideCastleAvailable(false);
+	getActivePlayer().setQueenSideCastleAvailable(false);
+	TeamColor activeColor = getActivePlayer().getColor();
 	//TODO split up into castle methods
 	if (move.getTargetSquare().x == 2) {
-	    if (getActivePlayer().getColor() == TeamColor.WHITE) {
+	    if (activeColor == TeamColor.WHITE) {
 		movePiece(new Point(0, 7), new Point(3, 7));
 	    } else {
 		movePiece(new Point(0, 0), new Point(3, 0));
 	    }
 	} else if (move.getTargetSquare().x == 6) {
-	    if (getActivePlayer().getColor() == TeamColor.WHITE) {
+	    if (activeColor == TeamColor.WHITE) {
 		movePiece(new Point(7, 7), new Point(5, 7));
 	    } else {
 		movePiece(new Point(7, 0), new Point(5, 0));
@@ -522,7 +535,7 @@ public class Board
 	activePlayerIndex = nextActivePlayerIndex;
 
 	if (nextActivePlayerIndex == 0) {
-	    fullmoveNumber++;
+	    fullMoveNumber++;
 	}
 
 	updateAvailableMoves(getInactivePlayer());
@@ -535,7 +548,7 @@ public class Board
 
 	//TODO remove debug prints when done
 	if (!gameOver) {
-	    System.out.println("New turn! Turn number: " + fullmoveNumber + "	Active player: " + getActivePlayer().getColor());
+	    System.out.println("New turn! Turn number: " + fullMoveNumber + "	Active player: " + getActivePlayer().getColor());
 	    //System.out.println("White threatens: " + getWhitePossibleMoves());
 	    //System.out.println("Black threatens: " + getBlackPossibleMoves());
 	    System.out.println("White in check: " + isInCheck(getPlayer(TeamColor.WHITE)));
