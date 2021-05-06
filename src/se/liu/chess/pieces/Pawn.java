@@ -45,7 +45,9 @@ public class Pawn extends AbstractPiece {
 
 	    if (board.isValidTile(combinedX, combinedY)) {
 		Piece piece = board.getPiece(combinedX, combinedY);
-		if (piece != null && piece.getColor() != this.getColor()) {
+		Point epTarget = board.getEnPassantTarget();
+		if ((epTarget != null && epTarget.x == combinedX && epTarget.y == combinedY) ||
+		    (piece != null && piece.getColor() != this.getColor())) {
 		    Move moveToAdd = new Move(new Point(x, y), new Point(combinedX, combinedY),
 					      this, moveCharacteristics);
 		    possibleMoves.add(moveToAdd);

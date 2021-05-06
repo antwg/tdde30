@@ -30,52 +30,52 @@ public class Board
     private int activePlayerIndex = 0;
     private boolean gameOver;
 
-    private FenConverter fenConverter;
+    private final FenConverter fenConverter;
 
     private Point enPassantTarget = null;
     private List<Point> threatenedSquares = null;
 
-    private Point currentlyPressed = null;
+    //private Point currentlyPressed = null;
 
     //TODO implement halfmoveClock
     private int halfmoveClock = 0;  // Used for 50 move rule
     private int fullmoveNumber = 1; // It's called halfmove and fullmove as one word
 
-    Point[] vectorThreatDirections = { new Point(1, 1),
-	    			       new Point(1, -1),
-	    			       new Point(-1, 1),
-	    			       new Point(-1, -1),
-	    			       new Point(1, 0),
-	    			       new Point(0, 1),
-	    			       new Point(-1, 0),
-	    			       new Point(0, -1) };
+    private final Point[] vectorThreatDirections = { new Point(1, 1),
+	    					     new Point(1, -1),
+						     new Point(-1, 1),
+						     new Point(-1, -1),
+						     new Point(1, 0),
+						     new Point(0, 1),
+						     new Point(-1, 0),
+						     new Point(0, -1) };
 
-    Point[] knightThreatDirections = { new Point(1, 2),
-	    			       new Point(2, 1),
-	    			       new Point(1, -2),
-	    			       new Point(2, -1),
-	    			       new Point(-1, 2),
-	    			       new Point(-2, 1),
-	    			       new Point(-1, -2),
-	    			       new Point(-2, -1) };
+    private final Point[] knightThreatDirections = { new Point(1, 2),
+						     new Point( 2, 1),
+						     new Point(1, -2),
+						     new Point(2, -1),
+						     new Point(-1, 2),
+						     new Point(-2, 1),
+						     new Point(-1, -2),
+						     new Point(-2, -1) };
 
-    Point[] pawnThreatDirections = { new Point(-1, -1),	// Pawn threats for white, can be inverted to get pawn threats for black.
-	    			     new Point(1, -1) };
+    private final Point[] pawnThreatDirections = { new Point(-1, -1),	// Pawn threats for white, can be inverted to get pawn threats for black.
+						   new Point(1, -1) };
 
-    List<Set<Point>> allDirectThreats = new ArrayList<>();
-    List<Set<Point>> allPins = new ArrayList<>();
+    private List<Set<Point>> allDirectThreats = new ArrayList<>();
+    private List<Set<Point>> allPins = new ArrayList<>();
 
 
     public Board(final int width, final int height) {
-	this.width = width;
-	this.height = height;
-	this.pieces = new Piece[width][height];
-	this.fenConverter = new FenConverter(this);
+		this.width = width;
+		this.height = height;
+		this.pieces = new Piece[width][height];
+		this.fenConverter = new FenConverter(this);
 
-	clearBoard();
+		clearBoard();
 
-	this.whitePlayer = new Player(TeamColor.WHITE);
-	this.blackPlayer = new Player(TeamColor.BLACK);
+		this.whitePlayer = new Player(TeamColor.WHITE);
+		this.blackPlayer = new Player(TeamColor.BLACK);
 
     }
 
@@ -91,11 +91,11 @@ public class Board
 	return height;
     }
 
-    public Piece getPiece(int x, int y) {
+    public Piece getPiece(final int x, final int y) {
 	return pieces[y][x];
     }
 
-    public Piece getPiece(Point p) {
+    public Piece getPiece(final Point p) {
 	return getPiece(p.x, p.y);
     }
 
@@ -115,7 +115,7 @@ public class Board
 	}
     }
 
-    public Player getOpponentPlayer(Player friendlyPlayer) {
+    public Player getOpponentPlayer(final Player friendlyPlayer) {
 	if (friendlyPlayer.equals(whitePlayer)) {
 	    return blackPlayer;
 	} else {
@@ -127,7 +127,7 @@ public class Board
 	return enPassantTarget;
     }
 
-    public Player getPlayer(TeamColor color) {
+    public Player getPlayer(final TeamColor color) {
         if (color == TeamColor.WHITE){
 	    return whitePlayer;
 	}
@@ -157,9 +157,11 @@ public class Board
     }
      */
 
+    /*
     public Point getCurrentlyPressed() {
 	return currentlyPressed;
     }
+     */
 
     public boolean isEmpty(int x, int y) {
 	return getPiece(x, y) == null;
@@ -247,11 +249,22 @@ public class Board
 	    getInactivePlayer().setQueensideCastleAvailable(false);
 	}
 
+	// Capture en passant target
+	if (move.getMovingPiece().getType().equals(PieceType.PAWN) && move.getTargetSquare().equals(enPassantTarget)) {
+	    int captureX = move.getTargetSquare().x;
+	    int captureY = move.getTargetSquare().y + getInactivePlayer().getForwardDirection();
+
+	    setPiece(captureX, captureY, null);
+	}
+
+	// Doublestep
 	if (move.isPawnDoubleStep()) {
 	    setEnPassantTargetSquare(move); // TODO rename similarly named functions?
 	} else {
 	    setEnPassantTarget(null);
 	}
+
+
 
 	movePiece(move.getOriginSquare(), move.getTargetSquare());
 
@@ -305,9 +318,9 @@ public class Board
 
     private void setEnPassantTargetSquare(final Move move) {
 	if (activePlayerIndex == 0) {
-	    setEnPassantTarget(move.getOriginSquare().x, 2);
-	} else {
 	    setEnPassantTarget(move.getOriginSquare().x, 5);
+	} else {
+	    setEnPassantTarget(move.getOriginSquare().x, 2);
 	}
     }
 
