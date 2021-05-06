@@ -264,8 +264,6 @@ public class Board
 	    setEnPassantTarget(null);
 	}
 
-
-
 	movePiece(move.getOriginSquare(), move.getTargetSquare());
 
 	if (move.isPromoting()) {

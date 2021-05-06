@@ -110,12 +110,20 @@ public class King extends PointMovePiece {
 	Set<Move> possibleMoves = new HashSet<>();
 
 	for (Move move : initialMoveSet) {
-	    if (!board.getInactivePlayer().getAttackedSquares().contains(move.getTargetSquare())) { //TODO breaks if king can move first move
+	    // check if not protected
+	    if (board.getPiece(move.getTargetSquare()) == null &&
+		!board.getInactivePlayer().getAttackedSquares().contains(move.getTargetSquare())) {
+		possibleMoves.add(move);
+	    } else if (!isPieceProtected(board, move.getTargetSquare())) {
 		possibleMoves.add(move);
 	    }
 	}
 
 	return possibleMoves;
+    }
+
+    private boolean isPieceProtected(final Board board, final Point targetSquare) {
+	return false;
     }
 
     private Set<Move> getCastlingMoves(final Board board) {
@@ -130,7 +138,17 @@ public class King extends PointMovePiece {
 	moveCharacteristics.add(MoveCharacteristics.CASTLING);
 
 	if (canCastleQueenside(board)) {
-	    if (owner.getColor() == TeamColor.WHITE) {
+		Point p1 = new Point(4, 0);
+		Point p2 = new Point(2, 0);
+
+		if (owner.getColor() == TeamColor.WHITE) {
+		    p1 = new Point(4, 7);
+		    p2 = new Point(2, 7);
+		}
+		Move moveToAdd = new Move(p1, p2, this, moveCharacteristics);
+		possibleMoves.add(moveToAdd);
+	}
+	    /*if (owner.getColor() == TeamColor.WHITE) {
 		Move moveToAdd = new Move(new Point(4, 7), new Point(2, 7),
 					  this, moveCharacteristics);
 		possibleMoves.add(moveToAdd);
@@ -138,10 +156,20 @@ public class King extends PointMovePiece {
 		Move moveToAdd = new Move(new Point(4, 0), new Point(2, 0),
 					  this, moveCharacteristics);
 		possibleMoves.add(moveToAdd);
-	    }
-	}
+	    }*/
+
 	if (canCastleKingside(board)) {
-	    if (owner.getColor() == TeamColor.WHITE) {
+	    Point p1 = new Point(4, 0);
+	    Point p2 = new Point(6, 0);
+
+	    if (owner.getColor() == TeamColor.WHITE){
+	        p1 = new Point(4, 7);
+	        p2 = new Point(6, 7);
+	    }
+	    Move moveToAdd = new Move(p1, p2, this, moveCharacteristics);
+	    possibleMoves.add(moveToAdd);
+
+	    /*if (owner.getColor() == TeamColor.WHITE) {
 		Move moveToAdd = new Move(new Point(4, 7), new Point(6, 7),
 					  this, moveCharacteristics);
 		possibleMoves.add(moveToAdd);
@@ -149,7 +177,7 @@ public class King extends PointMovePiece {
 		Move moveToAdd = new Move(new Point(4, 0), new Point(6, 0),
 					  this, moveCharacteristics);
 		possibleMoves.add(moveToAdd);
-	    }
+	    }*/
 	}
 
 	return possibleMoves;
