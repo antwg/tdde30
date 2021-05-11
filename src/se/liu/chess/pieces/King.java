@@ -58,11 +58,12 @@ public class King extends PointMovePiece {
 	    return false;
 	}
 
-	if (board.getPiece(5, owner.getHomeRank()) == null &&
-	    board.getPiece(6, owner.getHomeRank()) == null &&
-	    !opponent.getAttackedSquares().contains(new Point(4, owner.getHomeRank())) &&
-	    !opponent.getAttackedSquares().contains(new Point(5, owner.getHomeRank())) &&
-	    !opponent.getAttackedSquares().contains(new Point(6, owner.getHomeRank()))) {
+	int homeRank = owner.getHomeRank();
+	if (board.getPiece(5, homeRank) == null &&
+	    board.getPiece(6, homeRank) == null &&
+	    !opponent.getAttackedSquares().contains(new Point(4, homeRank)) &&
+	    !opponent.getAttackedSquares().contains(new Point(5, homeRank)) &&
+	    !opponent.getAttackedSquares().contains(new Point(6, homeRank))) {
 	    return true;
 	}
 	return false;
@@ -115,16 +116,13 @@ public class King extends PointMovePiece {
 	    if (board.getPiece(move.getTargetSquare()) == null &&
 		!board.getInactivePlayer().getAttackedSquares().contains(move.getTargetSquare())) {
 		possibleMoves.add(move);
-	    } else if (!isPieceProtected(board, move.getTargetSquare())) {
+	    } else if (board.getPiece(move.getTargetSquare()) != null &&
+		       !board.isPieceProtected(move.getTargetSquare())) {
 		possibleMoves.add(move);
 	    }
 	}
 
 	return possibleMoves;
-    }
-
-    private boolean isPieceProtected(final Board board, final Point targetSquare) {
-	return false;
     }
 
     private Set<Move> getCastlingMoves(final Board board) {

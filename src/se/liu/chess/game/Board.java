@@ -183,6 +183,18 @@ public class Board
 	return gameOver;
     }
 
+    /**
+     * Returns a list of threats.
+     * @return
+     */
+    public List<Set<Point>> getAllDirectThreats() {
+	return allDirectThreats;
+    }
+
+    public List<Set<Point>> getAllPins() {
+	return allPins;
+    }
+
     // --- Setters ---
 
 
@@ -445,18 +457,6 @@ public class Board
 
      */
 
-    /**
-     * Returns a list of threats.
-     * @return
-     */
-    public List<Set<Point>> getAllDirectThreats() {
-	return allDirectThreats;
-    }
-
-    public List<Set<Point>> getAllPins() {
-	return allPins;
-    }
-
     public boolean isInCheck(Player player) {
 	return !allDirectThreats.isEmpty() && player.equals(getActivePlayer());
     }
@@ -471,6 +471,122 @@ public class Board
 	updateThreats(getActivePlayer());
 	updateAvailableMoves(getActivePlayer());
 	gameOver = false;
+    }
+
+    public boolean isPieceProtected(final Point targetSquare) {
+	TeamColor protectionColor = getPiece(targetSquare).getColor();
+
+	//TODO split into multiple smaller functions
+
+	final Point[] diagonalVectors = { new Point(1, 1),
+					  new Point(1, -1),
+					  new Point(-1, 1),
+					  new Point(-1, -1)};
+
+	for (Point diagonalVector : diagonalVectors) {
+	    int combinedX = targetSquare.x + diagonalVector.x;
+	    int combinedY = targetSquare.y + diagonalVector.y;
+
+	    while (true) {
+		if (!isValidTile(combinedX, combinedY)) {
+		    break;
+		}
+
+		Piece pieceOnSquare = getPiece(combinedX, combinedY);
+
+		if (pieceOnSquare == null) {
+		    combinedX += diagonalVector.x;
+		    combinedY += diagonalVector.y;
+		} else if (pieceOnSquare.getColor().equals(protectionColor) &&
+			   (pieceOnSquare.getType().equals(PieceType.BISHOP) || pieceOnSquare.getType().equals(PieceType.QUEEN))) {
+		    return true;
+		} else {
+		    break;
+		}
+	    }
+	}
+
+
+
+	final Point[] orthogonalVectors = { new Point(1, 0),
+					    new Point(0, 1),
+					    new Point(-1, 0),
+					    new Point(0, -1) };
+
+	for (Point orthogonalVector : orthogonalVectors) {
+	    int combinedX = targetSquare.x + orthogonalVector.x;
+	    int combinedY = targetSquare.y + orthogonalVector.y;
+
+	    while (true) {
+		if (!isValidTile(combinedX, combinedY)) {
+		    break;
+		}
+
+		Piece pieceOnSquare = getPiece(combinedX, combinedY);
+
+		if (pieceOnSquare == null) {
+		    combinedX += orthogonalVector.x;
+		    combinedY += orthogonalVector.y;
+		} else if (pieceOnSquare.getColor().equals(protectionColor) &&
+			   (pieceOnSquare.getType().equals(PieceType.ROOK) || pieceOnSquare.getType().equals(PieceType.QUEEN))) {
+		    return true;
+		} else {
+		    break;
+		}
+	    }
+	}
+
+
+
+	final Point[] knightAttacks = { new Point(1, 2),
+		new Point( 2, 1),
+		new Point(1, -2),
+		new Point(2, -1),
+		new Point(-1, 2),
+		new Point(-2, 1),
+		new Point(-1, -2),
+		new Point(-2, -1) };
+
+	for (Point knightAttack : knightAttacks) {
+	    int combinedX = targetSquare.x + knightAttack.x;
+	    int combinedY = targetSquare.y + knightAttack.y;
+
+	    if (!isValidTile(combinedX, combinedY)) {
+		continue;
+	    }
+
+	    Piece pieceOnSquare = getPiece(combinedX, combinedY);
+
+	    if (pieceOnSquare != null &&
+		pieceOnSquare.getColor().equals(protectionColor) &&
+		pieceOnSquare.getType().equals(PieceType.KNIGHT)) {
+		return true;
+	    }
+	}
+
+
+
+	final Point[] pawnAttacks = { new Point(-1, -getPiece(targetSquare).getOwner().getForwardDirection()),
+		new Point(1, -getPiece(targetSquare).getOwner().getForwardDirection()) };
+
+	for (Point pawnAttack : pawnAttacks) {
+	    int combinedX = targetSquare.x + pawnAttack.x;
+	    int combinedY = targetSquare.y + pawnAttack.y;
+
+	    if (!isValidTile(combinedX, combinedY)) {
+		continue;
+	    }
+
+	    Piece pieceOnSquare = getPiece(combinedX, combinedY);
+
+	    if (pieceOnSquare != null &&
+		pieceOnSquare.getColor().equals(protectionColor) &&
+		pieceOnSquare.getType().equals(PieceType.PAWN)) {
+		return true;
+	    }
+	}
+
+	return false;
     }
 
 
