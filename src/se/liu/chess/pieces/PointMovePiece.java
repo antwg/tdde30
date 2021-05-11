@@ -27,25 +27,6 @@ public abstract class PointMovePiece extends AbstractPiece{
 	super(owner, position);
     }
 
-    /*
-    @Override public Set<Point> getMoves(final Board board, final int x, final int y) {
-	Set<Point> legalMoves = new HashSet<>();
-
-	for (Point move: allMoves) {
-	    int combinedX = x + move.x;
-	    int combinedY = y + move.y;
-
-	    if (board.isValidTile(combinedX, combinedY)) {
-		Piece piece = board.getPiece(combinedX, combinedY);
-		if (piece == null || piece.getColor() != this.getColor()) {
-		    legalMoves.add(new Point(combinedX, combinedY));
-		}
-	    }
-	}
-	return legalMoves;
-    }
-    */
-
     public Set<Move> getPointMoves(final Board board, final int x, final int y, Point[] moveVectors) {
         Set<Move> legalMoves = new HashSet<>();
 

@@ -54,7 +54,7 @@ public abstract class AbstractPiece implements Piece {
         if (threats.isEmpty()) {
             return initialMoves;
         }
-        else { //TODO kan vara fel
+        else {
             for (Set<Point> threat : threats){
                 if (threat.isEmpty()){
                     return initialMoves;

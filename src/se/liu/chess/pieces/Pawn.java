@@ -19,9 +19,6 @@ import java.util.Set;
 public class Pawn extends AbstractPiece {
 
     private Point[] attackingMoves = {new Point(1, owner.getForwardDirection()), new Point(-1, owner.getForwardDirection())};
-    //private Point[] forwardMoves = {new Point(0, owner.getForwardDirection())};
-    //private Point[] doubleMoves = {new Point(0, 2 * owner.getForwardDirection())};
-
 
     public Pawn(final Player owner, final Point position) {
 	super(owner, position);

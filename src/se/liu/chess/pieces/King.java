@@ -69,32 +69,6 @@ public class King extends PointMovePiece {
 	return false;
     }
 
-    /*
-    @Override public Set<Point> getMoves(final Board board, final int x, final int y) {
-        allMoves = kingMoves;
-        Set<Point> availableMoves = super.getMoves(board, x, y);
-        // TODO fix this too
-	if (!board.isInCheck(owner)) {
-	    if (canCastleQueenside(board)) {
-		if (owner.getColor() == TeamColor.WHITE) {
-		    availableMoves.add(new Point(2, 7));
-		} else {
-		    availableMoves.add(new Point(2, 0));
-		}
-	    }
-	    if (canCastleKingside(board)) {
-		if (owner.getColor() == TeamColor.WHITE) {
-		    availableMoves.add(new Point(6, 7));
-		} else {
-		    availableMoves.add(new Point(6, 0));
-		}
-	    }
-	}
-
-	return availableMoves;
-    }
-    */
-
     @Override public Set<Move> getMoves(final Board board, final int x, final int y) {
 	Set<Move> possibleMoves = new HashSet<>();
 
@@ -107,7 +81,6 @@ public class King extends PointMovePiece {
 	return possibleMoves;
     }
 
-    // TODO not working properly
     private Set<Move> limitMovesToSafeSquares(final Board board, final Set<Move> initialMoveSet) {
 	Set<Move> possibleMoves = new HashSet<>();
 

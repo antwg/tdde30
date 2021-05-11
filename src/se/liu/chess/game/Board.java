@@ -37,8 +37,6 @@ public class Board
     private List<Point> threatenedSquares = null;
     private ChessComponent chessComponent;
 
-    //private Point currentlyPressed = null;
-
     //TODO implement halfmoveClock
     private int halfMoveClock = 0;  // Used for 50 move rule
     private int fullMoveNumber = 1; // It's called halfmove and fullmove as one word
@@ -155,21 +153,6 @@ public class Board
 	return chessComponent;
     }
 
-    /*
-    public Set<Move> getPossibleMoves(TeamColor teamColor) {
-	if (teamColor == TeamColor.WHITE) {
-	    return whitePossibleMoves;
-	}
-	return blackPossibleMoves;
-    }
-     */
-
-    /*
-    public Point getCurrentlyPressed() {
-	return currentlyPressed;
-    }
-     */
-
     public boolean isEmpty(int x, int y) {
 	return getPiece(x, y) == null;
     }
@@ -252,12 +235,12 @@ public class Board
 	    performCastling(move);
 	}
 	// Disable castle availability on side where rook moved
-	else if (getPiece(move.getOriginSquare()).getType() == PieceType.ROOK) { //TODO replace with ex. activePlayerBackrank ?
+	else if (getPiece(move.getOriginSquare()).getType() == PieceType.ROOK) {
 	    boolean onQueenSide = true;
 	    if (move.getOriginSquare().equals(activePlayer.getKingSideRookHomePosition())) {
 		onQueenSide = false;
 	    }
-	    activePlayer.setCastleUnavailable(onQueenSide);
+	    activePlayer.setCastleUnavailable(onQueenSide);  //TODO replace this with setQueenSideCastleAvailable/setKingSideCastleAvailable
 
 	    //disableCastlingOnMoveSide(move);
 	}
@@ -366,17 +349,6 @@ public class Board
 
     }
 
-    /*
-    private void disableCastlingOnMoveSide(final Move move) {
-	if (move.getOriginSquare().x == 0) {
-	    getActivePlayer().setQueensideCastleAvailable(false);
-	} else if (move.getOriginSquare().x == 7) {
-	    getActivePlayer().setKingsideCastleAvailable(false);
-	}
-    }
-
-     */
-
     /**
      * Removes castling availability and moves the rooks for castling.
      * @param move
@@ -430,42 +402,6 @@ public class Board
 	return (0 <= x && x < width && 0 <= y && y < height);
     }
 
-    /*
-    public void pressedSquare(Point point){
-	Point lastPressed = currentlyPressed;
-	this.currentlyPressed = point;
-
-	// Stop from moving empty pieces (null)
-	if(lastPressed != null && getPiece(lastPressed) != null){
-
-	    // Get legal moves
-	    if (getValidMoves(lastPressed.x, lastPressed.y).contains(currentlyPressed)) {
-		movePiece(lastPressed, currentlyPressed);
-		getActivePlayer().increaseTimeByIncrement();
-		getPiece(currentlyPressed).setHasMoved(true);
-		testForUpgrade();
-		passTurn();
-	    }
-	    tryToKillEnPassant();
-	    setEnPassant(lastPressed);
-
-	    this.currentlyPressed = null;
-	}
-    }
-
-    public Set<Move> getValidMoves(int x, int y){
-	Piece selectedPiece = getPiece(x, y);
-	Set<Move> moves = new HashSet<>();
-
-	if (selectedPiece != null &&
-	    selectedPiece.getColor() == getActivePlayer().getColor()) {
-	    moves = selectedPiece.getMoves(this, x, y);
-	}
-	return moves;
-    }
-
-     */
-
     public boolean isInCheck(Player player) {
 	return !allDirectThreats.isEmpty() && player.equals(getActivePlayer());
     }
@@ -485,7 +421,7 @@ public class Board
     public boolean isPieceProtected(final Point targetSquare) {
 	TeamColor protectionColor = getPiece(targetSquare).getColor();
 
-	//TODO split into multiple smaller functions
+	//TODO This function is YUGE! Split into multiple smaller functions.
 
 	final Point[] diagonalVectors = { new Point(1, 1),
 					  new Point(1, -1),
@@ -600,70 +536,6 @@ public class Board
 
 
     // ----------------------------------------------------- Private Methods ---------------------------------------------------------------
-
-    /*
-    private boolean hasLegalMoves(Player player) {
-	return !getPossibleMoves(player.getColor()).isEmpty();
-    }
-
-    */
-
-    /*
-    private void testForUpgrade(){
-	if (getPiece(currentlyPressed) != null && getPiece(currentlyPressed) instanceof Pawn){ // Seems excessive to use polymorphism here
-	    final int topRow = 0, bottomRow = 7;					       // since we're only interested in Pawn.
-	    										       // Creating a method for all Pieces to check
-	    if (currentlyPressed.y == topRow || currentlyPressed.y == bottomRow) {	       // if it's a pawn seems inefficient
-		String[] options = {"Queen", "Rook", "Bishop", "Knight"};
-		int choice = JOptionPane.showOptionDialog(null, "Choose upgrade", "", JOptionPane.DEFAULT_OPTION,
-							  JOptionPane.INFORMATION_MESSAGE, null, options, options[0]);
-
-		final int queen = 0, rook = 1, bishop = 2, knight = 3;
-
-		switch(choice){
-		    case queen:
-			setPiece(currentlyPressed, new Queen(getActivePlayer()));
-			break;
-		    case rook:
-			setPiece(currentlyPressed, new Rook(getActivePlayer()));
-			break;
-		    case bishop:
-			setPiece(currentlyPressed, new Bishop(getActivePlayer()));
-			break;
-		    case knight:
-			setPiece(currentlyPressed, new Knight(getActivePlayer()));
-			break;
-		    default:
-			System.out.println("Error in testForUpgrade");
-		}
-	    }
-	}
-    }
-
-    private void setEnPassant(Point lastPressed) {
-        final int doubleMove = 2;
-	if (getPiece(currentlyPressed) != null &&
-	    getPiece(currentlyPressed) instanceof Pawn &&			             // Seems excessive to use polymorphism here
-	    Math.abs(currentlyPressed.y - lastPressed.y) == doubleMove){		     // since we're only interested in pawn
-	    setEnPassantTarget(lastPressed.x, (currentlyPressed.y + lastPressed.y) / 2);  // Creating a method for all Pieces to check
-	}										     // if it's a pawn seems inefficient
-	else {
-	    setEnPassantTarget(null);
-	}
-    }
-
-    private void tryToKillEnPassant() {
-	if (enPassantTarget != null && getPiece(enPassantTarget) != null){
-	    int previousY = enPassantTarget.y + 1;
-
-	    if (getPiece(enPassantTarget).getColor() == TeamColor.BLACK) {
-		previousY = enPassantTarget.y - 1;
-	    }
-	    setPiece(enPassantTarget.x, previousY, null);
-	}
-    }
-
-     */
 
     private void passTurn() { // Pass is used as a verb (inspection)
 	// Update active player
