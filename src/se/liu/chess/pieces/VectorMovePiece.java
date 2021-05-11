@@ -63,13 +63,18 @@ public abstract class VectorMovePiece extends AbstractPiece{
 	    while (true) {
 		if (!board.isValidTile(combinedX, combinedY)) {
 		    break;
-		} else if (board.getPiece(combinedX, combinedY) == null) {
+		}
+
+		Piece pieceOnSquare = board.getPiece(combinedX, combinedY);
+
+		if (pieceOnSquare == null ||
+		    pieceOnSquare.getColor() != getColor() && pieceOnSquare.getType() == PieceType.KING) {
 		    Move moveToAdd = new Move(new Point(x, y), new Point(combinedX, combinedY),
 					    this, moveCharacteristics);
 		    legalMoves.add(moveToAdd);
-		} else if (board.getPiece(combinedX, combinedY).getColor() == this.getColor()) {
+		} else if (pieceOnSquare.getColor() == this.getColor()) {
 		    break;
-		} else if (board.getPiece(combinedX, combinedY).getColor() != this.getColor()) {
+		} else if (pieceOnSquare.getColor() != this.getColor()) {
 		    Move moveToAdd = new Move(new Point(x, y), new Point(combinedX, combinedY),
 					      this, moveCharacteristics);
 		    legalMoves.add(moveToAdd);

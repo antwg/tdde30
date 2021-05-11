@@ -392,7 +392,7 @@ public class Board
 
 	} else {
 	    System.out.println("CODE SHOULD NOT GET HERE! (method castle() in Board)");
-	    // TODO throw exception
+	    // TODO throw exception?
 	}
     }
 
@@ -686,7 +686,6 @@ public class Board
 
     }
 
-    //TODO split into smaller functions
     private void updateThreats(final Player player) {
         Point kingPos = player.getKing().getPosition();
 
