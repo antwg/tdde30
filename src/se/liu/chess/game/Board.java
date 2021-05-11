@@ -296,7 +296,18 @@ public class Board
 	        message.append("Game Over: Stalemate");
 	        break;
 	}
-	JOptionPane.showMessageDialog(null, message.toString());
+
+	String[] options = {"Restart", "Quit"};
+        final int restart = 0, quit = 1;
+	int choice = JOptionPane.showOptionDialog(null, message.toString(), "", JOptionPane.DEFAULT_OPTION,
+						  JOptionPane.INFORMATION_MESSAGE, null, options, options[0]);
+	switch (choice){
+	    case restart:
+	        resetBoard();
+	        break;
+	    case quit:
+	        System.exit(0);
+	}
     }
 
     private void promote(final Move move) {
