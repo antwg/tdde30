@@ -6,6 +6,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import se.liu.chess.gui.ChessComponent;
 import se.liu.chess.pieces.Piece;
 import se.liu.chess.pieces.PieceType;
 import se.liu.chess.pieces.Rook;
@@ -34,6 +35,7 @@ public class Board
 
     private Point enPassantTarget = null;
     private List<Point> threatenedSquares = null;
+    private ChessComponent chessComponent;
 
     //private Point currentlyPressed = null;
 
@@ -71,6 +73,7 @@ public class Board
 		this.height = height;
 		this.pieces = new Piece[width][height];
 		this.fenConverter = new FenConverter(this);
+		this.chessComponent = new ChessComponent(this);
 
 		clearBoard();
 
@@ -146,6 +149,10 @@ public class Board
 	}
 
 	return moves;
+    }
+
+    public ChessComponent getChessComponent() {
+	return chessComponent;
     }
 
     /*
@@ -295,17 +302,19 @@ public class Board
     }
 
     public void displayGameOver(GameOverCauses cause){
+	chessComponent.repaint();
         StringBuilder message = new StringBuilder();
         message.append("Game Over: ");
+        String activePlayer = getActivePlayer().toString();
         switch (cause){
             case TIME:
-                message.append(getActivePlayer()).append(" ran out of time");
+                message.append(activePlayer).append(" ran out of time");
                 break;
 	    case CHECKMATE:
-		message.append(getActivePlayer()).append(" is Checkmated");
+		message.append(activePlayer).append(" is Checkmated");
 	        break;
 	    case STALEMATE:
-	        message.append("Game Over: Stalemate");
+	        message.append(" Stalemate");
 	        break;
 	}
 
@@ -823,7 +832,6 @@ public class Board
 		displayGameOver(GameOverCauses.STALEMATE);
 		System.out.println("Stalemate detected!");
 	    }
-	    gameOver = true;
 	}
     }
 

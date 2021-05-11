@@ -15,11 +15,9 @@ import java.util.Set;
  * AbstractPiece is extended by all PieceTypes.
  */
 
-public abstract class AbstractPiece implements Piece
-{
+public abstract class AbstractPiece implements Piece {
     protected Player owner;
     protected Point position;
-
     protected boolean hasMoved = false;
 
     protected AbstractPiece(final Player owner, final Point position) {

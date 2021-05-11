@@ -32,6 +32,11 @@ public class ChessComponent extends JComponent {
 		      pieceP = loadIMG("PawnWhite"), piecep = loadIMG("PawnBlack"), pieceQ = loadIMG("QueenWhite"),
 	    	      pieceq = loadIMG("QueenBlack"), pieceR = loadIMG("RookWhite"), piecer = loadIMG("RookBlack");
 
+    /**
+     * Creates a chessComponent and a mouseListener.
+     *
+     * @param board A Board object
+     */
     public ChessComponent(final Board board) {
 	this.board = board;
 	this.width = SQUARE_SIZE * board.getWidth();
@@ -52,17 +57,31 @@ public class ChessComponent extends JComponent {
 
     // ----------------------------------------------------- Public Methods ----------------------------------------------------------------
 
+    /**
+     * Getter for Board.
+     *
+     * @return Board
+     */
     public Board getBoard() {
 	return board;
     }
 
+    /**
+     * Returns the preferred size of component.
+     *
+     * @return Dimension of preferred size
+     */
     @Override public Dimension getPreferredSize() {
 	return new Dimension(width, height);
     }
 
     // ----------------------------------------------------- Protected Methods -------------------------------------------------------------
 
-
+    /**
+     * Paints a board including the Pieces
+     *
+     * @param g Graphics object
+     */
     @Override protected void paintComponent(final Graphics g) {
 	super.paintComponent(g);
 	final Graphics2D g2d = (Graphics2D) g;
@@ -106,10 +125,23 @@ public class ChessComponent extends JComponent {
 
     // ------------------------------------------------ Private Methods --------------------------------------------------------------------
 
+    /**
+     * Creates an ImageIcon ny loading a file "name" from resources.
+     *
+     * @param name The part of the name specific to that IMG e.g "BishopBlack" in "images/BishopBlack.png"
+     * @return ImageIcon
+     */
     private ImageIcon loadIMG(String name){
 	return new ImageIcon(ClassLoader.getSystemResource("images/" + name + ".png"));
     }
 
+    /**
+     * Returns all the moves the active player can do for a given coordinate.
+     *
+     * @param x The x value of the coordinate
+     * @param y The y value of the coordinate
+     * @return A set of Moves
+     */
     private Set<Move> getMovesForCoordinate(int x, int y){
         Set<Move> moves = new HashSet<>();
 	for (Move move: board.getActivePlayer().getAvailableMoves()){
@@ -119,6 +151,15 @@ public class ChessComponent extends JComponent {
 	}
 	return moves;
     }
+
+    /**
+     * Given a coordinate, will return a set of Points containing the targetSquare
+     * for all possible moves from the coordinate.
+     *
+     * @param x The x value of the coordinate
+     * @param y The y value of the coordinate
+     * @return A set of targetSquares
+     */
     private Set<Point> getTargetPointsFromMoveSet(int x, int y){
 	Set<Point> points = new HashSet<>();
 	for (Move move: getMovesForCoordinate(x, y)){
@@ -127,6 +168,11 @@ public class ChessComponent extends JComponent {
 	return points;
     }
 
+    /**
+     * Returns the move that was made last click, or null if no move was just made.
+     *
+     * @return A move or null
+     */
     private Move getMadeMove(){
         if (lastPressed != null){
             for (Move move : getMovesForCoordinate(lastPressed.x, lastPressed.y)){
@@ -139,6 +185,12 @@ public class ChessComponent extends JComponent {
         return null;
     }
 
+    /**
+     * Gets the ImageIcon for a given Piece object.
+     *
+     * @param piece A piece object
+     * @return An imageIcon
+     */
     private ImageIcon getImageForPiece(Piece piece){
 	ImageIcon image = null;
 	switch (piece.toString()){ // Useful to keep as string, both because "/" can't be used in enum and the main purpose is to convert from/to string

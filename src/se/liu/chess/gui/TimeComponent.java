@@ -14,12 +14,33 @@ public class TimeComponent extends JComponent {
     private int height;
     private Board board;
 
+    /**
+     * Creates a TimeComponent.
+     *
+     * @param board A board object
+     * @param width The preferred width of the object
+     * @param height The preferred height of the object
+     */
     public TimeComponent(Board board, final int width, final int height) {
 	this.width = width;
 	this.height = height;
 	this.board = board;
     }
 
+    /**
+     * Returns the preferred size of component.
+     *
+     * @return Dimension of preferred size
+     */
+    @Override public Dimension getPreferredSize() {
+	return new Dimension(width, height);
+    }
+
+    /**
+     * Paints a timeComponent
+     *
+     * @param g Graphics object
+     */
     @Override protected void paintComponent(final Graphics g) {
 	super.paintComponent(g);
 	final Graphics2D g2d = (Graphics2D) g;
@@ -36,9 +57,7 @@ public class TimeComponent extends JComponent {
 	g.fillRect(xOffset, middle, lineLength, rectHeight);
     }
 
-    @Override public Dimension getPreferredSize() {
-	return new Dimension(width, height);
-    }
+
 
 
 }

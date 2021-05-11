@@ -17,12 +17,19 @@ public class GameManager
     private TimeComponent timeComponent = null;
     private static final int CLOCK_DELAY = 1000;
 
+    /**
+     * Creates a GameManager.
+     * Also creates a new Board object.
+     */
     public GameManager() {
         this.board = new Board(8, 8);
     }
 
     // ----------------------------------------------------- Public Methods ----------------------------------------------------------------
 
+    /**
+     * Creates a new Board and replaces the old one.
+     */
     public void createNewGame() {
         this.board = new Board(8, 8);
     }
@@ -49,8 +56,6 @@ public class GameManager
     // ------------------------------------------------------- Main Method -----------------------------------------------------------------
 
     public static void main(String[] args) {
-        // Testing
-
         GameManager gm = new GameManager();
         gm.createNewGame();
 
@@ -58,7 +63,7 @@ public class GameManager
         System.out.println(gm.board.getFenConverter().convertBoardToFEN());
 
         gm.timeComponent = new TimeComponent(gm.board, 180, 512);
-        GameViewer gameViewer = new GameViewer(new ChessComponent(gm.board), gm.timeComponent);
+        GameViewer gameViewer = new GameViewer(gm.board, gm.timeComponent);
         gameViewer.show();
         gm.board.updateAvailableMoves(gm.board.getActivePlayer());
 

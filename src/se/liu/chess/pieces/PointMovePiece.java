@@ -18,6 +18,11 @@ public abstract class PointMovePiece extends AbstractPiece{
 
     protected Point[] allMoves = null;
 
+    /**
+     *
+     * @param owner
+     * @param position
+     */
     protected PointMovePiece(final Player owner, final Point position) {
 	super(owner, position);
     }
