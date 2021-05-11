@@ -24,6 +24,8 @@ public class Bishop extends VectorMovePiece
 	super(owner, position);
     }
 
+    // ----------------------------------------------------- Public Methods ----------------------------------------------------------------
+
     @Override public Set<Move> getMoves(Board board, int x, int y) {
 	Set<Move> possibleMoves = getVectorMoves(board, x, y, bishopMoveDirections);
 

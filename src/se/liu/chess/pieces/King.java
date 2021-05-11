@@ -30,9 +30,109 @@ public class King extends PointMovePiece {
 	super(owner, position);
     }
 
+    // ----------------------------------------------------- Public Methods ----------------------------------------------------------------
+
+    @Override public Set<Move> getMoves(final Board board, final int x, final int y) {
+	Set<Move> possibleMoves = new HashSet<>();
+
+	possibleMoves.addAll(getPointMoves(board, x, y, kingMoves));
+
+	possibleMoves.addAll(getCastlingMoves(board));
+
+	possibleMoves = limitMovesToSafeSquares(board, possibleMoves);
+
+	return possibleMoves;
+    }
+
+    @Override public PieceType getType() {
+	return PieceType.KING;
+    }
+
+    @Override public String toString() {
+	if (getColor() == TeamColor.WHITE) {
+	    return "K";
+	}
+	return "k";
+    }
+
+    // ----------------------------------------------------- Private Methods ---------------------------------------------------------------
+
+    private Set<Move> limitMovesToSafeSquares(final Board board, final Set<Move> initialMoveSet) {
+	Set<Move> possibleMoves = new HashSet<>();
+
+	for (Move move : initialMoveSet) {
+	    // check if not protected
+	    if (board.getPiece(move.getTargetSquare()) == null &&
+		!board.getInactivePlayer().getAttackedSquares().contains(move.getTargetSquare())) {
+		possibleMoves.add(move);
+	    } else if (board.getPiece(move.getTargetSquare()) != null &&
+		       !board.isPieceProtected(move.getTargetSquare())) {
+		possibleMoves.add(move);
+	    }
+	}
+
+	return possibleMoves;
+    }
+
+    private Set<Move> getCastlingMoves(final Board board) {
+	Set<Move> possibleMoves = new HashSet<>();
+
+	if (board.isInCheck(owner)) {
+	    return possibleMoves;
+	}
+
+	Set<MoveCharacteristics> moveCharacteristics = EnumSet.noneOf(MoveCharacteristics.class);
+	moveCharacteristics.add(MoveCharacteristics.HARMLESS);
+	moveCharacteristics.add(MoveCharacteristics.CASTLING);
+
+	if (canCastleQueenside(board)) {
+	    Point p1 = new Point(4, 0);
+	    Point p2 = new Point(2, 0);
+
+	    if (owner.getColor() == TeamColor.WHITE) {
+		p1 = new Point(4, 7);
+		p2 = new Point(2, 7);
+	    }
+	    Move moveToAdd = new Move(p1, p2, this, moveCharacteristics);
+	    possibleMoves.add(moveToAdd);
+	}
+	    /*if (owner.getColor() == TeamColor.WHITE) {
+		Move moveToAdd = new Move(new Point(4, 7), new Point(2, 7),
+					  this, moveCharacteristics);
+		possibleMoves.add(moveToAdd);
+	    } else {
+		Move moveToAdd = new Move(new Point(4, 0), new Point(2, 0),
+					  this, moveCharacteristics);
+		possibleMoves.add(moveToAdd);
+	    }*/
+
+	if (canCastleKingside(board)) {
+	    Point p1 = new Point(4, 0);
+	    Point p2 = new Point(6, 0);
+
+	    if (owner.getColor() == TeamColor.WHITE){
+		p1 = new Point(4, 7);
+		p2 = new Point(6, 7);
+	    }
+	    Move moveToAdd = new Move(p1, p2, this, moveCharacteristics);
+	    possibleMoves.add(moveToAdd);
+
+	    /*if (owner.getColor() == TeamColor.WHITE) {
+		Move moveToAdd = new Move(new Point(4, 7), new Point(6, 7),
+					  this, moveCharacteristics);
+		possibleMoves.add(moveToAdd);
+	    } else {
+		Move moveToAdd = new Move(new Point(4, 0), new Point(6, 0),
+					  this, moveCharacteristics);
+		possibleMoves.add(moveToAdd);
+	    }*/
+	}
+	return possibleMoves;
+    }
+
     //TODO fix hardcoded ugliness, duplicate code and bad naming
     private boolean canCastleQueenside(Board board) {
-        Player opponent = board.getOpponentPlayer(owner);
+	Player opponent = board.getOpponentPlayer(owner);
 
 	if (!owner.canCastleQueenside()) {
 	    return false;
@@ -67,101 +167,5 @@ public class King extends PointMovePiece {
 	    return true;
 	}
 	return false;
-    }
-
-    @Override public Set<Move> getMoves(final Board board, final int x, final int y) {
-	Set<Move> possibleMoves = new HashSet<>();
-
-	possibleMoves.addAll(getPointMoves(board, x, y, kingMoves));
-
-	possibleMoves.addAll(getCastlingMoves(board));
-
-	possibleMoves = limitMovesToSafeSquares(board, possibleMoves);
-
-	return possibleMoves;
-    }
-
-    private Set<Move> limitMovesToSafeSquares(final Board board, final Set<Move> initialMoveSet) {
-	Set<Move> possibleMoves = new HashSet<>();
-
-	for (Move move : initialMoveSet) {
-	    // check if not protected
-	    if (board.getPiece(move.getTargetSquare()) == null &&
-		!board.getInactivePlayer().getAttackedSquares().contains(move.getTargetSquare())) {
-		possibleMoves.add(move);
-	    } else if (board.getPiece(move.getTargetSquare()) != null &&
-		       !board.isPieceProtected(move.getTargetSquare())) {
-		possibleMoves.add(move);
-	    }
-	}
-
-	return possibleMoves;
-    }
-
-    private Set<Move> getCastlingMoves(final Board board) {
-	Set<Move> possibleMoves = new HashSet<>();
-
-	if (board.isInCheck(owner)) {
-	    return possibleMoves;
-	}
-
-	Set<MoveCharacteristics> moveCharacteristics = EnumSet.noneOf(MoveCharacteristics.class);
-	moveCharacteristics.add(MoveCharacteristics.HARMLESS);
-	moveCharacteristics.add(MoveCharacteristics.CASTLING);
-
-	if (canCastleQueenside(board)) {
-		Point p1 = new Point(4, 0);
-		Point p2 = new Point(2, 0);
-
-		if (owner.getColor() == TeamColor.WHITE) {
-		    p1 = new Point(4, 7);
-		    p2 = new Point(2, 7);
-		}
-		Move moveToAdd = new Move(p1, p2, this, moveCharacteristics);
-		possibleMoves.add(moveToAdd);
-	}
-	    /*if (owner.getColor() == TeamColor.WHITE) {
-		Move moveToAdd = new Move(new Point(4, 7), new Point(2, 7),
-					  this, moveCharacteristics);
-		possibleMoves.add(moveToAdd);
-	    } else {
-		Move moveToAdd = new Move(new Point(4, 0), new Point(2, 0),
-					  this, moveCharacteristics);
-		possibleMoves.add(moveToAdd);
-	    }*/
-
-	if (canCastleKingside(board)) {
-	    Point p1 = new Point(4, 0);
-	    Point p2 = new Point(6, 0);
-
-	    if (owner.getColor() == TeamColor.WHITE){
-	        p1 = new Point(4, 7);
-	        p2 = new Point(6, 7);
-	    }
-	    Move moveToAdd = new Move(p1, p2, this, moveCharacteristics);
-	    possibleMoves.add(moveToAdd);
-
-	    /*if (owner.getColor() == TeamColor.WHITE) {
-		Move moveToAdd = new Move(new Point(4, 7), new Point(6, 7),
-					  this, moveCharacteristics);
-		possibleMoves.add(moveToAdd);
-	    } else {
-		Move moveToAdd = new Move(new Point(4, 0), new Point(6, 0),
-					  this, moveCharacteristics);
-		possibleMoves.add(moveToAdd);
-	    }*/
-	}
-	return possibleMoves;
-    }
-
-    @Override public PieceType getType() {
-	return PieceType.KING;
-    }
-
-    @Override public String toString() {
-	if (getColor() == TeamColor.WHITE) {
-	    return "K";
-	}
-	return "k";
     }
 }

@@ -22,7 +22,7 @@ public abstract class VectorMovePiece extends AbstractPiece{
 	super(owner, position);
     }
 
-    public Set<Move> getVectorMoves(final Board board, final int x, final int y, Point[] moveVectors) {
+    protected Set<Move> getVectorMoves(final Board board, final int x, final int y, Point[] moveVectors) {
 	Set<Move> legalMoves = new HashSet<>();
 
 	Set<MoveCharacteristics> moveCharacteristics = EnumSet.noneOf(MoveCharacteristics.class);

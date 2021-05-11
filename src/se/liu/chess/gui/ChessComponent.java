@@ -25,7 +25,8 @@ public class ChessComponent extends JComponent {
     private int width, height;
     private Point currentlyPressed = null, lastPressed = null;
     private final static int SQUARE_SIZE = 72, IMG_SIZE = 64, OFFSET = (SQUARE_SIZE - IMG_SIZE) / 2;
-    private final static Color ODD_COLOR = Color.DARK_GRAY, EVEN_COLOR = Color.WHITE, SELECTED_COLOR = new Color(0, 0, 255, 100);
+    private final static Color ODD_TILE_COLOR = Color.DARK_GRAY, EVEN_TILE_COLOR = Color.WHITE,
+	                       HIGHLIGHT_COLOR = new Color(0, 0, 255, 100), TRANSPARENT = new Color(0, 0, 0, 0);
     // Inspection doesn't like names (ex pieceb), the reason for having a lower case b is that thats how it's written in FEN
     //TODO replace ex. pieceb with bishopBlack?
     private ImageIcon pieceB = loadIMG("BishopWhite"), pieceb = loadIMG("BishopBlack"), pieceK = loadIMG("KingWhite"),
@@ -88,43 +89,46 @@ public class ChessComponent extends JComponent {
 	final Graphics2D g2d = (Graphics2D) g;
 	g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 
-	// For all coordinates in board
 	for (int col = 0; col < board.getWidth(); col++) {
 	    for (int row = 0; row < board.getHeight(); row++) {
 
-		// Determine color of square
-		Color color = ODD_COLOR;
-		Color color2 = new Color(0, 0, 0, 0);
+		Color tileColor = ODD_TILE_COLOR;
+		Color highlightColor = TRANSPARENT;
 
-		// Normal board colouring
-		if ((col + row) % 2 == 0) {
-		    color = EVEN_COLOR;
-		}
-		// If piece selected
-		if (currentlyPressed != null && currentlyPressed.equals(new Point(col, row))){
-		    color2 = SELECTED_COLOR;
-		}
-		// If valid move
-		if (currentlyPressed != null && getTargetPointsFromMoveSet(currentlyPressed.x, currentlyPressed.y).contains(new Point(col, row))){
-		    color2 = SELECTED_COLOR;
-		}
-		// Paint square
-		g2d.setColor(color);
-		g2d.fillRect(col * SQUARE_SIZE, row * SQUARE_SIZE, SQUARE_SIZE, SQUARE_SIZE);
-		g2d.setColor(color2);
+		if (isEvenTile(col, row)) tileColor = EVEN_TILE_COLOR;
+
+		if (isSelectedPiece(col, row)) highlightColor = HIGHLIGHT_COLOR;
+
+		if (isValidMove(col, row)) highlightColor = HIGHLIGHT_COLOR;
+
+		g2d.setColor(tileColor);
 		g2d.fillRect(col * SQUARE_SIZE, row * SQUARE_SIZE, SQUARE_SIZE, SQUARE_SIZE);
 
-		// Paint piece if exists (not null)
+		g2d.setColor(highlightColor);
+		g2d.fillRect(col * SQUARE_SIZE, row * SQUARE_SIZE, SQUARE_SIZE, SQUARE_SIZE);
+
+		// Paint pieces
 		if (!board.isEmpty(col, row)) {
-		    Piece piece = board.getPiece(col, row);
-		    ImageIcon imageIcon = getImageForPiece(piece);
-		    imageIcon.paintIcon(this, g, col * SQUARE_SIZE + OFFSET, row * SQUARE_SIZE + OFFSET);
+		    ImageIcon pieceImage = getImageForPiece(board.getPiece(col, row));
+		    pieceImage.paintIcon(this, g, col * SQUARE_SIZE + OFFSET, row * SQUARE_SIZE + OFFSET);
 	    }
 	}
     }
 }
 
     // ------------------------------------------------ Private Methods --------------------------------------------------------------------
+
+    private boolean isEvenTile(final int col, final int row){
+        return (col + row) % 2 == 0;
+    }
+
+    private boolean isSelectedPiece(final int col, final int row){
+        return currentlyPressed != null && currentlyPressed.equals(new Point(col, row));
+    }
+
+    private boolean isValidMove(final int col, final int row){
+	return currentlyPressed != null && getTargetPointsFromMoveSet(currentlyPressed.x, currentlyPressed.y).contains(new Point(col, row));
+    }
 
     /**
      * Creates an ImageIcon ny loading a file "name" from resources.

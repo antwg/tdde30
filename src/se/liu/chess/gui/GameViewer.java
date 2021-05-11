@@ -37,12 +37,16 @@ public class GameViewer {
     public void show(){
         JFrame frame = new JFrame("Chess");
 	frame.setLayout(new BorderLayout());
-	frame.add(chessComponent, BorderLayout.CENTER);
-	setUpMenu();
-	frame.add(menuBar, BorderLayout.NORTH);
-	frame.add(timeComponent, BorderLayout.EAST);
 	frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+
+	setUpMenu();
+
+	frame.add(chessComponent, BorderLayout.WEST);
+	frame.add(menuBar, BorderLayout.NORTH);
+	frame.add(timeComponent, BorderLayout.CENTER);
+
 	frame.pack();
+	frame.setLocationRelativeTo(null);
 	frame.setVisible(true);
     }
 

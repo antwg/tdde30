@@ -28,6 +28,8 @@ public class Knight extends PointMovePiece
 	super(owner, position);
     }
 
+    // ----------------------------------------------------- Public Methods ----------------------------------------------------------------
+
     @Override public Set<Move> getMoves(final Board board, final int x, final int y) {
 	Set<Move> possibleMoves = getPointMoves(board, x, y, knightMoves);
 

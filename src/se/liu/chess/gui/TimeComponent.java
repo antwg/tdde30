@@ -27,6 +27,9 @@ public class TimeComponent extends JComponent {
 	this.board = board;
     }
 
+    // ----------------------------------------------------- Public Methods ----------------------------------------------------------------
+
+
     /**
      * Returns the preferred size of component.
      *
@@ -56,9 +59,5 @@ public class TimeComponent extends JComponent {
 	g.drawString(Double.toString(whiteTime), doubleXOffset, middle + yOffset + yOffset + yOffset);
 	g.fillRect(xOffset, middle, lineLength, rectHeight);
     }
-
-
-
-
 }
 

@@ -28,6 +28,8 @@ public class Queen extends VectorMovePiece
 	super(owner, position);
     }
 
+    // ----------------------------------------------------- Public Methods ----------------------------------------------------------------
+
     @Override public PieceType getType() {
 	return PieceType.QUEEN;
     }

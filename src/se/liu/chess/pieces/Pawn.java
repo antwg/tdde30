@@ -25,56 +25,19 @@ public class Pawn extends AbstractPiece {
 
     }
 
+    // ----------------------------------------------------- Public Methods ----------------------------------------------------------------
+
     @Override public PieceType getType() {
 	return PieceType.PAWN;
     }
 
     @Override public Set<Move> getMoves(final Board board, final int x, final int y) {
-
 	Set<Move> possibleMoves = new HashSet<>();
 	Set<MoveCharacteristics> moveCharacteristics = EnumSet.noneOf(MoveCharacteristics.class);
 
-	// Attacking moves
+	addAttackingMoves(board, x, y, possibleMoves, moveCharacteristics);
 
-	for (Point move: attackingMoves) {
-	    int combinedX = x + move.x;
-	    int combinedY = y + move.y;
-
-	    if (board.isValidTile(combinedX, combinedY)) {
-		Piece piece = board.getPiece(combinedX, combinedY);
-		Point enPassantTarget = board.getEnPassantTarget();
-		if ((enPassantTarget != null && enPassantTarget.x == combinedX && enPassantTarget.y == combinedY) ||
-		    (piece != null && piece.getColor() != this.getColor())) {
-		    Move moveToAdd = new Move(new Point(x, y), new Point(combinedX, combinedY),
-					      this, moveCharacteristics);
-		    possibleMoves.add(moveToAdd);
-		}
-	    }
-	}
-
-	// Harmless moves
-
-	int yForward = y + owner.getForwardDirection();
-	int yDoubleForward = y + 2 * owner.getForwardDirection();
-
-	if (board.isValidTile(x, yForward) &&
-	    board.getPiece(x, yForward) == null) {
-	    moveCharacteristics.add(MoveCharacteristics.HARMLESS);
-
-	    Move moveToAdd = new Move(new Point(x, y), new Point(x, yForward),
-					  this, moveCharacteristics);
-	    possibleMoves.add(moveToAdd);
-
-	    if (!hasMoved &&
-		board.isValidTile(x, yDoubleForward) &&
-		board.getPiece(x, yDoubleForward) == null) {
-		moveCharacteristics.add(MoveCharacteristics.DOUBLE_STEP);
-
-		moveToAdd = new Move(new Point(x, y), new Point(x, yDoubleForward),
-					  this, moveCharacteristics);
-		possibleMoves.add(moveToAdd);
-	    }
-	}
+	addHarmlessMoves(board, x, y, possibleMoves, moveCharacteristics);
 
 	// Limit moves
 
@@ -92,6 +55,8 @@ public class Pawn extends AbstractPiece {
 	return "p";
     }
 
+    // ----------------------------------------------------- Private Methods ---------------------------------------------------------------
+
     private boolean isValidMoveToEmptyPiece(Board board, int x, int y){
 	if (board.isValidTile(x, y)) {
 	    Piece piece = board.getPiece(x, y);
@@ -100,5 +65,51 @@ public class Pawn extends AbstractPiece {
 	    }
 	}
 	return false;
+    }
+
+    private void addHarmlessMoves(final Board board, final int x, final int y, final Set<Move> possibleMoves,
+				  final Set<MoveCharacteristics> moveCharacteristics) {
+
+        int yForward = y + owner.getForwardDirection();
+	int yDoubleForward = y + 2 * owner.getForwardDirection();
+
+	if (board.isValidTile(x, yForward) &&
+	    board.getPiece(x, yForward) == null) {
+	    moveCharacteristics.add(MoveCharacteristics.HARMLESS);
+
+	    Move moveToAdd = new Move(new Point(x, y), new Point(x, yForward),
+				      this, moveCharacteristics);
+	    possibleMoves.add(moveToAdd);
+
+	    if (!hasMoved &&
+		board.isValidTile(x, yDoubleForward) &&
+		board.getPiece(x, yDoubleForward) == null) {
+		moveCharacteristics.add(MoveCharacteristics.DOUBLE_STEP);
+
+		moveToAdd = new Move(new Point(x, y), new Point(x, yDoubleForward),
+				     this, moveCharacteristics);
+		possibleMoves.add(moveToAdd);
+	    }
+	}
+    }
+
+    private void addAttackingMoves(final Board board, final int x, final int y, final Set<Move> possibleMoves,
+				   final Set<MoveCharacteristics> moveCharacteristics)
+    {
+	for (Point move: attackingMoves) {
+	    int combinedX = x + move.x;
+	    int combinedY = y + move.y;
+
+	    if (board.isValidTile(combinedX, combinedY)) {
+		Piece piece = board.getPiece(combinedX, combinedY);
+		Point enPassantTarget = board.getEnPassantTarget();
+		if ((enPassantTarget != null && enPassantTarget.x == combinedX && enPassantTarget.y == combinedY) ||
+		    (piece != null && piece.getColor() != this.getColor())) {
+		    Move moveToAdd = new Move(new Point(x, y), new Point(combinedX, combinedY),
+					      this, moveCharacteristics);
+		    possibleMoves.add(moveToAdd);
+		}
+	    }
+	}
     }
 }

@@ -1,7 +1,6 @@
 package se.liu.chess.game;
 
 import se.liu.chess.gui.GameViewer;
-import se.liu.chess.gui.ChessComponent;
 import se.liu.chess.gui.TimeComponent;
 
 import javax.swing.*;
@@ -41,15 +40,17 @@ public class GameManager
 
         @Override public void actionPerformed(final ActionEvent e) {
             Player activePlayer = board.getActivePlayer();
+
             if (!board.isGameOver()) {
                 if (activePlayer.getTimeLeft() <= 0) {
                     board.setGameOver(true);
                     board.displayGameOver(GameOverCauses.TIME);
-                } else {
+                }
+                else {
                     activePlayer.setTimeLeft(activePlayer.getTimeLeft() - 1);
+                    timeComponent.repaint();
                 }
             }
-            timeComponent.repaint();
         }
     };
 

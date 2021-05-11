@@ -72,12 +72,10 @@ public class Board
 		this.pieces = new Piece[width][height];
 		this.fenConverter = new FenConverter(this);
 		this.chessComponent = new ChessComponent(this);
-
-		clearBoard();
-
 		this.whitePlayer = new Player(TeamColor.WHITE);
 		this.blackPlayer = new Player(TeamColor.BLACK);
 
+		clearBoard();
     }
 
     // ---------------------------------------------------- Getters/Setters ----------------------------------------------------------------
@@ -230,19 +228,18 @@ public class Board
      */
     public void performMove(Move move) {
         Player activePlayer = getActivePlayer();
-	// These cases are mutually exclusive
+
 	if (move.isCastling()) {
 	    performCastling(move);
 	}
-	// Disable castle availability on side where rook moved
+	// Disable castling availability on side where rook moved
 	else if (getPiece(move.getOriginSquare()).getType() == PieceType.ROOK) {
 	    boolean onQueenSide = true;
 	    if (move.getOriginSquare().equals(activePlayer.getKingSideRookHomePosition())) {
 		onQueenSide = false;
 	    }
 	    activePlayer.setCastleUnavailable(onQueenSide);  //TODO replace this with setQueenSideCastleAvailable/setKingSideCastleAvailable
-
-	    //disableCastlingOnMoveSide(move);
+	    						     //TODO inspection gillar inte att ha två liknande branches så kanske inte som ovan
 	}
 	// If king moved, disable castling on both sides
 	else if (move.getMovingPiece().getType() == PieceType.KING) {
@@ -280,30 +277,21 @@ public class Board
 	if (move.isPromoting()) {
 	    promote(move);
 	}
-
 	passTurn();
     }
 
+    /**
+     * Shows an OptionDialog saying who won and why.
+     * Also allows to restart or quit.
+     *
+     * @param cause The GameOverCause that caused the game to end.
+     */
     public void displayGameOver(GameOverCauses cause){
 	chessComponent.repaint();
-        StringBuilder message = new StringBuilder();
-        message.append("Game Over: ");
-        String activePlayer = getActivePlayer().toString();
-        switch (cause){
-            case TIME:
-                message.append(activePlayer).append(" ran out of time");
-                break;
-	    case CHECKMATE:
-		message.append(activePlayer).append(" is Checkmated");
-	        break;
-	    case STALEMATE:
-	        message.append(" Stalemate");
-	        break;
-	}
-
+	String message = getGameOverMessage(cause);
 	String[] options = {"Restart", "Quit"};
         final int restart = 0, quit = 1;
-	int choice = JOptionPane.showOptionDialog(null, message.toString(), "", JOptionPane.DEFAULT_OPTION,
+	int choice = JOptionPane.showOptionDialog(null, message, "", JOptionPane.DEFAULT_OPTION,
 						  JOptionPane.INFORMATION_MESSAGE, null, options, options[0]);
 	switch (choice){
 	    case restart:
@@ -313,6 +301,77 @@ public class Board
 	        System.exit(0);
 	}
     }
+
+    /**
+     * Replaces the piece on the target square with the piece on the origin square
+     * and sets the origin square to empty.
+     * @param originSquare
+     * @param targetSquare
+     */
+    public void movePiece(Point originSquare, Point targetSquare) {
+        Piece pieceToMove = getPiece(originSquare);
+	setPiece(targetSquare, pieceToMove);
+	setPiece(originSquare, null);
+
+	pieceToMove.setHasMoved(true);
+	pieceToMove.setPosition(targetSquare);
+    }
+
+    /**
+     * Returns true if given coordinates lie within the board, otherwise false.
+     * @param x
+     * @param y
+     * @return
+     */
+    public boolean isValidTile(int x, int y) {
+	return (0 <= x && x < width && 0 <= y && y < height);
+    }
+
+    /**
+     * Returns whether a player is in check or not.
+     *
+     * @param player The player to check
+     * @return true if in check, else false
+     */
+    public boolean isInCheck(Player player) {
+	return !allDirectThreats.isEmpty() && player.equals(getActivePlayer());
+    }
+
+    /**
+     * Resets the board.
+     */
+    public void resetBoard() {
+	clearBoard();
+	blackPlayer = new Player(TeamColor.BLACK);
+	whitePlayer = new Player(TeamColor.WHITE);
+	fenConverter.createBoardFromFEN("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1");
+	blackPlayer.resetTime();
+	whitePlayer.resetTime();
+	updateThreats(getActivePlayer());
+	updateAvailableMoves(getActivePlayer());
+	gameOver = false;
+    }
+
+    /**
+     * Returns true if targetSquare is protected, else false
+     *
+     * @param targetSquare
+     * @return true if protected, else false
+     */
+    public boolean isPieceProtected(final Point targetSquare) {
+	if (isDiagonallyProtected(targetSquare)) return true;
+
+	if (isOrthogonallyProtected(targetSquare)) return true;
+
+	if (isProtectedFromKnights(targetSquare)) return true;
+
+	if (isProtectedFromPawns(targetSquare)) return true;
+
+	return false;
+    }
+
+
+    // ----------------------------------------------------- Private Methods ---------------------------------------------------------------
 
     private void promote(final Move move) {
 	String[] options = {"Queen", "Rook", "Bishop", "Knight"};
@@ -342,10 +401,10 @@ public class Board
 
     private void setEnPassantTargetSquare(final Move move) {
 	int enPassantRow = 2;
-        if (activePlayerIndex == 0) {
+	if (activePlayerIndex == 0) {
 	    enPassantRow = 5;
 	}
-        setEnPassantTarget(move.getOriginSquare().x, enPassantRow);
+	setEnPassantTarget(move.getOriginSquare().x, enPassantRow);
 
     }
 
@@ -377,90 +436,69 @@ public class Board
 	}
     }
 
-    /**
-     * Replaces the piece on the target square with the piece on the origin square
-     * and sets the origin square to empty.
-     * @param originSquare
-     * @param targetSquare
-     */
-    public void movePiece(Point originSquare, Point targetSquare) {
-        Piece pieceToMove = getPiece(originSquare);
-	setPiece(targetSquare, pieceToMove);
-	setPiece(originSquare, null);
+    private boolean isProtectedFromPawns(final Point targetSquare) {
+	final Point[] pawnAttacks = { new Point(-1, -getPiece(targetSquare).getOwner().getForwardDirection()),
+				      new Point(1, -getPiece(targetSquare).getOwner().getForwardDirection()) };
 
-	pieceToMove.setHasMoved(true);
-	pieceToMove.setPosition(targetSquare);
+	return isProtectedFromPoints(targetSquare, pawnAttacks, PieceType.PAWN);
     }
 
-    /**
-     * Returns true if given coordinates lie within the board, otherwise false.
-     * @param x
-     * @param y
-     * @return
-     */
-    public boolean isValidTile(int x, int y) {
-	return (0 <= x && x < width && 0 <= y && y < height);
+    private boolean isProtectedFromKnights(final Point targetSquare) {
+	final Point[] knightAttacks = { new Point(1, 2),
+					new Point( 2, 1),
+					new Point(1, -2),
+					new Point(2, -1),
+					new Point(-1, 2),
+					new Point(-2, 1),
+					new Point(-1, -2),
+					new Point(-2, -1) };
+
+	return isProtectedFromPoints(targetSquare, knightAttacks, PieceType.KNIGHT);
     }
 
-    public boolean isInCheck(Player player) {
-	return !allDirectThreats.isEmpty() && player.equals(getActivePlayer());
-    }
-
-    public void resetBoard() {
-	clearBoard();
-	blackPlayer = new Player(TeamColor.BLACK);
-	whitePlayer = new Player(TeamColor.WHITE);
-	fenConverter.createBoardFromFEN("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1");
-	blackPlayer.resetTime();
-	whitePlayer.resetTime();
-	updateThreats(getActivePlayer());
-	updateAvailableMoves(getActivePlayer());
-	gameOver = false;
-    }
-
-    public boolean isPieceProtected(final Point targetSquare) {
-	TeamColor protectionColor = getPiece(targetSquare).getColor();
-
-	//TODO This function is YUGE! Split into multiple smaller functions.
-
-	final Point[] diagonalVectors = { new Point(1, 1),
-					  new Point(1, -1),
-					  new Point(-1, 1),
-					  new Point(-1, -1)};
-
-	for (Point diagonalVector : diagonalVectors) {
-	    int combinedX = targetSquare.x + diagonalVector.x;
-	    int combinedY = targetSquare.y + diagonalVector.y;
-
-	    while (true) {
-		if (!isValidTile(combinedX, combinedY)) {
-		    break;
-		}
-
-		Piece pieceOnSquare = getPiece(combinedX, combinedY);
-
-		if (pieceOnSquare == null) {
-		    combinedX += diagonalVector.x;
-		    combinedY += diagonalVector.y;
-		} else if (pieceOnSquare.getColor().equals(protectionColor) &&
-			   (pieceOnSquare.getType().equals(PieceType.BISHOP) || pieceOnSquare.getType().equals(PieceType.QUEEN))) {
-		    return true;
-		} else {
-		    break;
-		}
-	    }
-	}
-
-
-
+    private boolean isOrthogonallyProtected(final Point targetSquare) {
 	final Point[] orthogonalVectors = { new Point(1, 0),
 					    new Point(0, 1),
 					    new Point(-1, 0),
 					    new Point(0, -1) };
 
-	for (Point orthogonalVector : orthogonalVectors) {
-	    int combinedX = targetSquare.x + orthogonalVector.x;
-	    int combinedY = targetSquare.y + orthogonalVector.y;
+	return isProtectedFromVectors(targetSquare, orthogonalVectors, PieceType.ROOK);
+    }
+
+    private boolean isDiagonallyProtected(final Point targetSquare) {
+	final Point[] diagonalVectors = { new Point(1, 1),
+					  new Point(1, -1),
+					  new Point(-1, 1),
+					  new Point(-1, -1)};
+
+	return isProtectedFromVectors(targetSquare, diagonalVectors, PieceType.BISHOP);
+    }
+
+    private boolean isProtectedFromPoints(final Point targetSquare, final Point[] attacks, final PieceType pieceType) {
+	for (Point attack : attacks) {
+	    int combinedX = targetSquare.x + attack.x;
+	    int combinedY = targetSquare.y + attack.y;
+
+	    if (!isValidTile(combinedX, combinedY)) {
+		continue;
+	    }
+
+	    Piece pieceOnSquare = getPiece(combinedX, combinedY);
+	    TeamColor protectionColor = getPiece(targetSquare).getColor();
+
+	    if (pieceOnSquare != null &&
+		pieceOnSquare.getColor().equals(protectionColor) &&
+		pieceOnSquare.getType().equals(pieceType)) {
+		return true;
+	    }
+	}
+	return false;
+    }
+
+    private boolean isProtectedFromVectors(final Point targetSquare, final Point[] vectors, final PieceType pieceType) {
+	for (Point vector : vectors) {
+	    int combinedX = targetSquare.x + vector.x;
+	    int combinedY = targetSquare.y + vector.y;
 
 	    while (true) {
 		if (!isValidTile(combinedX, combinedY)) {
@@ -468,74 +506,40 @@ public class Board
 		}
 
 		Piece pieceOnSquare = getPiece(combinedX, combinedY);
+		TeamColor protectionColor = getPiece(targetSquare).getColor();
 
 		if (pieceOnSquare == null) {
-		    combinedX += orthogonalVector.x;
-		    combinedY += orthogonalVector.y;
+		    combinedX += vector.x;
+		    combinedY += vector.y;
 		} else if (pieceOnSquare.getColor().equals(protectionColor) &&
-			   (pieceOnSquare.getType().equals(PieceType.ROOK) || pieceOnSquare.getType().equals(PieceType.QUEEN))) {
+			   (pieceOnSquare.getType().equals(pieceType) || pieceOnSquare.getType().equals(PieceType.QUEEN))) {
 		    return true;
 		} else {
 		    break;
 		}
 	    }
 	}
-
-
-
-	final Point[] knightAttacks = { new Point(1, 2),
-		new Point( 2, 1),
-		new Point(1, -2),
-		new Point(2, -1),
-		new Point(-1, 2),
-		new Point(-2, 1),
-		new Point(-1, -2),
-		new Point(-2, -1) };
-
-	for (Point knightAttack : knightAttacks) {
-	    int combinedX = targetSquare.x + knightAttack.x;
-	    int combinedY = targetSquare.y + knightAttack.y;
-
-	    if (!isValidTile(combinedX, combinedY)) {
-		continue;
-	    }
-
-	    Piece pieceOnSquare = getPiece(combinedX, combinedY);
-
-	    if (pieceOnSquare != null &&
-		pieceOnSquare.getColor().equals(protectionColor) &&
-		pieceOnSquare.getType().equals(PieceType.KNIGHT)) {
-		return true;
-	    }
-	}
-
-
-
-	final Point[] pawnAttacks = { new Point(-1, -getPiece(targetSquare).getOwner().getForwardDirection()),
-		new Point(1, -getPiece(targetSquare).getOwner().getForwardDirection()) };
-
-	for (Point pawnAttack : pawnAttacks) {
-	    int combinedX = targetSquare.x + pawnAttack.x;
-	    int combinedY = targetSquare.y + pawnAttack.y;
-
-	    if (!isValidTile(combinedX, combinedY)) {
-		continue;
-	    }
-
-	    Piece pieceOnSquare = getPiece(combinedX, combinedY);
-
-	    if (pieceOnSquare != null &&
-		pieceOnSquare.getColor().equals(protectionColor) &&
-		pieceOnSquare.getType().equals(PieceType.PAWN)) {
-		return true;
-	    }
-	}
-
 	return false;
     }
 
+    private String getGameOverMessage(final GameOverCauses cause) {
+	StringBuilder message = new StringBuilder();
+	message.append("Game Over: ");
+	String activePlayer = getActivePlayer().toString();
 
-    // ----------------------------------------------------- Private Methods ---------------------------------------------------------------
+	switch (cause){
+	    case TIME:
+		message.append(activePlayer).append(" ran out of time");
+		break;
+	    case CHECKMATE:
+		message.append(activePlayer).append(" is Checkmated");
+		break;
+	    case STALEMATE:
+		message.append(" Stalemate");
+		break;
+	}
+	return message.toString();
+    }
 
     private void passTurn() { // Pass is used as a verb (inspection)
 	// Update active player

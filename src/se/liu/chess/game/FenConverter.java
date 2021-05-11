@@ -24,7 +24,7 @@ public class FenConverter {
 	this.width = board.getWidth();
     }
 
-    //                                                   --- Convert to FEN ---
+    // ----------------------------------------------------- Public Methods ----------------------------------------------------------------
 
     /**
      * https://en.wikipedia.org/wiki/Forsyth%E2%80%93Edwards_Notation
@@ -42,6 +42,23 @@ public class FenConverter {
 
 	return builder.toString();
     }
+
+    public void createBoardFromFEN(final String fen) {
+	// Split fen string
+	String[] arrOfString = fen.split(" ");
+	final int piecePart = 0, playerPart = 1, castlingPart = 2, enPassantPart = 3, halfMovePart = 4, fullMovePart = 5;
+
+	placePiecesFromFEN(arrOfString[piecePart]);
+	setActivePlayerFromFEN(arrOfString[playerPart]);
+	setCastlingAvailabilityFromFEN(arrOfString[castlingPart]);
+	setEnPassantTargetFromFEN(arrOfString[enPassantPart]);
+	setMovesFromFEN(arrOfString[halfMovePart], arrOfString[fullMovePart]);
+    }
+
+    // ----------------------------------------------------- Private Methods ---------------------------------------------------------------
+
+    //                                                   --- Convert to FEN ---
+
 
     private void convertPiecesToFEN(StringBuilder builder) {
 	for (int y = 0; y < height; y++) {
@@ -112,18 +129,6 @@ public class FenConverter {
     }
 
     //                                                   --- Convert from FEN ---
-
-    public void createBoardFromFEN(final String fen) {
-	// Split fen string
-	String[] arrOfString = fen.split(" ");
-	final int piecePart = 0, playerPart = 1, castlingPart = 2, enPassantPart = 3, halfMovePart = 4, fullMovePart = 5;
-
-	placePiecesFromFEN(arrOfString[piecePart]);
-	setActivePlayerFromFEN(arrOfString[playerPart]);
-	setCastlingAvailabilityFromFEN(arrOfString[castlingPart]);
-	setEnPassantTargetFromFEN(arrOfString[enPassantPart]);
-	setMovesFromFEN(arrOfString[halfMovePart], arrOfString[fullMovePart]);
-    }
 
     private void placePiecesFromFEN(String piecePositions){
 	int x = 0;
