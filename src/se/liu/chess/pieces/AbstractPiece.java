@@ -49,6 +49,10 @@ public abstract class AbstractPiece implements Piece {
         this.hasMoved = hasMoved;
     }
 
+    @Override public void checkMove(final Move move, final Point enPassantTarget, final Board board) {
+        return;
+    }
+
     protected Set<Move> limitMovesToThreatSquares(Board board, Set<Move> initialMoves) {
         List<Set<Point>> threats = board.getAllDirectThreats();
         if (threats.isEmpty()) {

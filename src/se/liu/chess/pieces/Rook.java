@@ -43,10 +43,21 @@ public class Rook extends VectorMovePiece
 	return possibleMoves;
     }
 
+    @Override public void checkMove(Move move, Point enPassantTarget, final Board board) {
+        Player activePlayer = board.getActivePlayer();
+	if (move.getOriginSquare().equals(activePlayer.getKingSideRookHomePosition())) {
+	    activePlayer.setKingSideCastleAvailable(false);
+	}
+	else if(move.getOriginSquare().equals(activePlayer.getQueenSideRookHomePosition())){
+	    activePlayer.setQueenSideCastleAvailable(false);
+	}
+    }
+
     @Override public String toString() {
 	if (getColor() == TeamColor.WHITE) {
 	    return "R";
 	}
 	return "r";
     }
+
 }

@@ -30,4 +30,7 @@ public interface Piece
     public void setPosition(Point p);
 
     public String toString();
+
+    public abstract void checkMove(Move move, Point enPassantTarget, final Board board);
+
 }

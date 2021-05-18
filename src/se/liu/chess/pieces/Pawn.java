@@ -55,6 +55,16 @@ public class Pawn extends AbstractPiece {
 	return "p";
     }
 
+    @Override public void checkMove(final Move move, Point enPassantTarget, final Board board) {
+	Point targetSquare = move.getTargetSquare();
+	if (targetSquare.equals(enPassantTarget)){
+	    int captureX = targetSquare.x;
+	    int captureY = targetSquare.y + board.getInactivePlayer().getForwardDirection();
+
+	    board.setPiece(captureX, captureY, null);
+	}
+    }
+
     // ----------------------------------------------------- Private Methods ---------------------------------------------------------------
 
     private boolean isValidMoveToEmptyPiece(Board board, int x, int y){

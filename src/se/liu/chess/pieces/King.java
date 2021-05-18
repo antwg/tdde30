@@ -55,6 +55,12 @@ public class King extends PointMovePiece {
 	return "k";
     }
 
+    @Override public void checkMove(final Move move, Point enPassantTarget, final Board board) {
+	Player activePlayer = board.getActivePlayer();
+        activePlayer.setQueenSideCastleAvailable(false);
+	activePlayer.setKingSideCastleAvailable(false);
+    }
+
     // ----------------------------------------------------- Private Methods ---------------------------------------------------------------
 
     private Set<Move> limitMovesToSafeSquares(final Board board, final Set<Move> initialMoves) {

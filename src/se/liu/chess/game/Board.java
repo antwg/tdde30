@@ -7,8 +7,6 @@ import java.util.List;
 import java.util.Set;
 
 import se.liu.chess.gui.ChessComponent;
-import se.liu.chess.pieces.King;
-import se.liu.chess.pieces.Pawn;
 import se.liu.chess.pieces.Piece;
 import se.liu.chess.pieces.PieceType;
 import se.liu.chess.pieces.Rook;
@@ -239,11 +237,20 @@ public class Board
      * @param move
      */
     public void performMove(Move move) {
-        Player activePlayer = getActivePlayer();
-
 	if (move.isCastling()) {
 	    performCastling(move);
 	}
+	move.getMovingPiece().checkMove(move, enPassantTarget, this);
+
+	setEnPassantTarget(move);
+
+	movePiece(move.getOriginSquare(), move.getTargetSquare());
+
+	if (move.isPromoting()) {
+	    promote(move);
+	}
+	passTurn();
+		/*
 	// Disable castling availability on side where rook moved
 	else if (move.getMovingPiece() instanceof Rook) {
 	    if (move.getOriginSquare().equals(activePlayer.getKingSideRookHomePosition())) {
@@ -276,16 +283,7 @@ public class Board
 
 	    setPiece(captureX, captureY, null);
 	}
-
-	// Doublestep
-	setEnPassantTarget(move);
-
-	movePiece(move.getOriginSquare(), targetSquare);
-
-	if (move.isPromoting()) {
-	    promote(move);
-	}
-	passTurn();
+	*/
     }
 
     /**
@@ -655,6 +653,8 @@ public class Board
 		// Hostile piece encountered
 
 		// The queen, bishop and rook captures along a vector.
+
+
 		if (!(piece instanceof Queen) && !(isCheckingDiagonals && piece instanceof Bishop) &&
 		    !(!isCheckingDiagonals && piece instanceof Rook)) {
 		    isDirectThreat = false;
