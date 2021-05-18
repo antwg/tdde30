@@ -1,7 +1,6 @@
 package se.liu.chess.game;
 
 import se.liu.chess.pieces.Piece;
-import se.liu.chess.pieces.PieceType;
 
 import java.awt.*;
 import java.util.HashSet;
@@ -69,7 +68,7 @@ public class Player
 	return kingSideCastleAvailable;
     }
 
-    public boolean canCastleQueenside() {
+    public boolean canCastleQueenSide() {
 	return queenSideCastleAvailable;
     }
 

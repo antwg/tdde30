@@ -94,8 +94,7 @@ public class Pawn extends AbstractPiece {
     }
 
     private void addAttackingMoves(final Board board, final int x, final int y, final Set<Move> possibleMoves,
-				   final Set<MoveCharacteristics> moveCharacteristics)
-    {
+				   final Set<MoveCharacteristics> moveCharacteristics) {
 	for (Point move: attackingMoves) {
 	    int combinedX = x + move.x;
 	    int combinedY = y + move.y;

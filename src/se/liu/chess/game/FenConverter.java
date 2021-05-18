@@ -97,13 +97,13 @@ public class FenConverter {
 	if (board.getPlayer(TeamColor.WHITE).canCastleKingside()) { // (Inspection) Not mutually exclusive
 	    builder.append("K");
 	}
-	if (board.getPlayer(TeamColor.WHITE).canCastleQueenside()) { // It's written as one word
+	if (board.getPlayer(TeamColor.WHITE).canCastleQueenSide()) { // It's written as one word
 	    builder.append("Q");
 	}
 	if (board.getPlayer(TeamColor.BLACK).canCastleKingside()) {
 	    builder.append("k");
 	}
-	if (board.getPlayer(TeamColor.BLACK).canCastleQueenside()) {
+	if (board.getPlayer(TeamColor.BLACK).canCastleQueenSide()) {
 	    builder.append("q");
 	}
 	builder.append(" ");
@@ -219,9 +219,9 @@ public class FenConverter {
 	//TODO add functionality
     }
 
-    private void setMovesFromFEN(String halfmoveClock, String fullmoveNumber){
+    private void setMovesFromFEN(String halfMoveClock, String fullmoveNumber){
 	// Set halfmove clock
-	board.setHalfMoveClock(Integer.parseInt(halfmoveClock));
+	board.setHalfMoveClock(Integer.parseInt(halfMoveClock));
 
 	// Set fullmove number
 	board.setFullMoveNumber(Integer.parseInt(fullmoveNumber));

@@ -90,14 +90,14 @@ public abstract class AbstractPiece implements Piece {
             return initialMoves;
         }
 
-        Set<Move> restrictedMoveSet = new HashSet<>();
+        Set<Move> restrictedMoves = new HashSet<>();
 
         for (Move move : initialMoves) {
             if (pinRestrictedSquares.contains(move.getTargetSquare())) {
-                restrictedMoveSet.add(move);
+                restrictedMoves.add(move);
             }
         }
 
-        return restrictedMoveSet;
+        return restrictedMoves;
     }
 }
