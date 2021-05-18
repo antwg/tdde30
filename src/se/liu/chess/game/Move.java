@@ -4,6 +4,7 @@ import se.liu.chess.pieces.Piece;
 import se.liu.chess.pieces.PieceType;
 
 import java.awt.*;
+import java.util.Objects;
 import java.util.Set;
 
 /**
@@ -63,10 +64,37 @@ public class Move
     public boolean isPromoting() {
         return (targetSquare.y == movingPiece.getOwner().getPromotionRank()) &&
 	       (movingPiece.getType() == PieceType.PAWN);
-	//return promoting;
     }
 
     public boolean isEnPassant() {
 	return enPassant;
     }
+
+    @Override public int hashCode() {
+	return Objects.hash(originSquare, targetSquare, movingPiece);
+    }
+
+    @Override public boolean equals(final Object obj) {
+	if (obj == this)
+	    return true;
+
+	if (!(obj instanceof Move))
+	    return false;
+
+	Move moveObj = (Move) obj;
+
+
+	return (hasSameBasics(moveObj) && hasSameCharacteristics(moveObj));
+    }
+
+    private boolean hasSameBasics(final Move moveObj) {
+	return originSquare.equals(moveObj.originSquare) && (targetSquare.equals(moveObj.targetSquare)) &&
+	       (movingPiece.equals(moveObj.movingPiece));
+    }
+
+    private boolean hasSameCharacteristics(final Move moveObj) {
+	return (harmless == moveObj.harmless) && (castling == moveObj.castling) && (pawnDoubleStep == moveObj.pawnDoubleStep) &&
+	       (enPassant == moveObj.enPassant);
+    }
+
 }

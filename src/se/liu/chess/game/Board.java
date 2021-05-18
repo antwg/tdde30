@@ -25,6 +25,8 @@ public class Board
     private final int width;
     private final int height;
 
+    private GameManager gameManager;
+
     private Player whitePlayer;
     private Player blackPlayer;
 
@@ -65,8 +67,9 @@ public class Board
     private List<Set<Point>> allPins = new ArrayList<>();
 
 
-    public Board(final int width, final int height) {
-		this.width = width;
+    public Board(final int width, final int height, GameManager gameManager) {
+		this.gameManager = gameManager;
+        	this.width = width;
 		this.height = height;
 		this.pieces = new Piece[width][height];
 		this.fenConverter = new FenConverter(this);
@@ -145,13 +148,16 @@ public class Board
     }
 
     public void setEnPassantTarget(Move move){
-	if  (move == null) return;
-
-	int enPassantRow = 2;
-	if (activePlayerIndex == 0) {
-	    enPassantRow = 5;
+	if  (move == null) {
+	    this.enPassantTarget = null;
 	}
-	this.enPassantTarget = new Point(move.getOriginSquare().x, enPassantRow);
+	else {
+	    int enPassantRow = 2;
+	    if (activePlayerIndex == 0) {
+		enPassantRow = 5;
+	    }
+	    this.enPassantTarget = new Point(move.getOriginSquare().x, enPassantRow);
+	}
     }
 
     public Player getPlayer(final TeamColor color) {
@@ -353,6 +359,7 @@ public class Board
 	updateThreats(getActivePlayer());
 	updateAvailableMoves(getActivePlayer());
 	gameOver = false;
+
     }
 
     /**
