@@ -61,8 +61,8 @@ public class FenConverter {
 
 
     private void convertPiecesToFEN(StringBuilder builder) {
+	int emptySquaresInARow = 0; //(Inspection) variable used in both for-loop and if-statement below
 	for (int y = 0; y < height; y++) {
-	    int emptySquaresInARow = 0; //(Inspection) variable used in both for-loop and if-statement below
 	    for (int x = 0; x < width; x++) {
 		if (board.isEmpty(x, y)) {
 		    emptySquaresInARow++;
