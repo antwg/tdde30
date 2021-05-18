@@ -7,6 +7,8 @@ import java.util.List;
 import java.util.Set;
 
 import se.liu.chess.gui.ChessComponent;
+import se.liu.chess.pieces.King;
+import se.liu.chess.pieces.Pawn;
 import se.liu.chess.pieces.Piece;
 import se.liu.chess.pieces.PieceType;
 import se.liu.chess.pieces.Rook;
@@ -24,8 +26,6 @@ public class Board
     private Piece[][] pieces;
     private final int width;
     private final int height;
-
-    private GameManager gameManager;
 
     private Player whitePlayer;
     private Player blackPlayer;
@@ -67,8 +67,7 @@ public class Board
     private List<Set<Point>> allPins = new ArrayList<>();
 
 
-    public Board(final int width, final int height, GameManager gameManager) {
-		this.gameManager = gameManager;
+    public Board(final int width, final int height) {
         	this.width = width;
 		this.height = height;
 		this.pieces = new Piece[width][height];
@@ -246,7 +245,7 @@ public class Board
 	    performCastling(move);
 	}
 	// Disable castling availability on side where rook moved
-	else if (getPiece(move.getOriginSquare()).getType() == PieceType.ROOK) {
+	else if (move.getMovingPiece() instanceof Rook) {
 	    if (move.getOriginSquare().equals(activePlayer.getKingSideRookHomePosition())) {
 		activePlayer.setKingSideCastleAvailable(false);
 	    }
@@ -255,7 +254,7 @@ public class Board
 	    }
 	}
 	// If king moved, disable castling on both sides
-	else if (move.getMovingPiece().getType() == PieceType.KING) {
+	else if (move.getMovingPiece() instanceof King) {
 	    activePlayer.setQueenSideCastleAvailable(false);
 	    activePlayer.setKingSideCastleAvailable(false);
 	}
@@ -271,7 +270,7 @@ public class Board
 	}
 
 	// Capture en passant target
-	if (move.getMovingPiece().getType().equals(PieceType.PAWN) && targetSquare.equals(enPassantTarget)) {
+	if (move.getMovingPiece() instanceof Pawn && targetSquare.equals(enPassantTarget)) {
 	    int captureX = targetSquare.x;
 	    int captureY = targetSquare.y + inactivePlayer.getForwardDirection();
 
@@ -353,6 +352,7 @@ public class Board
 	clearBoard();
 	blackPlayer = new Player(TeamColor.BLACK);
 	whitePlayer = new Player(TeamColor.WHITE);
+	enPassantTarget = null;
 	fenConverter.createBoardFromFEN("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1");
 	blackPlayer.resetTime();
 	whitePlayer.resetTime();
@@ -513,7 +513,7 @@ public class Board
 		    combinedX += vector.x;
 		    combinedY += vector.y;
 		} else if (pieceOnSquare.getColor().equals(protectionColor) &&
-			   (pieceOnSquare.getType().equals(pieceType) || pieceOnSquare.getType().equals(PieceType.QUEEN))) {
+			   (pieceOnSquare.getType().equals(pieceType) || pieceOnSquare instanceof Queen)) {
 		    return true;
 		} else {
 		    break;
@@ -653,8 +653,8 @@ public class Board
 		// Hostile piece encountered
 
 		// The queen, bishop and rook captures along a vector.
-		if (piece.getType() != PieceType.QUEEN && !(isCheckingDiagonals && piece.getType() == PieceType.BISHOP) &&
-		    !(!isCheckingDiagonals && piece.getType() == PieceType.ROOK)) {
+		if (!(piece instanceof Queen) && !(isCheckingDiagonals && piece instanceof Bishop) &&
+		    !(!isCheckingDiagonals && piece instanceof Rook)) {
 		    isDirectThreat = false;
 		    isPin = false;
 		} else {

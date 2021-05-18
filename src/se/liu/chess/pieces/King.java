@@ -57,10 +57,10 @@ public class King extends PointMovePiece {
 
     // ----------------------------------------------------- Private Methods ---------------------------------------------------------------
 
-    private Set<Move> limitMovesToSafeSquares(final Board board, final Set<Move> initialMoveSet) {
+    private Set<Move> limitMovesToSafeSquares(final Board board, final Set<Move> initialMoves) {
 	Set<Move> possibleMoves = new HashSet<>();
 
-	for (Move move : initialMoveSet) {
+	for (Move move : initialMoves) {
 	    // check if not protected
 	    if (board.getPiece(move.getTargetSquare()) == null &&
 		!board.getInactivePlayer().getAttackedSquares().contains(move.getTargetSquare())) {
@@ -134,7 +134,7 @@ public class King extends PointMovePiece {
     private boolean canCastleQueenside(Board board) {
 	Player opponent = board.getOpponentPlayer(owner);
 
-	if (!owner.canCastleQueenside()) {
+	if (!owner.canCastleQueenSide()) {
 	    return false;
 	}
 
