@@ -37,9 +37,8 @@ public class Board
     private List<Point> threatenedSquares = null;
     private ChessComponent chessComponent;
 
-    //TODO implement halfmoveClock
-    private int halfMoveClock = 0;  // Used for 50 move rule
-    private int fullMoveNumber = 1; // It's called halfmove and fullmove as one word
+    private int halfMoveClock = 0; //TODO implement
+    private int fullMoveNumber = 1;
 
     private final Point[] vectorThreatDirections = { new Point(1, 1),
 	    					     new Point(1, -1),
@@ -96,6 +95,10 @@ public class Board
 
     public Piece getPiece(final Point p) {
 	return getPiece(p.x, p.y);
+    }
+
+    public int getHalfMoveClock() {
+	return halfMoveClock;
     }
 
     public Player getActivePlayer() {
@@ -155,10 +158,6 @@ public class Board
 	return getPiece(x, y) == null;
     }
 
-    public int getHalfMoveClock() {
-	return halfMoveClock;
-    }
-
     public int getFullMoveNumber() {
 	return fullMoveNumber;
     }
@@ -185,7 +184,6 @@ public class Board
 
     // --- Setters ---
 
-
     public void setGameOver(boolean gameOver) {
 	this.gameOver = gameOver;
     }
@@ -198,24 +196,26 @@ public class Board
 	setPiece(p.x, p.y, piece);
     }
 
-    public void setEnPassantTarget(final Point enPassantTarget) {
-	this.enPassantTarget = enPassantTarget;
-    }
+    public void setEnPassantTarget(Move move){
+	if  (move == null) return;
 
-    public void setEnPassantTarget(int x, int y) {
-	this.enPassantTarget = new Point(x, y);
+	int enPassantRow = 2;
+	if (activePlayerIndex == 0) {
+	    enPassantRow = 5;
+	}
+	this.enPassantTarget = new Point(move.getOriginSquare().x, enPassantRow);
     }
 
     public void setActivePlayerIndex(final int activePlayerIndex) {
 	this.activePlayerIndex = activePlayerIndex;
     }
 
-    public void setHalfMoveClock(final int halfMoveClock) {
-	this.halfMoveClock = halfMoveClock;
-    }
-
     public void setFullMoveNumber(final int fullMoveNumber) {
 	this.fullMoveNumber = fullMoveNumber;
+    }
+
+    public void setHalfMoveClock(final int halfMoveClock) {
+	this.halfMoveClock = halfMoveClock;
     }
 
     // ----------------------------------------------------- Public Methods ----------------------------------------------------------------
@@ -234,12 +234,12 @@ public class Board
 	}
 	// Disable castling availability on side where rook moved
 	else if (getPiece(move.getOriginSquare()).getType() == PieceType.ROOK) {
-	    boolean onQueenSide = true;
 	    if (move.getOriginSquare().equals(activePlayer.getKingSideRookHomePosition())) {
-		onQueenSide = false;
+		activePlayer.setKingSideCastleAvailable(false);
 	    }
-	    activePlayer.setCastleUnavailable(onQueenSide);  //TODO replace this with setQueenSideCastleAvailable/setKingSideCastleAvailable
-	    						     //TODO inspection gillar inte att ha två liknande branches så kanske inte som ovan
+	    else if(move.getOriginSquare().equals(activePlayer.getQueenSideRookHomePosition())){
+	        activePlayer.setQueenSideCastleAvailable(false);
+	    }
 	}
 	// If king moved, disable castling on both sides
 	else if (move.getMovingPiece().getType() == PieceType.KING) {
@@ -266,11 +266,7 @@ public class Board
 	}
 
 	// Doublestep
-	if (move.isPawnDoubleStep()) {
-	    setEnPassantTargetSquare(move); // TODO rename similarly named functions?
-	} else {
-	    setEnPassantTarget(null);
-	}
+	setEnPassantTarget(move);
 
 	movePiece(move.getOriginSquare(), targetSquare);
 
@@ -355,7 +351,7 @@ public class Board
     /**
      * Returns true if targetSquare is protected, else false
      *
-     * @param targetSquare
+     * @param targetSquare square with piece on
      * @return true if protected, else false
      */
     public boolean isPieceProtected(final Point targetSquare) {
@@ -397,15 +393,6 @@ public class Board
 	    default:
 		System.out.println("Error in testForUpgrade");
 	}
-    }
-
-    private void setEnPassantTargetSquare(final Move move) {
-	int enPassantRow = 2;
-	if (activePlayerIndex == 0) {
-	    enPassantRow = 5;
-	}
-	setEnPassantTarget(move.getOriginSquare().x, enPassantRow);
-
     }
 
     /**
