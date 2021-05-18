@@ -8,8 +8,10 @@ import java.util.HashSet;
 import java.util.Set;
 
 /**
- * A player object contains all the information specific to said player as well as methods to access that information.
- * A player object keeps track of its color, timeLeft, score, increment and castling ability.
+ * A player object contains all the information specific to said player as
+ * well as methods to access that information.
+ * A player object keeps track of its color, timeLeft, score, increment and
+ * castling ability as well as some player specific board coordinates.
  */
 
 public class Player

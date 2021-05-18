@@ -79,8 +79,6 @@ public class Board
 
     // ---------------------------------------------------- Getters/Setters ----------------------------------------------------------------
 
-    // --- Getters ---
-
     public int getWidth() {
 	return width;
     }
@@ -97,8 +95,12 @@ public class Board
 	return getPiece(p.x, p.y);
     }
 
-    public int getHalfMoveClock() {
-	return halfMoveClock;
+    public void setPiece(int x, int y, Piece piece) {
+	pieces[y][x] = piece;
+    }
+
+    public void setPiece(Point p, Piece piece) {
+	setPiece(p.x, p.y, piece);
     }
 
     public Player getActivePlayer() {
@@ -125,8 +127,31 @@ public class Board
 	}
     }
 
+    //TODO behöver den här vara public?
+    public void setActivePlayerIndex(final int activePlayerIndex) {
+    	this.activePlayerIndex = activePlayerIndex;
+    }
+
     public Point getEnPassantTarget() {
 	return enPassantTarget;
+    }
+
+    public void setEnPassantTarget(final Point enPassantTarget) {
+	this.enPassantTarget = enPassantTarget;
+    }
+
+    public void setEnPassantTarget(int x, int y) {
+	this.enPassantTarget = new Point(x, y);
+    }
+
+    public void setEnPassantTarget(Move move){
+	if  (move == null) return;
+
+	int enPassantRow = 2;
+	if (activePlayerIndex == 0) {
+	    enPassantRow = 5;
+	}
+	this.enPassantTarget = new Point(move.getOriginSquare().x, enPassantRow);
     }
 
     public Player getPlayer(final TeamColor color) {
@@ -158,8 +183,20 @@ public class Board
 	return getPiece(x, y) == null;
     }
 
+    public int getHalfMoveClock() {
+	return halfMoveClock;
+    }
+
+    public void setHalfMoveClock(final int halfMoveClock) {
+	this.halfMoveClock = halfMoveClock;
+    }
+
     public int getFullMoveNumber() {
 	return fullMoveNumber;
+    }
+
+    public void setFullMoveNumber(final int fullMoveNumber) {
+	this.fullMoveNumber = fullMoveNumber;
     }
 
     public FenConverter getFenConverter() {
@@ -168,6 +205,10 @@ public class Board
 
     public boolean isGameOver() {
 	return gameOver;
+    }
+
+    public void setGameOver(boolean gameOver) {
+    	this.gameOver = gameOver;
     }
 
     /**
@@ -182,41 +223,7 @@ public class Board
 	return allPins;
     }
 
-    // --- Setters ---
 
-    public void setGameOver(boolean gameOver) {
-	this.gameOver = gameOver;
-    }
-
-    public void setPiece(int x, int y, Piece piece) {
-	pieces[y][x] = piece;
-    }
-
-    public void setPiece(Point p, Piece piece) {
-	setPiece(p.x, p.y, piece);
-    }
-
-    public void setEnPassantTarget(Move move){
-	if  (move == null) return;
-
-	int enPassantRow = 2;
-	if (activePlayerIndex == 0) {
-	    enPassantRow = 5;
-	}
-	this.enPassantTarget = new Point(move.getOriginSquare().x, enPassantRow);
-    }
-
-    public void setActivePlayerIndex(final int activePlayerIndex) {
-	this.activePlayerIndex = activePlayerIndex;
-    }
-
-    public void setFullMoveNumber(final int fullMoveNumber) {
-	this.fullMoveNumber = fullMoveNumber;
-    }
-
-    public void setHalfMoveClock(final int halfMoveClock) {
-	this.halfMoveClock = halfMoveClock;
-    }
 
     // ----------------------------------------------------- Public Methods ----------------------------------------------------------------
 
