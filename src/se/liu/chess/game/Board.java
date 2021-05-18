@@ -356,10 +356,12 @@ public class Board
 	fenConverter.createBoardFromFEN("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1");
 	blackPlayer.resetTime();
 	whitePlayer.resetTime();
+	gameOver = false;
+	//TODO do this in createBoardFromFEN() instead
+	enPassantTarget = null;
+
 	updateThreats(getActivePlayer());
 	updateAvailableMoves(getActivePlayer());
-	gameOver = false;
-
     }
 
     /**
@@ -551,9 +553,9 @@ public class Board
 	    fullMoveNumber++;
 	}
 
-	updateAvailableMoves(getInactivePlayer());
-
 	updateThreats(getActivePlayer());
+
+	updateAvailableMoves(getInactivePlayer());
 
 	updateAvailableMoves(getActivePlayer());
 
