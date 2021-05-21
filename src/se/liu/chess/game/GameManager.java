@@ -21,7 +21,7 @@ public class GameManager
      * Also creates a new Board object.
      */
     public GameManager() {
-        this.board = new Board(8, 8);
+        this.board = new Board();
     }
 
     // ----------------------------------------------------- Public Methods ----------------------------------------------------------------
@@ -30,7 +30,7 @@ public class GameManager
      * Creates a new Board and replaces the old one.
      */
     public void createNewGame() {
-        this.board = new Board(8, 8);
+        this.board = new Board();
     }
 
 

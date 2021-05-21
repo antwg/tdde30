@@ -61,11 +61,11 @@ public class Player
 	return color;
     }
 
-    public boolean canCastleKingside() {
+    public boolean isKingSideCastleAvailable() {
 	return kingSideCastleAvailable;
     }
 
-    public boolean canCastleQueenSide() {
+    public boolean isQueenSideCastleAvailable() {
 	return queenSideCastleAvailable;
     }
 

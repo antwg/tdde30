@@ -15,8 +15,7 @@ import java.awt.*;
  */
 public class FenConverter {
     private Board board;
-    private int height;
-    private int width;
+    private int height, width;
 
     public FenConverter(final Board board) {
 	this.board = board;
@@ -94,16 +93,16 @@ public class FenConverter {
     }
 
     private void convertCastlingAbilityToFEN(StringBuilder builder){
-	if (board.getPlayer(TeamColor.WHITE).canCastleKingside()) { // (Inspection) Not mutually exclusive
+	if (board.getPlayer(TeamColor.WHITE).isKingSideCastleAvailable()) { // (Inspection) Not mutually exclusive
 	    builder.append("K");
 	}
-	if (board.getPlayer(TeamColor.WHITE).canCastleQueenSide()) {
+	if (board.getPlayer(TeamColor.WHITE).isQueenSideCastleAvailable()) {
 	    builder.append("Q");
 	}
-	if (board.getPlayer(TeamColor.BLACK).canCastleKingside()) {
+	if (board.getPlayer(TeamColor.BLACK).isKingSideCastleAvailable()) {
 	    builder.append("k");
 	}
-	if (board.getPlayer(TeamColor.BLACK).canCastleQueenSide()) {
+	if (board.getPlayer(TeamColor.BLACK).isQueenSideCastleAvailable()) {
 	    builder.append("q");
 	}
 	builder.append(" ");

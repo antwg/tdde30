@@ -102,15 +102,6 @@ public class King extends PointMovePiece {
 	    Move moveToAdd = new Move(p1, p2, this, moveCharacteristics);
 	    possibleMoves.add(moveToAdd);
 	}
-	    /*if (owner.getColor() == TeamColor.WHITE) {
-		Move moveToAdd = new Move(new Point(4, 7), new Point(2, 7),
-					  this, moveCharacteristics);
-		possibleMoves.add(moveToAdd);
-	    } else {
-		Move moveToAdd = new Move(new Point(4, 0), new Point(2, 0),
-					  this, moveCharacteristics);
-		possibleMoves.add(moveToAdd);
-	    }*/
 
 	if (canCastleKingside(board)) {
 	    Point p1 = new Point(4, 0);
@@ -122,16 +113,6 @@ public class King extends PointMovePiece {
 	    }
 	    Move moveToAdd = new Move(p1, p2, this, moveCharacteristics);
 	    possibleMoves.add(moveToAdd);
-
-	    /*if (owner.getColor() == TeamColor.WHITE) {
-		Move moveToAdd = new Move(new Point(4, 7), new Point(6, 7),
-					  this, moveCharacteristics);
-		possibleMoves.add(moveToAdd);
-	    } else {
-		Move moveToAdd = new Move(new Point(4, 0), new Point(6, 0),
-					  this, moveCharacteristics);
-		possibleMoves.add(moveToAdd);
-	    }*/
 	}
 	return possibleMoves;
     }
@@ -140,18 +121,20 @@ public class King extends PointMovePiece {
     private boolean canCastleQueenSide(Board board) {
 	Player opponent = board.getOpponentPlayer(owner);
 
-	if (!owner.canCastleQueenSide()) {
+	if (!owner.isQueenSideCastleAvailable()) {
 	    return false;
 	}
 
 	final int homeRank = owner.getHomeRank();
-	final int columnOne = 1, columnTwo = 2, columnThree = 3;
+	final int columnOne = 1, columnTwo = 2, columnThree = 3, columnFour = 4;
+
 	if (board.getPiece(columnOne, homeRank) == null &&
 	    board.getPiece(columnTwo, homeRank) == null &&
 	    board.getPiece(columnThree, homeRank) == null &&
-	    !opponent.getAttackedSquares().contains(new Point(2, homeRank)) &&
-	    !opponent.getAttackedSquares().contains(new Point(3, homeRank)) &&
-	    !opponent.getAttackedSquares().contains(new Point(4, homeRank))) {
+	    !opponent.getAttackedSquares().contains(new Point(columnTwo, homeRank)) &&
+	    !opponent.getAttackedSquares().contains(new Point(columnThree, homeRank)) &&
+	    !opponent.getAttackedSquares().contains(new Point(columnFour, homeRank)))
+	{
 	    return true;
 	}
 	return false;
@@ -161,17 +144,19 @@ public class King extends PointMovePiece {
     private boolean canCastleKingside(Board board) {
 	Player opponent = board.getOpponentPlayer(owner);
 
-	if (!owner.canCastleKingside()) {
+	if (!owner.isKingSideCastleAvailable()) {
 	    return false;
 	}
 
 	final int homeRank = owner.getHomeRank();
-	final int columnFive = 5, columnSix = 2;
+	final int columnFour = 4, columnFive = 5, columnSix = 2;
+
 	if (board.getPiece(columnFive, homeRank) == null &&
 	    board.getPiece(columnSix, homeRank) == null &&
 	    !opponent.getAttackedSquares().contains(new Point(4, homeRank)) &&
 	    !opponent.getAttackedSquares().contains(new Point(5, homeRank)) &&
-	    !opponent.getAttackedSquares().contains(new Point(6, homeRank))) {
+	    !opponent.getAttackedSquares().contains(new Point(6, homeRank)))
+	{
 	    return true;
 	}
 	return false;

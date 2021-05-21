@@ -22,7 +22,7 @@ import javax.swing.*;
 public class Board
 {
     private Piece[][] pieces;
-    private final int width, height;
+    private static final int WIDTH = 8, HEIGHT = 8;
 
     private Player whitePlayer, blackPlayer;
 
@@ -32,9 +32,9 @@ public class Board
     private final FenConverter fenConverter;
 
     private Point enPassantTarget = null;
-    private ChessComponent chessComponent;
+    private final ChessComponent chessComponent;
 
-    private int halfMoveClock = 0; //TODO implement
+    private int halfMoveClock = 0; //TODO implement 50 move rule
     private int fullMoveNumber = 1;
 
     private final Point[] vectorThreatDirections = { new Point(1, 1),
@@ -47,7 +47,7 @@ public class Board
 						     new Point(0, -1) };
 
     private final Point[] knightThreatDirections = { new Point(1, 2),
-						     new Point( 2, 1),
+						     new Point(2, 1),
 						     new Point(1, -2),
 						     new Point(2, -1),
 						     new Point(-1, 2),
@@ -62,10 +62,8 @@ public class Board
     private List<Set<Point>> allPins = new ArrayList<>();
 
 
-    public Board(final int width, final int height) {
-        	this.width = width;
-		this.height = height;
-		this.pieces = new Piece[width][height];
+    public Board() {
+		this.pieces = new Piece[WIDTH][HEIGHT];
 		this.fenConverter = new FenConverter(this);
 		this.chessComponent = new ChessComponent(this);
 		this.whitePlayer = new Player(TeamColor.WHITE);
@@ -132,7 +130,7 @@ public class Board
      * @return
      */
     public boolean isValidTile(int x, int y) {
-	return (0 <= x && x < width && 0 <= y && y < height);
+	return (0 <= x && x < WIDTH && 0 <= y && y < HEIGHT);
     }
 
     /**
@@ -231,9 +229,11 @@ public class Board
     private void performCastling(final Move move) {
 	getActivePlayer().setKingSideCastleAvailable(false);
 	getActivePlayer().setQueenSideCastleAvailable(false);
+
 	TeamColor activeColor = getActivePlayer().getColor();
 	final int kingPositionCastlingQueenSide = 2;
 	final int kingPositionCastlingKingSide = 6;
+	
 	//TODO split up into castle methods
 	if (move.getTargetSquare().x == kingPositionCastlingQueenSide) {
 	    if (activeColor == TeamColor.WHITE) {
@@ -496,8 +496,8 @@ public class Board
     public void updateAvailableMoves(final Player player) {
         Set<Move> availableMoves = new HashSet<>();
 
-	for (int y = 0; y < height; y++) {
-	    for (int x = 0; x < width; x++) {
+	for (int y = 0; y < HEIGHT; y++) {
+	    for (int x = 0; x < WIDTH; x++) {
 	        Piece currentPiece = getPiece(x, y);
 
 		if (currentPiece == null || !currentPiece.getOwner().equals(player)) {
@@ -528,8 +528,8 @@ public class Board
     }
 
     private void clearBoard() {
-	for (int y = 0; y < height; y++) {
-	    for (int x = 0; x < width; x++) {
+	for (int y = 0; y < HEIGHT; y++) {
+	    for (int x = 0; x < WIDTH; x++) {
 		pieces[y][x] = null;
 	    }
 	}
@@ -538,11 +538,11 @@ public class Board
     // ---------------------------------------------------- Getters/Setters ----------------------------------------------------------------
 
     public int getWidth() {
-	return width;
+	return WIDTH;
     }
 
     public int getHeight() {
-	return height;
+	return HEIGHT;
     }
 
     public Piece getPiece(final int x, final int y) {
