@@ -29,10 +29,12 @@ public class ChessComponent extends JComponent {
 	                       HIGHLIGHT_COLOR = new Color(0, 0, 255, 100), TRANSPARENT = new Color(0, 0, 0, 0);
     // Inspection doesn't like names (ex pieceb), the reason for having a lower case b is that thats how it's written in FEN
     //TODO replace ex. pieceb with bishopBlack?
-    private ImageIcon pieceB = loadIMG("BishopWhite"), pieceb = loadIMG("BishopBlack"), pieceK = loadIMG("KingWhite"),
-	    	      piecek = loadIMG("KingBlack"), pieceN = loadIMG("KnightWhite"), piecen = loadIMG("KnightBlack"),
-		      pieceP = loadIMG("PawnWhite"), piecep = loadIMG("PawnBlack"), pieceQ = loadIMG("QueenWhite"),
-	    	      pieceq = loadIMG("QueenBlack"), pieceR = loadIMG("RookWhite"), piecer = loadIMG("RookBlack");
+    private ImageIcon bishopWhite = loadIMG("BishopWhite"), bishopBlack = loadIMG("BishopBlack"),
+	    	      kingWhite = loadIMG("KingWhite"), kingBlack = loadIMG("KingBlack"),
+	    	      knightWhite = loadIMG("KnightWhite"), knightBlack = loadIMG("KnightBlack"),
+		      pawnWhite = loadIMG("PawnWhite"), pawnBlack = loadIMG("PawnBlack"),
+	    	      queenWhite = loadIMG("QueenWhite"), queenBlack = loadIMG("QueenBlack"),
+		      rookWhite = loadIMG("RookWhite"), rookBlack = loadIMG("RookBlack");
 
     /**
      * Creates a chessComponent and a mouseListener.
@@ -168,40 +170,40 @@ public class ChessComponent extends JComponent {
 	ImageIcon image = null;
 	switch (piece.toString()){ // Useful to keep as string, both because "/" can't be used in enum and the main purpose is to convert from/to string
 	    case "B":
-		image = pieceB;
+		image = bishopWhite;
 		break;
 	    case "b":
-		image = pieceb;
+		image = bishopBlack;
 		break;
 	    case "K":
-		image = pieceK;
+		image = kingWhite;
 		break;
 	    case "k":
-		image = piecek;
+		image = kingBlack;
 		break;
 	    case "N":
-		image = pieceN;
+		image = knightWhite;
 		break;
 	    case "n":
-		image = piecen;
+		image = knightBlack;
 		break;
 	    case "P":
-		image = pieceP;
+		image = pawnWhite;
 		break;
 	    case "p":
-		image = piecep;
+		image = pawnBlack;
 		break;
 	    case "Q":
-		image = pieceQ;
+		image = queenWhite;
 		break;
 	    case "q":
-		image = pieceq;
+		image = queenBlack;
 		break;
 	    case "R":
-		image = pieceR;
+		image = rookWhite;
 		break;
 	    case "r":
-		image = piecer;
+		image = rookBlack;
 		break;
 	}
 	return image;
