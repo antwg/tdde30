@@ -88,10 +88,10 @@ public class King extends PointMovePiece {
 
 	if (canCastleQueenSide(board)) {
 	    final int homeRank = owner.getHomeRank();
-	    final int fileB = 1, fileE = 4;
+	    final int fileC = 2, fileE = 4;
 
 	    Point originSquare = new Point(fileE, homeRank);
-	    Point targetSquare = new Point(fileB, homeRank);
+	    Point targetSquare = new Point(fileC, homeRank);
 
 	    Move moveToAdd = new Move(originSquare, targetSquare, this, moveCharacteristics);
 	    possibleMoves.add(moveToAdd);
@@ -111,8 +111,6 @@ public class King extends PointMovePiece {
     }
     
     private boolean canCastleQueenSide(Board board) {
-	Player opponent = board.getOpponentPlayer(owner);
-
 	if (!owner.isQueenSideCastleAvailable()) {
 	    return false;
 	}
@@ -120,21 +118,13 @@ public class King extends PointMovePiece {
 	final int homeRank = owner.getHomeRank();
 	final int fileB = 1, fileC = 2, fileD = 3, fileE = 4;
 
-	if (board.getPiece(fileB, homeRank) == null &&
-	    board.getPiece(fileC, homeRank) == null &&
-	    board.getPiece(fileD, homeRank) == null &&
-	    !opponent.getAttackedSquares().contains(new Point(fileC, homeRank)) &&
-	    !opponent.getAttackedSquares().contains(new Point(fileD, homeRank)) &&
-	    !opponent.getAttackedSquares().contains(new Point(fileE, homeRank)))
-	{
-	    return true;
-	}
-	return false;
+	return (board.getPiece(fileB, homeRank) == null &&
+		board.getPiece(fileC, homeRank) == null &&
+		board.getPiece(fileD, homeRank) == null &&
+		squaresAreNotThreatened(board, homeRank, fileC, fileD));
     }
 
     private boolean canCastleKingside(Board board) {
-	Player opponent = board.getOpponentPlayer(owner);
-
 	if (!owner.isKingSideCastleAvailable()) {
 	    return false;
 	}
@@ -142,14 +132,16 @@ public class King extends PointMovePiece {
 	final int homeRank = owner.getHomeRank();
 	final int fileE = 4, fileF = 5, fileG = 6;
 
-	if (board.getPiece(fileF, homeRank) == null &&
-	    board.getPiece(fileG, homeRank) == null &&
-	    !opponent.getAttackedSquares().contains(new Point(fileE, homeRank)) &&
-	    !opponent.getAttackedSquares().contains(new Point(fileF, homeRank)) &&
-	    !opponent.getAttackedSquares().contains(new Point(fileG, homeRank)))
-	{
-	    return true;
-	}
-	return false;
+	return (board.getPiece(fileF, homeRank) == null && board.getPiece(fileG, homeRank) == null &&
+		squaresAreNotThreatened(board, homeRank, fileF, fileG));
+    }
+
+    private boolean squaresAreNotThreatened(final Board board, final int homeRank, final int fileOne, final int fileTwo) {
+        final int fileE = 4;
+	Player opponent = board.getOpponentPlayer(owner);
+
+	return (!opponent.getAttackedSquares().contains(new Point(fileE, homeRank)) &&
+	       !opponent.getAttackedSquares().contains(new Point(fileOne, homeRank)) &&
+	       !opponent.getAttackedSquares().contains(new Point(fileTwo, homeRank)));
     }
 }
