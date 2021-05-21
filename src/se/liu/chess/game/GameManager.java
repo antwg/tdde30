@@ -61,7 +61,6 @@ public class GameManager
         gm.createNewGame();
 
         gm.board.resetBoard();
-        System.out.println(gm.board.getFenConverter().convertBoardToFEN());
 
         gm.timeComponent = new TimeComponent(gm.board, 180, 512);
         GameViewer gameViewer = new GameViewer(gm.board, gm.timeComponent);

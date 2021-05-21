@@ -16,8 +16,6 @@ import java.util.Set;
  */
 public abstract class PointMovePiece extends AbstractPiece{
 
-    protected Point[] allMoves = null;
-
     /**
      *
      * @param owner

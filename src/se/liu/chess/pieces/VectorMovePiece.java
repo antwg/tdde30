@@ -16,8 +16,6 @@ import java.util.Set;
  */
 public abstract class VectorMovePiece extends AbstractPiece{
 
-    protected Point[] allMoveDirections = null;
-
     protected VectorMovePiece(final Player owner, final Point position) {
 	super(owner, position);
     }

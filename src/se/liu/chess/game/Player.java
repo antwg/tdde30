@@ -17,26 +17,18 @@ public class Player
 {
     private TeamColor color;
 
-    private boolean kingSideCastleAvailable = true;
-    private boolean queenSideCastleAvailable = true;
-    private Point queenSideRookHomePosition;
-    private Point kingSideRookHomePosition;
-    private int promotionRank;
-    private int homeRank;
-    private int pawnRank;
-    private int enPassantRow;
-    private int forwardDirection;
+    private boolean kingSideCastleAvailable = true, queenSideCastleAvailable = true;
+    private Point queenSideRookHomePosition, kingSideRookHomePosition;
+    private int promotionRank, homeRank, pawnRank, enPassantRow, forwardDirection;
 
     private Set<Move> availableMoves = new HashSet<>();
     private Set<Point> attackedSquares = new HashSet<>();
 
-    //TODO problematiskt med cirkelreferens?
     private Piece king = null;
 
     private double timeLeft;
     private static final double START_TIME = 300;
     private static final int INCREMENT = 1;
-
 
     public Player(final TeamColor color) {
 	this.color = color;

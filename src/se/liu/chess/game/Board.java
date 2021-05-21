@@ -34,7 +34,6 @@ public class Board
     private final FenConverter fenConverter;
 
     private Point enPassantTarget = null;
-    private List<Point> threatenedSquares = null;
     private ChessComponent chessComponent;
 
     private int halfMoveClock = 0; //TODO implement
@@ -363,14 +362,16 @@ public class Board
 	getActivePlayer().setKingSideCastleAvailable(false);
 	getActivePlayer().setQueenSideCastleAvailable(false);
 	TeamColor activeColor = getActivePlayer().getColor();
+	int kingPositionCastlingQueenSide = 2;
+	int kingPositionCastlingKingSide = 6;
 	//TODO split up into castle methods
-	if (move.getTargetSquare().x == 2) {
+	if (move.getTargetSquare().x == kingPositionCastlingQueenSide) {
 	    if (activeColor == TeamColor.WHITE) {
 		movePiece(new Point(0, 7), new Point(3, 7));
 	    } else {
 		movePiece(new Point(0, 0), new Point(3, 0));
 	    }
-	} else if (move.getTargetSquare().x == 6) {
+	} else if (move.getTargetSquare().x == kingPositionCastlingKingSide) {
 	    if (activeColor == TeamColor.WHITE) {
 		movePiece(new Point(7, 7), new Point(5, 7));
 	    } else {
