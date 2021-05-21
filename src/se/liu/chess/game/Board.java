@@ -126,20 +126,6 @@ public class Board
     }
 
     /**
-     * Replaces the piece on the target square with the piece on the origin square
-     * and sets the origin square to empty.
-     * @param originSquare
-     * @param targetSquare
-     */
-    public void movePiece(Point originSquare, Point targetSquare) {
-        Piece pieceToMove = getPiece(originSquare);
-	setPiece(targetSquare, pieceToMove);
-	setPiece(originSquare, null);
-
-	pieceToMove.setPosition(targetSquare);
-    }
-
-    /**
      * Returns true if given coordinates lie within the board, otherwise false.
      * @param x
      * @param y
@@ -185,19 +171,32 @@ public class Board
      * @return true if protected, else false
      */
     public boolean isPieceProtected(final Point targetSquare) {
-	if (isDiagonallyProtected(targetSquare)) return true;
-
-	if (isOrthogonallyProtected(targetSquare)) return true;
-
-	if (isProtectedFromKnights(targetSquare)) return true;
-
-	if (isProtectedFromPawns(targetSquare)) return true;
-
+	if (isDiagonallyProtected(targetSquare) ||
+	    isOrthogonallyProtected(targetSquare) ||
+	    isProtectedFromKnights(targetSquare) ||
+	    isProtectedFromPawns(targetSquare))
+	{
+	    return true;
+	}
 	return false;
     }
 
 
     // ----------------------------------------------------- Private Methods ---------------------------------------------------------------
+
+    /**
+     * Replaces the piece on the target square with the piece on the origin square
+     * and sets the origin square to empty.
+     * @param originSquare
+     * @param targetSquare
+     */
+    private void movePiece(Point originSquare, Point targetSquare) {
+	Piece pieceToMove = getPiece(originSquare);
+	setPiece(targetSquare, pieceToMove);
+	setPiece(originSquare, null);
+
+	pieceToMove.setPosition(targetSquare);
+    }
 
     private void promote(final Move move) {
 	String[] options = {"Queen", "Rook", "Bishop", "Knight"};
@@ -456,7 +455,6 @@ public class Board
 		threat.add(new Point(combinedX, combinedY));
 	    } else if (piece.getOwner().equals(getActivePlayer())) {
 		// Friendly piece encountered
-
 		if (isPin) {
 		    isPin = false;
 		    break;
