@@ -22,11 +22,9 @@ import javax.swing.*;
 public class Board
 {
     private Piece[][] pieces;
-    private final int width;
-    private final int height;
+    private final int width, height;
 
-    private Player whitePlayer;
-    private Player blackPlayer;
+    private Player whitePlayer, blackPlayer;
 
     private int activePlayerIndex = 0;
     private boolean gameOver;

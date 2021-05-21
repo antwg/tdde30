@@ -41,7 +41,6 @@ public abstract class AbstractPiece implements Piece {
     }
 
     @Override public void performSpecialMove(final Move move, final Point enPassantTarget, final Board board) {
-        return;
     }
 
     protected Set<Move> limitMovesToThreatSquares(Board board, Set<Move> initialMoves) {
