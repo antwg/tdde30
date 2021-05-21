@@ -233,8 +233,8 @@ public class Board
 	getActivePlayer().setKingSideCastleAvailable(false);
 	getActivePlayer().setQueenSideCastleAvailable(false);
 	TeamColor activeColor = getActivePlayer().getColor();
-	int kingPositionCastlingQueenSide = 2;
-	int kingPositionCastlingKingSide = 6;
+	final int kingPositionCastlingQueenSide = 2;
+	final int kingPositionCastlingKingSide = 6;
 	//TODO split up into castle methods
 	if (move.getTargetSquare().x == kingPositionCastlingQueenSide) {
 	    if (activeColor == TeamColor.WHITE) {

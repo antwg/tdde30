@@ -61,7 +61,7 @@ public class FenConverter {
 
 
     private void convertPiecesToFEN(StringBuilder builder) {
-	int emptySquaresInARow = 0; //(Inspection) variable used in both for-loop and if-statement below
+	int emptySquaresInARow = 0;
 	for (int y = 0; y < height; y++) {
 	    for (int x = 0; x < width; x++) {
 		if (board.isEmpty(x, y)) {
@@ -97,7 +97,7 @@ public class FenConverter {
 	if (board.getPlayer(TeamColor.WHITE).canCastleKingside()) { // (Inspection) Not mutually exclusive
 	    builder.append("K");
 	}
-	if (board.getPlayer(TeamColor.WHITE).canCastleQueenSide()) { // It's written as one word
+	if (board.getPlayer(TeamColor.WHITE).canCastleQueenSide()) {
 	    builder.append("Q");
 	}
 	if (board.getPlayer(TeamColor.BLACK).canCastleKingside()) {

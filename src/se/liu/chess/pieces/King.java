@@ -144,10 +144,11 @@ public class King extends PointMovePiece {
 	    return false;
 	}
 
-	int homeRank = owner.getHomeRank();
-	if (board.getPiece(1, homeRank) == null &&
-	    board.getPiece(2, homeRank) == null &&
-	    board.getPiece(3, homeRank) == null &&
+	final int homeRank = owner.getHomeRank();
+	final int columnOne = 1, columnTwo = 2, columnThree = 3;
+	if (board.getPiece(columnOne, homeRank) == null &&
+	    board.getPiece(columnTwo, homeRank) == null &&
+	    board.getPiece(columnThree, homeRank) == null &&
 	    !opponent.getAttackedSquares().contains(new Point(2, homeRank)) &&
 	    !opponent.getAttackedSquares().contains(new Point(3, homeRank)) &&
 	    !opponent.getAttackedSquares().contains(new Point(4, homeRank))) {
@@ -164,9 +165,10 @@ public class King extends PointMovePiece {
 	    return false;
 	}
 
-	int homeRank = owner.getHomeRank();
-	if (board.getPiece(5, homeRank) == null &&
-	    board.getPiece(6, homeRank) == null &&
+	final int homeRank = owner.getHomeRank();
+	final int columnFive = 5, columnSix = 2;
+	if (board.getPiece(columnFive, homeRank) == null &&
+	    board.getPiece(columnSix, homeRank) == null &&
 	    !opponent.getAttackedSquares().contains(new Point(4, homeRank)) &&
 	    !opponent.getAttackedSquares().contains(new Point(5, homeRank)) &&
 	    !opponent.getAttackedSquares().contains(new Point(6, homeRank))) {
