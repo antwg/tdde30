@@ -21,10 +21,6 @@ public interface Piece
 
     public PieceType getType();
 
-    public boolean hasMoved();
-
-    public void setHasMoved(boolean b);
-
     public Point getPosition();
 
     public void setPosition(Point p);

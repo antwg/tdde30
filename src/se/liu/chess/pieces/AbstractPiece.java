@@ -18,7 +18,6 @@ import java.util.Set;
 public abstract class AbstractPiece implements Piece {
     protected Player owner;
     protected Point position;
-    protected boolean hasMoved = false;
 
     protected AbstractPiece(final Player owner, final Point position) {
 	this.owner = owner;
@@ -39,14 +38,6 @@ public abstract class AbstractPiece implements Piece {
 
     @Override public void setPosition(final Point position) {
         this.position = position;
-    }
-
-    @Override public boolean hasMoved() {
-        return hasMoved;
-    }
-
-    @Override public void setHasMoved(final boolean hasMoved) {
-        this.hasMoved = hasMoved;
     }
 
     @Override public void performSpecialMove(final Move move, final Point enPassantTarget, final Board board) {

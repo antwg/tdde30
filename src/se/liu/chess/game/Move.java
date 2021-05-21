@@ -21,8 +21,6 @@ public class Move
     private boolean harmless;
     private boolean castling;
     private boolean pawnDoubleStep;
-    //private boolean promoting;
-    private boolean enPassant;
 
     public Move(final Point originSquare, final Point targetSquare, final Piece movingPiece, Set<MoveCharacteristics> moveCharacteristics)
     {
@@ -33,8 +31,6 @@ public class Move
 	this.harmless = moveCharacteristics.contains(MoveCharacteristics.HARMLESS);
 	this.castling = moveCharacteristics.contains(MoveCharacteristics.CASTLING);
 	this.pawnDoubleStep = moveCharacteristics.contains(MoveCharacteristics.DOUBLE_STEP);
-	//this.promoting = moveCharacteristics.contains(MoveCharacteristics.PROMOTING);
-	this.enPassant = moveCharacteristics.contains(MoveCharacteristics.EN_PASSANT);
     }
 
     public Point getOriginSquare() {
@@ -66,10 +62,6 @@ public class Move
 	       (movingPiece.getType() == PieceType.PAWN);
     }
 
-    public boolean isEnPassant() {
-	return enPassant;
-    }
-
     @Override public int hashCode() {
 	return Objects.hash(originSquare, targetSquare, movingPiece);
     }
@@ -93,8 +85,7 @@ public class Move
     }
 
     private boolean hasSameCharacteristics(final Move moveObj) {
-	return (harmless == moveObj.harmless) && (castling == moveObj.castling) && (pawnDoubleStep == moveObj.pawnDoubleStep) &&
-	       (enPassant == moveObj.enPassant);
+	return (harmless == moveObj.harmless) && (castling == moveObj.castling) && (pawnDoubleStep == moveObj.pawnDoubleStep);
     }
 
 }

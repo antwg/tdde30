@@ -127,7 +127,6 @@ public class Board
 	}
     }
 
-    //TODO behöver den här vara public?
     public void setActivePlayerIndex(final int activePlayerIndex) {
     	this.activePlayerIndex = activePlayerIndex;
     }
@@ -136,24 +135,12 @@ public class Board
 	return enPassantTarget;
     }
 
-    public void setEnPassantTarget(final Point enPassantTarget) {
-	this.enPassantTarget = enPassantTarget;
-    }
-
-    public void setEnPassantTarget(int x, int y) {
-	this.enPassantTarget = new Point(x, y);
-    }
-
     public void setEnPassantTarget(Move move){
-	if  (move == null) {
+	if (move == null) {
 	    this.enPassantTarget = null;
 	}
 	else {
-	    int enPassantRow = 2;
-	    if (activePlayerIndex == 0) {
-		enPassantRow = 5;
-	    }
-	    this.enPassantTarget = new Point(move.getOriginSquare().x, enPassantRow);
+	    this.enPassantTarget = new Point(move.getOriginSquare().x, getActivePlayer().getEnPassantRow());
 	}
     }
 
@@ -164,18 +151,6 @@ public class Board
         else{
             return blackPlayer;
 	}
-    }
-
-    public Set<Move> getMoves(int x,int y) {
-        Set<Move> moves = new HashSet<>();
-
-	for (Move move : getActivePlayer().getAvailableMoves()) {
-	    if (move.getOriginSquare().x == x && move.getOriginSquare().y == y) {
-	        moves.add(move);
-	    }
-	}
-
-	return moves;
     }
 
     public ChessComponent getChessComponent() {
@@ -240,50 +215,22 @@ public class Board
 	if (move.isCastling()) {
 	    performCastling(move);
 	}
+
 	move.getMovingPiece().performSpecialMove(move, enPassantTarget, this);
 
-	setEnPassantTarget(move);
+	if (move.isPawnDoubleStep()) {
+	    setEnPassantTarget(move);
+	} else {
+	    setEnPassantTarget(null);
+	}
 
 	movePiece(move.getOriginSquare(), move.getTargetSquare());
 
 	if (move.isPromoting()) {
 	    promote(move);
 	}
+
 	passTurn();
-		/*
-	// Disable castling availability on side where rook moved
-	else if (move.getMovingPiece() instanceof Rook) {
-	    if (move.getOriginSquare().equals(activePlayer.getKingSideRookHomePosition())) {
-		activePlayer.setKingSideCastleAvailable(false);
-	    }
-	    else if(move.getOriginSquare().equals(activePlayer.getQueenSideRookHomePosition())){
-	        activePlayer.setQueenSideCastleAvailable(false);
-	    }
-	}
-	// If king moved, disable castling on both sides
-	else if (move.getMovingPiece() instanceof King) {
-	    activePlayer.setQueenSideCastleAvailable(false);
-	    activePlayer.setKingSideCastleAvailable(false);
-	}
-
-	Point targetSquare = move.getTargetSquare();
-	Player inactivePlayer = getInactivePlayer();
-
-	// Disable castling if rook is captured
-	if (targetSquare.equals(inactivePlayer.getKingSideRookHomePosition())) {
-	    inactivePlayer.setKingSideCastleAvailable(false);
-	} else if (targetSquare.equals(inactivePlayer.getQueenSideRookHomePosition())) {
-	    inactivePlayer.setQueenSideCastleAvailable(false);
-	}
-
-	// Capture en passant target
-	if (move.getMovingPiece() instanceof Pawn && targetSquare.equals(enPassantTarget)) {
-	    int captureX = targetSquare.x;
-	    int captureY = targetSquare.y + inactivePlayer.getForwardDirection();
-
-	    setPiece(captureX, captureY, null);
-	}
-	*/
     }
 
     /**
@@ -319,7 +266,6 @@ public class Board
 	setPiece(targetSquare, pieceToMove);
 	setPiece(originSquare, null);
 
-	pieceToMove.setHasMoved(true);
 	pieceToMove.setPosition(targetSquare);
     }
 
@@ -540,6 +486,8 @@ public class Board
     }
 
     private void passTurn() { // Pass is used as a verb (inspection)
+        getActivePlayer().increaseTimeByIncrement();
+
 	// Update active player
 	int nextActivePlayerIndex = (activePlayerIndex + 1) % 2;
 	activePlayerIndex = nextActivePlayerIndex;
@@ -716,35 +664,5 @@ public class Board
 	    }
 	}
     }
-
-
-    /**
-     * Updates whitePossibleMoves and blackPossibleMoves with the currently
-     * available moves for both players. Sets threatenedSquares to squares
-     * threatened by inactive player.
-     */
-    /*
-    private void updatePossibleMoves() {
-        whitePossibleMoves.clear();
-        blackPossibleMoves.clear();
-
-	for (int y = 0; y < height; y++) {
-	    for (int x = 0; x < width; x++) {
-		Piece currPiece = getPiece(x, y);
-
-		if (currPiece != null) {
-		    if (currPiece.getColor() == TeamColor.WHITE) {
-			whitePossibleMoves.addAll(currPiece.getMoves(this, x, y));
-		    } else {
-			blackPossibleMoves.addAll(currPiece.getMoves(this, x, y));
-		    }
-		}
-	    }
-	}
-    }
-
-    */
-
-
 }
 

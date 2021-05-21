@@ -67,16 +67,6 @@ public class Pawn extends AbstractPiece {
 
     // ----------------------------------------------------- Private Methods ---------------------------------------------------------------
 
-    private boolean isValidMoveToEmptyPiece(Board board, int x, int y){
-	if (board.isValidTile(x, y)) {
-	    Piece piece = board.getPiece(x, y);
-	    if (piece == null) {
-		return true;
-	    }
-	}
-	return false;
-    }
-
     private void addHarmlessMoves(final Board board, final int x, final int y, final Set<Move> possibleMoves,
 				  final Set<MoveCharacteristics> moveCharacteristics) {
 
@@ -91,7 +81,7 @@ public class Pawn extends AbstractPiece {
 				      this, moveCharacteristics);
 	    possibleMoves.add(moveToAdd);
 
-	    if (!hasMoved &&
+	    if (y == owner.getPawnRank() &&
 		board.isValidTile(x, yDoubleForward) &&
 		board.getPiece(x, yDoubleForward) == null) {
 		moveCharacteristics.add(MoveCharacteristics.DOUBLE_STEP);

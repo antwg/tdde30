@@ -23,6 +23,8 @@ public class Player
     private Point kingSideRookHomePosition;
     private int promotionRank;
     private int homeRank;
+    private int pawnRank;
+    private int enPassantRow;
     private int forwardDirection;
 
     private Set<Move> availableMoves = new HashSet<>();
@@ -33,7 +35,6 @@ public class Player
 
     private double timeLeft;
     private static final double START_TIME = 300;
-    private static final int SCORE = 0; // (Inspection) false alarm
     private static final int INCREMENT = 1;
 
 
@@ -46,12 +47,16 @@ public class Player
 	    this.kingSideRookHomePosition = new Point(7, 7);
 	    this.promotionRank = 0;
 	    this.homeRank = 7;
+	    this.pawnRank = 6;
+	    this.enPassantRow = 5;
 	    this.forwardDirection = -1;
 	} else {
 	    this.queenSideRookHomePosition = new Point(0, 0);
 	    this.kingSideRookHomePosition = new Point(7, 0);
 	    this.promotionRank = 7;
 	    this.homeRank = 0;
+	    this.pawnRank = 1;
+	    this.enPassantRow = 2;
 	    this.forwardDirection = 1;
 	}
 
@@ -88,6 +93,14 @@ public class Player
 	return homeRank;
     }
 
+    public int getPawnRank() {
+	return pawnRank;
+    }
+
+    public int getEnPassantRow() {
+        return enPassantRow;
+    }
+
     public int getForwardDirection() {
 	return forwardDirection;
     }
@@ -103,10 +116,6 @@ public class Player
     public double getTimeLeft() {
 	return timeLeft;
     }
-
-    public int getScore() {
-    return SCORE;
-}
 
     public Piece getKing() {
     return king;
