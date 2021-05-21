@@ -168,11 +168,11 @@ public class Board
      * @param targetSquare square with piece on
      * @return true if protected, else false
      */
-    public boolean isPieceProtected(final Point targetSquare) {
-	if (isDiagonallyProtected(targetSquare) ||
-	    isOrthogonallyProtected(targetSquare) ||
-	    isProtectedFromKnights(targetSquare) ||
-	    isProtectedFromPawns(targetSquare))
+    public boolean isSquareProtectedByPlayer(final Point targetSquare, final Player protectingPlayer) {
+	if (isDiagonallyProtected(targetSquare, protectingPlayer) ||
+	    isOrthogonallyProtected(targetSquare, protectingPlayer) ||
+	    isProtectedFromKnights(targetSquare, protectingPlayer) ||
+	    isProtectedFromPawns(targetSquare, protectingPlayer))
 	{
 	    return true;
 	}
@@ -254,14 +254,14 @@ public class Board
 	}
     }
 
-    private boolean isProtectedFromPawns(final Point targetSquare) {
-	final Point[] pawnAttacks = { new Point(-1, -getPiece(targetSquare).getOwner().getForwardDirection()),
-				      new Point(1, -getPiece(targetSquare).getOwner().getForwardDirection()) };
+    private boolean isProtectedFromPawns(final Point targetSquare, final Player protectingPlayer) {
+	final Point[] pawnAttacks = { new Point(-1, -protectingPlayer.getForwardDirection()),
+				      new Point(1, -protectingPlayer.getForwardDirection()) };
 
-	return isProtectedFromPoints(targetSquare, pawnAttacks, PieceType.PAWN);
+	return isProtectedFromPoints(targetSquare, protectingPlayer, pawnAttacks, PieceType.PAWN);
     }
 
-    private boolean isProtectedFromKnights(final Point targetSquare) {
+    private boolean isProtectedFromKnights(final Point targetSquare, final Player protectingPlayer) {
 	final Point[] knightAttacks = { new Point(1, 2),
 					new Point( 2, 1),
 					new Point(1, -2),
@@ -271,28 +271,28 @@ public class Board
 					new Point(-1, -2),
 					new Point(-2, -1) };
 
-	return isProtectedFromPoints(targetSquare, knightAttacks, PieceType.KNIGHT);
+	return isProtectedFromPoints(targetSquare, protectingPlayer, knightAttacks, PieceType.KNIGHT);
     }
 
-    private boolean isOrthogonallyProtected(final Point targetSquare) {
+    private boolean isOrthogonallyProtected(final Point targetSquare, final Player protectingPlayer) {
 	final Point[] orthogonalVectors = { new Point(1, 0),
 					    new Point(0, 1),
 					    new Point(-1, 0),
 					    new Point(0, -1) };
 
-	return isProtectedFromVectors(targetSquare, orthogonalVectors, PieceType.ROOK);
+	return isProtectedFromVectors(targetSquare, protectingPlayer, orthogonalVectors, PieceType.ROOK);
     }
 
-    private boolean isDiagonallyProtected(final Point targetSquare) {
+    private boolean isDiagonallyProtected(final Point targetSquare, final Player protectingPlayer) {
 	final Point[] diagonalVectors = { new Point(1, 1),
 					  new Point(1, -1),
 					  new Point(-1, 1),
 					  new Point(-1, -1)};
 
-	return isProtectedFromVectors(targetSquare, diagonalVectors, PieceType.BISHOP);
+	return isProtectedFromVectors(targetSquare, protectingPlayer, diagonalVectors, PieceType.BISHOP);
     }
 
-    private boolean isProtectedFromPoints(final Point targetSquare, final Point[] attacks, final PieceType pieceType) {
+    private boolean isProtectedFromPoints(final Point targetSquare, final Player protectingPlayer, final Point[] attacks, final PieceType pieceType) {
 	for (Point attack : attacks) {
 	    int combinedX = targetSquare.x + attack.x;
 	    int combinedY = targetSquare.y + attack.y;
@@ -302,10 +302,10 @@ public class Board
 	    }
 
 	    Piece pieceOnSquare = getPiece(combinedX, combinedY);
-	    TeamColor protectionColor = getPiece(targetSquare).getColor();
+	    TeamColor protectingColor = protectingPlayer.getColor();
 
 	    if (pieceOnSquare != null &&
-		pieceOnSquare.getColor().equals(protectionColor) &&
+		pieceOnSquare.getColor().equals(protectingColor) &&
 		pieceOnSquare.getType().equals(pieceType)) {
 		return true;
 	    }
@@ -313,7 +313,7 @@ public class Board
 	return false;
     }
 
-    private boolean isProtectedFromVectors(final Point targetSquare, final Point[] vectors, final PieceType pieceType) {
+    private boolean isProtectedFromVectors(final Point targetSquare, final Player protectingPlayer, final Point[] vectors, final PieceType pieceType) {
 	for (Point vector : vectors) {
 	    int combinedX = targetSquare.x + vector.x;
 	    int combinedY = targetSquare.y + vector.y;
@@ -321,12 +321,13 @@ public class Board
 	    while (isValidTile(combinedX, combinedY)) {
 
 		Piece pieceOnSquare = getPiece(combinedX, combinedY);
-		TeamColor protectionColor = getPiece(targetSquare).getColor();
+		TeamColor protectingColor = protectingPlayer.getColor();
 
-		if (pieceOnSquare == null) {
+		if (pieceOnSquare == null ||
+		    pieceOnSquare.getType().equals(PieceType.KING) && !pieceOnSquare.getColor().equals(protectingColor)) {
 		    combinedX += vector.x;
 		    combinedY += vector.y;
-		} else if (pieceOnSquare.getColor().equals(protectionColor) &&
+		} else if (pieceOnSquare.getColor().equals(protectingColor) &&
 			   (pieceOnSquare.getType().equals(pieceType) || pieceOnSquare.getType().equals(PieceType.QUEEN))) {
 		    return true;
 		} else {

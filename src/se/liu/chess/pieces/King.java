@@ -67,12 +67,7 @@ public class King extends PointMovePiece {
 	Set<Move> possibleMoves = new HashSet<>();
 
 	for (Move move : initialMoves) {
-	    // check if not protected
-	    if (board.getPiece(move.getTargetSquare()) == null &&
-		!board.getInactivePlayer().getAttackedSquares().contains(move.getTargetSquare())) {
-		possibleMoves.add(move);
-	    } else if (board.getPiece(move.getTargetSquare()) != null &&
-		       !board.isPieceProtected(move.getTargetSquare())) {
+	    if (!board.isSquareProtectedByPlayer(move.getTargetSquare(), board.getOpponentPlayer(owner))) {
 		possibleMoves.add(move);
 	    }
 	}
