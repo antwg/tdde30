@@ -34,7 +34,7 @@ public abstract class VectorMovePiece extends AbstractPiece{
 		Piece pieceOnSquare = board.getPiece(combinedX, combinedY);
 
 		if (pieceOnSquare == null ||
-		    pieceOnSquare.getColor() != getColor() && pieceOnSquare.getType() == PieceType.KING) {
+		    pieceOnSquare.getColor() != getColor() && pieceOnSquare.getType().equals(PieceType.KING)) {
 		    Move moveToAdd = new Move(new Point(x, y), new Point(combinedX, combinedY),
 					    this, moveCharacteristics);
 		    legalMoves.add(moveToAdd);

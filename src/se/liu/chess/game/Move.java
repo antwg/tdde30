@@ -58,8 +58,8 @@ public class Move
     }
 
     public boolean isPromoting() {
-        return (targetSquare.y == movingPiece.getOwner().getPromotionRank()) &&
-	       (movingPiece.getType() == PieceType.PAWN);
+        return (movingPiece.getType().equals(PieceType.PAWN)) &&
+	       (targetSquare.y == movingPiece.getOwner().getPromotionRank());
     }
 
     @Override public int hashCode() {

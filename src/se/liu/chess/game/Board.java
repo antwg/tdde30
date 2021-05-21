@@ -426,7 +426,7 @@ public class Board
 	Piece piece = getPiece(combinedX, combinedY);
 
 	if (piece != null && piece.getOwner().equals(getInactivePlayer()) &&
-	    piece.getType() == pieceType) {
+	    piece.getType().equals(pieceType)) {
 	    Set<Point> threat = new HashSet<>();
 	    threat.add(new Point(combinedX, combinedY));
 	    allDirectThreats.add(threat);
