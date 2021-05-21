@@ -146,7 +146,6 @@ public class Board
 	blackPlayer.resetTime();
 	whitePlayer.resetTime();
 	gameOver = false;
-	//TODO do this in createBoardFromFEN() instead
 	enPassantTarget = null;
 
 	updateThreats(getActivePlayer());
@@ -455,7 +454,7 @@ public class Board
 		    threat.add(new Point(combinedX, combinedY));
 		}
 
-	    } else if (!piece.getOwner().equals(getActivePlayer())) {
+	    } else {
 		// Hostile piece encountered
 
 		// The queen, bishop and rook captures along a vector.
@@ -468,8 +467,6 @@ public class Board
 		}
 		break;
 
-	    } else {
-		System.out.println("Code should not get here! (method updateThreats() in Board)");
 	    }
 	    combinedX += moveVector.x;
 	    combinedY += moveVector.y;

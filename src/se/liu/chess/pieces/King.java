@@ -87,32 +87,29 @@ public class King extends PointMovePiece {
 	moveCharacteristics.add(MoveCharacteristics.CASTLING);
 
 	if (canCastleQueenSide(board)) {
-	    Point originSquare = new Point(4, 0);
-	    Point targetSquare = new Point(2, 0);
+	    final int homeRank = owner.getHomeRank();
+	    final int fileB = 1, fileE = 4;
 
-	    if (owner.getColor() == TeamColor.WHITE) {
-		originSquare = new Point(4, 7);
-		targetSquare = new Point(2, 7);
-	    }
+	    Point originSquare = new Point(fileE, homeRank);
+	    Point targetSquare = new Point(fileB, homeRank);
+
 	    Move moveToAdd = new Move(originSquare, targetSquare, this, moveCharacteristics);
 	    possibleMoves.add(moveToAdd);
 	}
 
 	if (canCastleKingside(board)) {
-	    Point originSquare = new Point(4, 0);
-	    Point targetSquare = new Point(6, 0);
+	    final int homeRank = owner.getHomeRank();
+	    final int fileE = 4, fileG = 6;
 
-	    if (owner.getColor() == TeamColor.WHITE){
-		originSquare = new Point(4, 7);
-		targetSquare = new Point(6, 7);
-	    }
+	    Point originSquare = new Point(fileE, homeRank);
+	    Point targetSquare = new Point(fileG, homeRank);
+
 	    Move moveToAdd = new Move(originSquare, targetSquare, this, moveCharacteristics);
 	    possibleMoves.add(moveToAdd);
 	}
 	return possibleMoves;
     }
-
-    //TODO fix hardcoded ugliness, duplicate code and bad naming
+    
     private boolean canCastleQueenSide(Board board) {
 	Player opponent = board.getOpponentPlayer(owner);
 
@@ -135,7 +132,6 @@ public class King extends PointMovePiece {
 	return false;
     }
 
-    //TODO fix hardcoded ugliness, duplicate code and bad naming
     private boolean canCastleKingside(Board board) {
 	Player opponent = board.getOpponentPlayer(owner);
 
