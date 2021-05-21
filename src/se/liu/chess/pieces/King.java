@@ -87,26 +87,26 @@ public class King extends PointMovePiece {
 	moveCharacteristics.add(MoveCharacteristics.CASTLING);
 
 	if (canCastleQueenSide(board)) {
-	    Point p1 = new Point(4, 0);
-	    Point p2 = new Point(2, 0);
+	    Point originSquare = new Point(4, 0);
+	    Point targetSquare = new Point(2, 0);
 
 	    if (owner.getColor() == TeamColor.WHITE) {
-		p1 = new Point(4, 7);
-		p2 = new Point(2, 7);
+		originSquare = new Point(4, 7);
+		targetSquare = new Point(2, 7);
 	    }
-	    Move moveToAdd = new Move(p1, p2, this, moveCharacteristics);
+	    Move moveToAdd = new Move(originSquare, targetSquare, this, moveCharacteristics);
 	    possibleMoves.add(moveToAdd);
 	}
 
 	if (canCastleKingside(board)) {
-	    Point p1 = new Point(4, 0);
-	    Point p2 = new Point(6, 0);
+	    Point originSquare = new Point(4, 0);
+	    Point targetSquare = new Point(6, 0);
 
 	    if (owner.getColor() == TeamColor.WHITE){
-		p1 = new Point(4, 7);
-		p2 = new Point(6, 7);
+		originSquare = new Point(4, 7);
+		targetSquare = new Point(6, 7);
 	    }
-	    Move moveToAdd = new Move(p1, p2, this, moveCharacteristics);
+	    Move moveToAdd = new Move(originSquare, targetSquare, this, moveCharacteristics);
 	    possibleMoves.add(moveToAdd);
 	}
 	return possibleMoves;

@@ -46,17 +46,8 @@ public class Board
 						     new Point(-1, 0),
 						     new Point(0, -1) };
 
-    private final Point[] knightThreatDirections = { new Point(1, 2),
-						     new Point(2, 1),
-						     new Point(1, -2),
-						     new Point(2, -1),
-						     new Point(-1, 2),
-						     new Point(-2, 1),
-						     new Point(-1, -2),
-						     new Point(-2, -1) };
-
-    private final Point[] pawnThreatDirections = { new Point(-1, -1),	// Pawn threats for white, can be inverted to get pawn threats for black.
-						   new Point(1, -1) };
+    private final Point[] pawnThreatDirections = { new Point(-1, -1),
+	    					   new Point(1, -1) };
 
     private List<Set<Point>> allDirectThreats = new ArrayList<>();
     private List<Set<Point>> allPins = new ArrayList<>();
@@ -230,27 +221,27 @@ public class Board
 	getActivePlayer().setKingSideCastleAvailable(false);
 	getActivePlayer().setQueenSideCastleAvailable(false);
 
-	TeamColor activeColor = getActivePlayer().getColor();
-	final int kingPositionCastlingQueenSide = 2;
-	final int kingPositionCastlingKingSide = 6;
-	
-	//TODO split up into castle methods
-	if (move.getTargetSquare().x == kingPositionCastlingQueenSide) {
-	    if (activeColor == TeamColor.WHITE) {
-		movePiece(new Point(0, 7), new Point(3, 7));
-	    } else {
-		movePiece(new Point(0, 0), new Point(3, 0));
-	    }
-	} else if (move.getTargetSquare().x == kingPositionCastlingKingSide) {
-	    if (activeColor == TeamColor.WHITE) {
-		movePiece(new Point(7, 7), new Point(5, 7));
-	    } else {
-		movePiece(new Point(7, 0), new Point(5, 0));
-	    }
+	final int kingPositionCastlingQueenSide = 2, kingPositionCastlingKingSide = 6;
 
-	} else {
+	if (move.getTargetSquare().x == kingPositionCastlingQueenSide) {
+	    moveCastlingRook(0, 3);
+	}
+	else if (move.getTargetSquare().x == kingPositionCastlingKingSide) {
+	    moveCastlingRook(7, 5);
+
+	}
+	else {
 	    System.out.println("CODE SHOULD NOT GET HERE! (method castle() in Board)");
-	    // TODO throw exception?
+	}
+    }
+
+    private void moveCastlingRook(final int originX, final int targetX) {
+	TeamColor activeColor = getActivePlayer().getColor();
+
+	if (activeColor == TeamColor.WHITE) {
+	    movePiece(new Point(originX, 7), new Point(targetX, 7));
+	} else {
+	    movePiece(new Point(originX, 0), new Point(targetX, 0));
 	}
     }
 
@@ -401,17 +392,16 @@ public class Board
 	}
 
 	// Check point threats. These are unblockable. (knight and pawn)
-	for (Point movePoint : knightThreatDirections) {
+	for (Point movePoint : Knight.getKnightMoves()) {
 	    updateThreatsOnPoint(kingPos, movePoint, PieceType.KNIGHT);
 	}
 
 	// Point moves are for white pieces by default. Can be inverted along the
 	// y-axis to get threats for black.
-	//TODO go over this
 	for (Point movePoint : pawnThreatDirections) {
-	    int inversionFactor = 1 - 2 * activePlayerIndex;
+	    int forwardDirection = getInactivePlayer().getForwardDirection();
 
-	    updateThreatsOnPoint(kingPos, new Point(movePoint.x, movePoint.y * inversionFactor), PieceType.PAWN);
+	    updateThreatsOnPoint(kingPos, new Point(movePoint.x, movePoint.y * forwardDirection), PieceType.PAWN);
 	}
     }
 

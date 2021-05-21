@@ -15,7 +15,7 @@ import java.util.Set;
  */
 public class Knight extends PointMovePiece
 {
-    private Point[] knightMoves = { new Point(1, 2),
+    private final static Point[] KNIGHT_MOVES = { new Point(1, 2),
 	    			    new Point(2, 1),
 	    			    new Point(1, -2),
 	    			    new Point(2, -1),
@@ -28,10 +28,14 @@ public class Knight extends PointMovePiece
 	super(owner, position);
     }
 
+    public static Point[] getKnightMoves() {
+	return KNIGHT_MOVES;
+    }
+
     // ----------------------------------------------------- Public Methods ----------------------------------------------------------------
 
     @Override public Set<Move> getMoves(final Board board, final int x, final int y) {
-	Set<Move> possibleMoves = getPointMoves(board, x, y, knightMoves);
+	Set<Move> possibleMoves = getPointMoves(board, x, y, KNIGHT_MOVES);
 
 	// Limit moves
 
