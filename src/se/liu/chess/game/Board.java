@@ -328,7 +328,7 @@ public class Board
 		    combinedX += vector.x;
 		    combinedY += vector.y;
 		} else if (pieceOnSquare.getColor().equals(protectionColor) &&
-			   (pieceOnSquare.getType().equals(pieceType) || pieceOnSquare instanceof Queen)) {
+			   (pieceOnSquare.getType().equals(pieceType) || pieceOnSquare.getType().equals(PieceType.QUEEN))) {
 		    return true;
 		} else {
 		    break;
@@ -470,8 +470,8 @@ public class Board
 		// Hostile piece encountered
 
 		// The queen, bishop and rook captures along a vector.
-		if (!(piece instanceof Queen) && !(isCheckingDiagonals && piece instanceof Bishop) &&
-		    !(!isCheckingDiagonals && piece instanceof Rook)) {
+		if (!(piece.getType().equals(PieceType.QUEEN)) && !(isCheckingDiagonals && piece.getType().equals(PieceType.BISHOP)) &&
+		    !(!isCheckingDiagonals && piece.getType().equals(PieceType.ROOK))) {
 		    isDirectThreat = false;
 		    isPin = false;
 		} else {
