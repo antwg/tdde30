@@ -240,7 +240,7 @@ public class Board
 	if (move.isCastling()) {
 	    performCastling(move);
 	}
-	move.getMovingPiece().checkMove(move, enPassantTarget, this);
+	move.getMovingPiece().performSpecialMove(move, enPassantTarget, this);
 
 	setEnPassantTarget(move);
 
@@ -501,10 +501,7 @@ public class Board
 	    int combinedX = targetSquare.x + vector.x;
 	    int combinedY = targetSquare.y + vector.y;
 
-	    while (true) {
-		if (!isValidTile(combinedX, combinedY)) {
-		    break;
-		}
+	    while (isValidTile(combinedX, combinedY)) {
 
 		Piece pieceOnSquare = getPiece(combinedX, combinedY);
 		TeamColor protectionColor = getPiece(targetSquare).getColor();
@@ -653,8 +650,6 @@ public class Board
 		// Hostile piece encountered
 
 		// The queen, bishop and rook captures along a vector.
-
-
 		if (!(piece instanceof Queen) && !(isCheckingDiagonals && piece instanceof Bishop) &&
 		    !(!isCheckingDiagonals && piece instanceof Rook)) {
 		    isDirectThreat = false;

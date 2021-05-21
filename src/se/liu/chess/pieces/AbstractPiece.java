@@ -49,7 +49,7 @@ public abstract class AbstractPiece implements Piece {
         this.hasMoved = hasMoved;
     }
 
-    @Override public void checkMove(final Move move, final Point enPassantTarget, final Board board) {
+    @Override public void performSpecialMove(final Move move, final Point enPassantTarget, final Board board) {
         return;
     }
 

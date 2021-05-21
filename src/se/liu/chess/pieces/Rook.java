@@ -43,7 +43,7 @@ public class Rook extends VectorMovePiece
 	return possibleMoves;
     }
 
-    @Override public void checkMove(Move move, Point enPassantTarget, final Board board) {
+    @Override public void performSpecialMove(Move move, Point enPassantTarget, final Board board) {
         Player activePlayer = board.getActivePlayer();
 	if (move.getOriginSquare().equals(activePlayer.getKingSideRookHomePosition())) {
 	    activePlayer.setKingSideCastleAvailable(false);

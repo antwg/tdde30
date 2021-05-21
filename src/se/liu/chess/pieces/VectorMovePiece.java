@@ -31,10 +31,7 @@ public abstract class VectorMovePiece extends AbstractPiece{
 	    int combinedX = x + moveVector.x;
 	    int combinedY = y + moveVector.y;
 
-	    while (true) {
-		if (!board.isValidTile(combinedX, combinedY)) {
-		    break;
-		}
+	    while (board.isValidTile(combinedX, combinedY)) {
 
 		Piece pieceOnSquare = board.getPiece(combinedX, combinedY);
 

@@ -31,6 +31,6 @@ public interface Piece
 
     public String toString();
 
-    public abstract void checkMove(Move move, Point enPassantTarget, final Board board);
+    public abstract void performSpecialMove(Move move, Point enPassantTarget, final Board board);
 
 }

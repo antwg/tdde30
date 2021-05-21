@@ -219,12 +219,12 @@ public class FenConverter {
 	//TODO add functionality
     }
 
-    private void setMovesFromFEN(String halfMoveClock, String fullmoveNumber){
+    private void setMovesFromFEN(String halfMoveClock, String fullMoveNumber){
 	// Set halfmove clock
 	board.setHalfMoveClock(Integer.parseInt(halfMoveClock));
 
 	// Set fullmove number
-	board.setFullMoveNumber(Integer.parseInt(fullmoveNumber));
+	board.setFullMoveNumber(Integer.parseInt(fullMoveNumber));
     }
 
     private String convertPositionToNotation(final Point p) {

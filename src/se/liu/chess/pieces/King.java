@@ -55,7 +55,7 @@ public class King extends PointMovePiece {
 	return "k";
     }
 
-    @Override public void checkMove(final Move move, Point enPassantTarget, final Board board) {
+    @Override public void performSpecialMove(final Move move, Point enPassantTarget, final Board board) {
 	Player activePlayer = board.getActivePlayer();
         activePlayer.setQueenSideCastleAvailable(false);
 	activePlayer.setKingSideCastleAvailable(false);
@@ -91,7 +91,7 @@ public class King extends PointMovePiece {
 	moveCharacteristics.add(MoveCharacteristics.HARMLESS);
 	moveCharacteristics.add(MoveCharacteristics.CASTLING);
 
-	if (canCastleQueenside(board)) {
+	if (canCastleQueenSide(board)) {
 	    Point p1 = new Point(4, 0);
 	    Point p2 = new Point(2, 0);
 
@@ -137,7 +137,7 @@ public class King extends PointMovePiece {
     }
 
     //TODO fix hardcoded ugliness, duplicate code and bad naming
-    private boolean canCastleQueenside(Board board) {
+    private boolean canCastleQueenSide(Board board) {
 	Player opponent = board.getOpponentPlayer(owner);
 
 	if (!owner.canCastleQueenSide()) {
