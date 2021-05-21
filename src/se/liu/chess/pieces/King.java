@@ -121,14 +121,14 @@ public class King extends PointMovePiece {
 	}
 
 	final int homeRank = owner.getHomeRank();
-	final int columnOne = 1, columnTwo = 2, columnThree = 3, columnFour = 4;
+	final int fileB = 1, fileC = 2, fileD = 3, fileE = 4;
 
-	if (board.getPiece(columnOne, homeRank) == null &&
-	    board.getPiece(columnTwo, homeRank) == null &&
-	    board.getPiece(columnThree, homeRank) == null &&
-	    !opponent.getAttackedSquares().contains(new Point(columnTwo, homeRank)) &&
-	    !opponent.getAttackedSquares().contains(new Point(columnThree, homeRank)) &&
-	    !opponent.getAttackedSquares().contains(new Point(columnFour, homeRank)))
+	if (board.getPiece(fileB, homeRank) == null &&
+	    board.getPiece(fileC, homeRank) == null &&
+	    board.getPiece(fileD, homeRank) == null &&
+	    !opponent.getAttackedSquares().contains(new Point(fileC, homeRank)) &&
+	    !opponent.getAttackedSquares().contains(new Point(fileD, homeRank)) &&
+	    !opponent.getAttackedSquares().contains(new Point(fileE, homeRank)))
 	{
 	    return true;
 	}
@@ -144,13 +144,13 @@ public class King extends PointMovePiece {
 	}
 
 	final int homeRank = owner.getHomeRank();
-	final int columnFour = 4, columnFive = 5, columnSix = 2;
+	final int fileE = 4, fileF = 5, fileG = 6;
 
-	if (board.getPiece(columnFive, homeRank) == null &&
-	    board.getPiece(columnSix, homeRank) == null &&
-	    !opponent.getAttackedSquares().contains(new Point(4, homeRank)) &&
-	    !opponent.getAttackedSquares().contains(new Point(5, homeRank)) &&
-	    !opponent.getAttackedSquares().contains(new Point(6, homeRank)))
+	if (board.getPiece(fileF, homeRank) == null &&
+	    board.getPiece(fileG, homeRank) == null &&
+	    !opponent.getAttackedSquares().contains(new Point(fileE, homeRank)) &&
+	    !opponent.getAttackedSquares().contains(new Point(fileF, homeRank)) &&
+	    !opponent.getAttackedSquares().contains(new Point(fileG, homeRank)))
 	{
 	    return true;
 	}
