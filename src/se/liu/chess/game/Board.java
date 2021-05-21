@@ -73,133 +73,6 @@ public class Board
 
 		clearBoard();
     }
-
-    // ---------------------------------------------------- Getters/Setters ----------------------------------------------------------------
-
-    public int getWidth() {
-	return width;
-    }
-
-    public int getHeight() {
-	return height;
-    }
-
-    public Piece getPiece(final int x, final int y) {
-	return pieces[y][x];
-    }
-
-    public Piece getPiece(final Point p) {
-	return getPiece(p.x, p.y);
-    }
-
-    public void setPiece(int x, int y, Piece piece) {
-	pieces[y][x] = piece;
-    }
-
-    public void setPiece(Point p, Piece piece) {
-	setPiece(p.x, p.y, piece);
-    }
-
-    public Player getActivePlayer() {
-	if (activePlayerIndex == 0) {
-	    return whitePlayer;
-	} else {
-	    return blackPlayer;
-	}
-    }
-
-    public Player getInactivePlayer() {
-	if (activePlayerIndex == 0) {
-	    return blackPlayer;
-	} else {
-	    return whitePlayer;
-	}
-    }
-
-    public Player getOpponentPlayer(final Player friendlyPlayer) {
-	if (friendlyPlayer.equals(whitePlayer)) {
-	    return blackPlayer;
-	} else {
-	    return whitePlayer;
-	}
-    }
-
-    public void setActivePlayerIndex(final int activePlayerIndex) {
-    	this.activePlayerIndex = activePlayerIndex;
-    }
-
-    public Point getEnPassantTarget() {
-	return enPassantTarget;
-    }
-
-    public void setEnPassantTarget(Move move){
-	if (move == null) {
-	    this.enPassantTarget = null;
-	}
-	else {
-	    this.enPassantTarget = new Point(move.getOriginSquare().x, getActivePlayer().getEnPassantRow());
-	}
-    }
-
-    public Player getPlayer(final TeamColor color) {
-        if (color == TeamColor.WHITE){
-	    return whitePlayer;
-	}
-        else{
-            return blackPlayer;
-	}
-    }
-
-    public ChessComponent getChessComponent() {
-	return chessComponent;
-    }
-
-    public boolean isEmpty(int x, int y) {
-	return getPiece(x, y) == null;
-    }
-
-    public int getHalfMoveClock() {
-	return halfMoveClock;
-    }
-
-    public void setHalfMoveClock(final int halfMoveClock) {
-	this.halfMoveClock = halfMoveClock;
-    }
-
-    public int getFullMoveNumber() {
-	return fullMoveNumber;
-    }
-
-    public void setFullMoveNumber(final int fullMoveNumber) {
-	this.fullMoveNumber = fullMoveNumber;
-    }
-
-    public FenConverter getFenConverter() {
-	return fenConverter;
-    }
-
-    public boolean isGameOver() {
-	return gameOver;
-    }
-
-    public void setGameOver(boolean gameOver) {
-    	this.gameOver = gameOver;
-    }
-
-    /**
-     * Returns a list of threats.
-     * @return
-     */
-    public List<Set<Point>> getAllDirectThreats() {
-	return allDirectThreats;
-    }
-
-    public List<Set<Point>> getAllPins() {
-	return allPins;
-    }
-
-
-
     // ----------------------------------------------------- Public Methods ----------------------------------------------------------------
 
     /**
@@ -662,6 +535,130 @@ public class Board
 		pieces[y][x] = null;
 	    }
 	}
+    }
+
+    // ---------------------------------------------------- Getters/Setters ----------------------------------------------------------------
+
+    public int getWidth() {
+	return width;
+    }
+
+    public int getHeight() {
+	return height;
+    }
+
+    public Piece getPiece(final int x, final int y) {
+	return pieces[y][x];
+    }
+
+    public Piece getPiece(final Point p) {
+	return getPiece(p.x, p.y);
+    }
+
+    public void setPiece(int x, int y, Piece piece) {
+	pieces[y][x] = piece;
+    }
+
+    public void setPiece(Point p, Piece piece) {
+	setPiece(p.x, p.y, piece);
+    }
+
+    public Player getActivePlayer() {
+	if (activePlayerIndex == 0) {
+	    return whitePlayer;
+	} else {
+	    return blackPlayer;
+	}
+    }
+
+    public Player getInactivePlayer() {
+	if (activePlayerIndex == 0) {
+	    return blackPlayer;
+	} else {
+	    return whitePlayer;
+	}
+    }
+
+    public Player getOpponentPlayer(final Player friendlyPlayer) {
+	if (friendlyPlayer.equals(whitePlayer)) {
+	    return blackPlayer;
+	} else {
+	    return whitePlayer;
+	}
+    }
+
+    public void setActivePlayerIndex(final int activePlayerIndex) {
+	this.activePlayerIndex = activePlayerIndex;
+    }
+
+    public Point getEnPassantTarget() {
+	return enPassantTarget;
+    }
+
+    public void setEnPassantTarget(Move move){
+	if (move == null) {
+	    this.enPassantTarget = null;
+	}
+	else {
+	    this.enPassantTarget = new Point(move.getOriginSquare().x, getActivePlayer().getEnPassantRow());
+	}
+    }
+
+    public Player getPlayer(final TeamColor color) {
+	if (color == TeamColor.WHITE){
+	    return whitePlayer;
+	}
+	else{
+	    return blackPlayer;
+	}
+    }
+
+    public ChessComponent getChessComponent() {
+	return chessComponent;
+    }
+
+    public boolean isEmpty(int x, int y) {
+	return getPiece(x, y) == null;
+    }
+
+    public int getHalfMoveClock() {
+	return halfMoveClock;
+    }
+
+    public void setHalfMoveClock(final int halfMoveClock) {
+	this.halfMoveClock = halfMoveClock;
+    }
+
+    public int getFullMoveNumber() {
+	return fullMoveNumber;
+    }
+
+    public void setFullMoveNumber(final int fullMoveNumber) {
+	this.fullMoveNumber = fullMoveNumber;
+    }
+
+    public FenConverter getFenConverter() {
+	return fenConverter;
+    }
+
+    public boolean isGameOver() {
+	return gameOver;
+    }
+
+    public void setGameOver(boolean gameOver) {
+	this.gameOver = gameOver;
+    }
+
+    /**
+     * Returns a list of threats.
+     * @return
+     */
+    public List<Set<Point>> getAllDirectThreats() {
+	return allDirectThreats;
+    }
+
+    public List<Set<Point>> getAllPins() {
+	return allPins;
     }
 }
 
