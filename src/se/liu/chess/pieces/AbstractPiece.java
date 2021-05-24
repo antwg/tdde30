@@ -1,42 +1,98 @@
 package se.liu.chess.pieces;
 
 import se.liu.chess.game.Board;
+import se.liu.chess.game.Move;
 import se.liu.chess.game.Player;
 import se.liu.chess.game.TeamColor;
 
-import java.awt.*;
+import java.awt.Point;
+import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * AbstractPiece is an abstract class that implements the Piece class.
  * AbstractPiece is extended by all PieceTypes.
  */
 
-public abstract class AbstractPiece implements Piece
-{
+public abstract class AbstractPiece implements Piece {
     protected Player owner;
-    protected boolean hasMoved = false;
+    protected Point position;
 
-    protected AbstractPiece(final Player owner) {
+    protected AbstractPiece(final Player owner, final Point position) {
 	this.owner = owner;
+	this.position = position;
     }
 
-    public TeamColor getColor() {
-        return owner.getColor();
-    }
-
-    public Player getOwner() {
+    @Override public Player getOwner() {
         return owner;
     }
 
-    public boolean hasMoved() {
-        return hasMoved;
+    @Override public TeamColor getColor() {
+        return owner.getColor();
     }
 
-    public void setHasMoved(final boolean hasMoved) {
-        this.hasMoved = hasMoved;
+    @Override public Point getPosition() {
+        return position;
     }
 
-    protected boolean isLegalCoordinate(Point coordinate, Board board) {
-        return true;
+    @Override public void setPosition(final Point position) {
+        this.position = position;
+    }
+
+    @Override public void performSpecialMove(final Move move, final Point enPassantTarget, final Board board) {
+        // Medvetet lämnad tom då vissa subklasser ska göra ingenting när denna metod kallas.
+    }
+
+    protected Set<Move> limitMovesToThreatSquares(Board board, Set<Move> initialMoves) {
+        List<Set<Point>> threats = board.getAllDirectThreats();
+        if (threats.isEmpty()) {
+            return initialMoves;
+        }
+        else {
+            for (Set<Point> threat : threats){
+                if (threat.isEmpty()){
+                    return initialMoves;
+                }
+            }
+        }
+
+        Set<Move> restrictedMoves = new HashSet<>();
+
+        if (threats.size() > 1) {
+            return restrictedMoves;
+        } else {
+            for (Move move : initialMoves) {
+                if (threats.get(0).contains(move.getTargetSquare())) {
+                    restrictedMoves.add(move);
+                }
+            }
+        }
+
+        return restrictedMoves;
+    }
+
+    protected Set<Move> limitMovesToPinSquares(Board board, Set<Move> initialMoves) {
+        Set<Point> pinRestrictedSquares = null;
+
+        for (Set<Point> pin : board.getAllPins()) {
+            if (pin.contains(this.position)) {
+                pinRestrictedSquares = pin;
+            }
+        }
+
+        if (pinRestrictedSquares == null) {
+            return initialMoves;
+        }
+
+        Set<Move> restrictedMoves = new HashSet<>();
+
+        for (Move move : initialMoves) {
+            if (pinRestrictedSquares.contains(move.getTargetSquare())) {
+                restrictedMoves.add(move);
+            }
+        }
+
+        return restrictedMoves;
     }
 }

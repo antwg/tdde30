@@ -1,6 +1,7 @@
 package se.liu.chess.pieces;
 
 import se.liu.chess.game.Board;
+import se.liu.chess.game.Move;
 import se.liu.chess.game.Player;
 import se.liu.chess.game.TeamColor;
 
@@ -10,6 +11,7 @@ import java.util.Set;
 /**
  * The Queen class extends VectorMovePiece and in turn AbstractPiece and Piece.
  * Overrides getMoves, getType and toString.
+ * Can move both diagonally and in cardinal directions.
  */
 public class Queen extends VectorMovePiece
 {
@@ -22,17 +24,26 @@ public class Queen extends VectorMovePiece
 	    				   new Point(-1, 0),
 	    				   new Point(0, -1)};
 
-    public Queen(final Player owner) {
-	super(owner);
+    public Queen(final Player owner, final Point position) {
+	super(owner, position);
     }
+
+    // ----------------------------------------------------- Public Methods ----------------------------------------------------------------
 
     @Override public PieceType getType() {
 	return PieceType.QUEEN;
     }
 
-    @Override public Set<Point> getMoves(Board board, int x, int y) {
-	allMoveDirections = queenMoveDirections;
-        return super.getMoves(board, x, y);
+    @Override public Set<Move> getMoves(Board board, int x, int y) {
+	Set<Move> possibleMoves = getVectorMoves(board, x, y, queenMoveDirections);
+
+	// Limit moves
+
+	possibleMoves = limitMovesToThreatSquares(board, possibleMoves);
+
+	possibleMoves = limitMovesToPinSquares(board, possibleMoves);
+
+	return possibleMoves;
     }
 
     @Override public String toString() {

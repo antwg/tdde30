@@ -1,15 +1,20 @@
 package se.liu.chess.pieces;
 
 import se.liu.chess.game.Board;
+import se.liu.chess.game.Move;
+import se.liu.chess.game.MoveCharacteristics;
 import se.liu.chess.game.Player;
 import se.liu.chess.game.TeamColor;
 
 import java.awt.*;
+import java.util.EnumSet;
+import java.util.HashSet;
 import java.util.Set;
 
 /**
  * The King class extends PointMovePiece and in turn AbstractPiece and Piece.
  * Overrides getMoves, getType and toString. Also has methods related to castling.
+ * Overrides superclass GetMoves method to filter special cases.
  */
 public class King extends PointMovePiece {
     private Point[] kingMoves = { new Point(0, 1),
@@ -21,81 +26,22 @@ public class King extends PointMovePiece {
 	    			  new Point(-1, 1),
 	    			  new Point(-1, -1) };
 
-    public King(final Player owner) {
-	super(owner);
+    public King(final Player owner, final Point position) {
+	super(owner, position);
     }
 
-    //TODO fix hardcoded ugliness, duplicate code and bad naming
-    private boolean canCastleQueenside(Board board) {
-	if (!owner.canCastleQueenside() || board.isInCheck(owner)) {
-	    return false;
-	}
+    // ----------------------------------------------------- Public Methods ----------------------------------------------------------------
 
-	if (owner.getColor() == TeamColor.WHITE) {
-	    if (board.getPiece(1, 7) == null &&
-		board.getPiece(2, 7) == null &&
-		board.getPiece(3, 7) == null &&
-		!board.getPossibleMoves(TeamColor.BLACK).contains(new Point(1, 7)) &&
-		!board.getPossibleMoves(TeamColor.BLACK).contains(new Point(2, 7)) &&
-		!board.getPossibleMoves(TeamColor.BLACK).contains(new Point(3, 7))) {
-	        return true;
-	    }
-	} else {
-	    if (board.getPiece(1, 0) == null &&
-		board.getPiece(2, 0) == null &&
-		board.getPiece(3, 0) == null &&
-		!board.getPossibleMoves(TeamColor.WHITE).contains(new Point(1, 0)) &&
-		!board.getPossibleMoves(TeamColor.WHITE).contains(new Point(2, 0)) &&
-		!board.getPossibleMoves(TeamColor.WHITE).contains(new Point(3, 0))) {
-		return true;
-	    }
-	}
-	return false;
-    }
+    @Override public Set<Move> getMoves(final Board board, final int x, final int y) {
+	Set<Move> possibleMoves = new HashSet<>();
 
-    //TODO fix hardcoded ugliness, duplicate code and bad naming
-    private boolean canCastleKingside(Board board) {
-	if (!owner.canCastleKingside() || board.isInCheck(owner)) {
-	    return false;
-	}
+	possibleMoves.addAll(getPointMoves(board, x, y, kingMoves));
 
-	if (owner.getColor() == TeamColor.WHITE) {
-	    if (board.getPiece(5, 7) == null &&
-		board.getPiece(6, 7) == null &&
-		!board.getPossibleMoves(TeamColor.BLACK).contains(new Point(5, 7)) &&
-		!board.getPossibleMoves(TeamColor.BLACK).contains(new Point(6, 7))) {
-		return true;
-	    }
-	} else {
-	    if (board.getPiece(5, 0) == null &&
-		board.getPiece(6, 0) == null &&
-		!board.getPossibleMoves(TeamColor.WHITE).contains(new Point(5, 0)) &&
-		!board.getPossibleMoves(TeamColor.WHITE).contains(new Point(6, 0))) {
-		return true;
-	    }
-	}
-	return false;
-    }
+	possibleMoves.addAll(getCastlingMoves(board));
 
-    @Override public Set<Point> getMoves(final Board board, final int x, final int y) {
-        allMoves = kingMoves;
-        Set<Point> availableMoves = super.getMoves(board, x, y);
-        // TODO fix this too
-	if (canCastleQueenside(board)) {
-	    if (owner.getColor() == TeamColor.WHITE) {
-		availableMoves.add(new Point(2, 7));
-	    } else {
-	        availableMoves.add(new Point(2, 0));
-	    }
-	}
-	if (canCastleKingside(board)) {
-	    if (owner.getColor() == TeamColor.WHITE) {
-		availableMoves.add(new Point(6, 7));
-	    } else {
-		availableMoves.add(new Point(6, 0));
-	    }
-	}
-	return availableMoves;
+	possibleMoves = limitMovesToSafeSquares(board, possibleMoves);
+
+	return possibleMoves;
     }
 
     @Override public PieceType getType() {
@@ -107,5 +53,95 @@ public class King extends PointMovePiece {
 	    return "K";
 	}
 	return "k";
+    }
+
+    @Override public void performSpecialMove(final Move move, Point enPassantTarget, final Board board) {
+	Player activePlayer = board.getActivePlayer();
+        activePlayer.setQueenSideCastleAvailable(false);
+	activePlayer.setKingSideCastleAvailable(false);
+    }
+
+    // ----------------------------------------------------- Private Methods ---------------------------------------------------------------
+
+    private Set<Move> limitMovesToSafeSquares(final Board board, final Set<Move> initialMoves) {
+	Set<Move> possibleMoves = new HashSet<>();
+
+	for (Move move : initialMoves) {
+	    if (!board.isSquareProtectedByPlayer(move.getTargetSquare(), board.getOpponentPlayer(owner))) {
+		possibleMoves.add(move);
+	    }
+	}
+
+	return possibleMoves;
+    }
+
+    private Set<Move> getCastlingMoves(final Board board) {
+	Set<Move> possibleMoves = new HashSet<>();
+
+	if (board.isInCheck(owner)) {
+	    return possibleMoves;
+	}
+
+	Set<MoveCharacteristics> moveCharacteristics = EnumSet.noneOf(MoveCharacteristics.class);
+	moveCharacteristics.add(MoveCharacteristics.HARMLESS);
+	moveCharacteristics.add(MoveCharacteristics.CASTLING);
+
+	if (canCastleQueenSide(board)) {
+	    final int homeRank = owner.getHomeRank();
+	    final int fileC = 2, fileE = 4;
+
+	    Point originSquare = new Point(fileE, homeRank);
+	    Point targetSquare = new Point(fileC, homeRank);
+
+	    Move moveToAdd = new Move(originSquare, targetSquare, this, moveCharacteristics);
+	    possibleMoves.add(moveToAdd);
+	}
+
+	if (canCastleKingside(board)) {
+	    final int homeRank = owner.getHomeRank();
+	    final int fileE = 4, fileG = 6;
+
+	    Point originSquare = new Point(fileE, homeRank);
+	    Point targetSquare = new Point(fileG, homeRank);
+
+	    Move moveToAdd = new Move(originSquare, targetSquare, this, moveCharacteristics);
+	    possibleMoves.add(moveToAdd);
+	}
+	return possibleMoves;
+    }
+    
+    private boolean canCastleQueenSide(Board board) {
+	if (!owner.isQueenSideCastleAvailable()) {
+	    return false;
+	}
+
+	final int homeRank = owner.getHomeRank();
+	final int fileB = 1, fileC = 2, fileD = 3;
+
+	return (board.getPiece(fileB, homeRank) == null &&
+		board.getPiece(fileC, homeRank) == null &&
+		board.getPiece(fileD, homeRank) == null &&
+		squaresAreNotThreatened(board, homeRank, fileC, fileD));
+    }
+
+    private boolean canCastleKingside(Board board) {
+	if (!owner.isKingSideCastleAvailable()) {
+	    return false;
+	}
+
+	final int homeRank = owner.getHomeRank();
+	final int fileF = 5, fileG = 6;
+
+	return (board.getPiece(fileF, homeRank) == null && board.getPiece(fileG, homeRank) == null &&
+		squaresAreNotThreatened(board, homeRank, fileF, fileG));
+    }
+
+    private boolean squaresAreNotThreatened(final Board board, final int homeRank, final int fileOne, final int fileTwo) {
+        final int fileE = 4;
+	Player opponent = board.getOpponentPlayer(owner);
+
+	return (!opponent.getAttackedSquares().contains(new Point(fileE, homeRank)) &&
+	       !opponent.getAttackedSquares().contains(new Point(fileOne, homeRank)) &&
+	       !opponent.getAttackedSquares().contains(new Point(fileTwo, homeRank)));
     }
 }

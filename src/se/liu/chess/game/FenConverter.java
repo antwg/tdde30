@@ -10,10 +10,12 @@ import se.liu.chess.pieces.Rook;
 
 import java.awt.*;
 
+/**
+ * Object that converts a given Board object to and from FEN
+ */
 public class FenConverter {
     private Board board;
-    private int height;
-    private int width;
+    private int height, width;
 
     public FenConverter(final Board board) {
 	this.board = board;
@@ -21,7 +23,7 @@ public class FenConverter {
 	this.width = board.getWidth();
     }
 
-    //                                                   --- Convert to FEN ---
+    // ----------------------------------------------------- Public Methods ----------------------------------------------------------------
 
     /**
      * https://en.wikipedia.org/wiki/Forsyth%E2%80%93Edwards_Notation
@@ -33,16 +35,30 @@ public class FenConverter {
 
 	convertPiecesToFEN(builder);
 	convertActivePlayerToFEN(builder);
-	convertCastlingAbilityToFEN(builder); //TODO add castling availability
+	convertCastlingAbilityToFEN(builder);
 	convertEnPassantAvailabilityToFEN(builder);
 	convertMoveToFEN(builder);
 
 	return builder.toString();
     }
 
+    public void createBoardFromFEN(final String fen) {
+	// Split fen string
+	String[] arrOfString = fen.split(" ");
+	final int piecePart = 0, playerPart = 1, castlingPart = 2, enPassantPart = 3, halfMovePart = 4, fullMovePart = 5;
+
+	placePiecesFromFEN(arrOfString[piecePart]);
+	setActivePlayerFromFEN(arrOfString[playerPart]);
+	setCastlingAvailabilityFromFEN(arrOfString[castlingPart]);
+	setEnPassantTargetFromFEN(arrOfString[enPassantPart]);
+	setMovesFromFEN(arrOfString[halfMovePart], arrOfString[fullMovePart]);
+    }
+
+    // ----------------------------------------------------- Private Methods ---------------------------------------------------------------
+
     private void convertPiecesToFEN(StringBuilder builder) {
+	int emptySquaresInARow = 0;
 	for (int y = 0; y < height; y++) {
-	    int emptySquaresInARow = 0; //(Inspection) variable used in both for-loop and if-statement below
 	    for (int x = 0; x < width; x++) {
 		if (board.isEmpty(x, y)) {
 		    emptySquaresInARow++;
@@ -58,7 +74,7 @@ public class FenConverter {
 		builder.append(emptySquaresInARow);
 		emptySquaresInARow = 0;
 	    }
-	    builder.append("/"); // (Inspection) thinks it's used for file path
+	    builder.append("/"); // --- (Inspection) thinks it's used for file path
 	}
 	builder.append(" ");
     }
@@ -74,16 +90,16 @@ public class FenConverter {
     }
 
     private void convertCastlingAbilityToFEN(StringBuilder builder){
-	if (board.getPlayer(TeamColor.WHITE).canCastleKingside()) { // (Inspection) Not mutually exclusive
+	if (board.getPlayer(TeamColor.WHITE).isKingSideCastleAvailable()) { // --- (Inspection) Not mutually exclusive
 	    builder.append("K");
 	}
-	if (board.getPlayer(TeamColor.WHITE).canCastleQueenside()) { // It's written as one word
+	if (board.getPlayer(TeamColor.WHITE).isQueenSideCastleAvailable()) {
 	    builder.append("Q");
 	}
-	if (board.getPlayer(TeamColor.BLACK).canCastleKingside()) {
+	if (board.getPlayer(TeamColor.BLACK).isKingSideCastleAvailable()) {
 	    builder.append("k");
 	}
-	if (board.getPlayer(TeamColor.BLACK).canCastleQueenside()) {
+	if (board.getPlayer(TeamColor.BLACK).isQueenSideCastleAvailable()) {
 	    builder.append("q");
 	}
 	builder.append(" ");
@@ -99,92 +115,77 @@ public class FenConverter {
     }
 
     private void convertMoveToFEN(StringBuilder builder){
-	// 5. Halfmove clock
-	builder.append(board.getHalfmoveClock());
+	builder.append(board.getHalfMoveClock());
 	builder.append(" ");
 
-	// 6. Fullmove number
-	builder.append(board.getFullmoveNumber());
+	builder.append(board.getFullMoveNumber());
 	builder.append(" ");
-    }
-
-    //                                                   --- Convert from FEN ---
-
-    public void createBoardFromFEN(final String fen) {
-	// Split fen string
-	String[] arrOfString = fen.split(" ");
-	final int piecePart = 0, playerPart = 1, castlingPart = 2, enPassantPart = 3, halfMovePart = 4, fullMovePart = 5;
-
-	placePiecesFromFEN(arrOfString[piecePart]);
-	setActivePlayerFromFEN(arrOfString[playerPart]);
-	setCastlingAvailabilityFromFEN(arrOfString[castlingPart]);
-	setEnPassantTargetFromFEN(arrOfString[enPassantPart]);
-	setMovesFromFEN(arrOfString[halfMovePart], arrOfString[fullMovePart]);
     }
 
     private void placePiecesFromFEN(String piecePositions){
 	int x = 0;
 	int y = 0;
+	Player black = board.getPlayer(TeamColor.BLACK);
+	Player white = board.getPlayer(TeamColor.WHITE);
+
 	for (int i = 0; i < piecePositions.length(); i++) {
 	    char curr = piecePositions.charAt(i);
 
-	    //TODO replace with piece construction method?
 	    switch (curr) { // Useful to keep as string, both because "/" can't be used in enum and the main purpose is to convert from/to string
 		case '/':
 		    y++;
 		    x = 0;
 		    break;
 		case 'r':
-		    board.setPiece(x, y, new Rook(board.getPlayer(TeamColor.BLACK)));
+		    board.setPiece(x, y, new Rook(black, new Point(x, y)));
 		    x++;
 		    break;
 		case 'R':
-		    board.setPiece(x, y, new Rook(board.getPlayer(TeamColor.WHITE)));
+		    board.setPiece(x, y, new Rook(white, new Point(x, y)));
 		    x++;
 		    break;
 		case 'n':
-		    board.setPiece(x, y, new Knight(board.getPlayer(TeamColor.BLACK)));
+		    board.setPiece(x, y, new Knight(black, new Point(x, y)));
 		    x++;
 		    break;
 		case 'N':
-		    board.setPiece(x, y, new Knight(board.getPlayer(TeamColor.WHITE)));
+		    board.setPiece(x, y, new Knight(white, new Point(x, y)));
 		    x++;
 		    break;
 		case 'b':
-		    board.setPiece(x, y, new Bishop(board.getPlayer(TeamColor.BLACK)));
+		    board.setPiece(x, y, new Bishop(black, new Point(x, y)));
 		    x++;
 		    break;
 		case 'B':
-		    board.setPiece(x, y, new Bishop(board.getPlayer(TeamColor.WHITE)));
+		    board.setPiece(x, y, new Bishop(white, new Point(x, y)));
 		    x++;
 		    break;
 		case 'k':
-		    Piece blackKing = new King(board.getPlayer(TeamColor.BLACK));
-		    board.getPlayer(TeamColor.BLACK).setKing(blackKing);
+		    Piece blackKing = new King(black, new Point(x, y));
+		    black.setKing(blackKing);
 		    board.setPiece(x, y, blackKing);
 		    x++;
 		    break;
 		case 'K':
-		    Piece whiteKing = new King(board.getPlayer(TeamColor.WHITE));
-		    board.getPlayer(TeamColor.WHITE).setKing(whiteKing);
-
+		    Piece whiteKing = new King(white, new Point(x, y));
+		    white.setKing(whiteKing);
 		    board.setPiece(x, y, whiteKing);
 		    x++;
 		    break;
 		case 'q':
-		    board.setPiece(x, y, new Queen(board.getPlayer(TeamColor.BLACK)));
+		    board.setPiece(x, y, new Queen(black, new Point(x, y)));
 		    x++;
 		    break;
 		case 'Q':
-		    board.setPiece(x, y, new Queen(board.getPlayer(TeamColor.WHITE)));
+		    board.setPiece(x, y, new Queen(white, new Point(x, y)));
 		    x++;
 		    break;
 		case 'p':
-		    board.setPiece(x, y, new Pawn(board.getPlayer(TeamColor.BLACK)));
+		    board.setPiece(x, y, new Pawn(black, new Point(x, y)));
 		    x++;
 		    break;
 		case 'P':
-		    board.setPiece(x, y, new Pawn(board.getPlayer(TeamColor.WHITE)));
+		    board.setPiece(x, y, new Pawn(white, new Point(x, y)));
 		    x++;
 		    break;
 		default:
@@ -201,7 +202,7 @@ public class FenConverter {
 	}
     }
 
-    private void setCastlingAvailabilityFromFEN(String str){
+    private void setCastlingAvailabilityFromFEN(String str){  // Dessa metoder hör till sparande/laddande av spel, vilket inte är färdigt än
 	//TODO add functionality
     }
 
@@ -209,12 +210,12 @@ public class FenConverter {
 	//TODO add functionality
     }
 
-    private void setMovesFromFEN(String halfmoveClock, String fullmoveNumber){
+    private void setMovesFromFEN(String halfMoveClock, String fullMoveNumber){
 	// Set halfmove clock
-	board.setHalfmoveClock(Integer.parseInt(halfmoveClock));
+	board.setHalfMoveClock(Integer.parseInt(halfMoveClock));
 
 	// Set fullmove number
-	board.setFullmoveNumber(Integer.parseInt(fullmoveNumber));
+	board.setFullMoveNumber(Integer.parseInt(fullMoveNumber));
     }
 
     private String convertPositionToNotation(final Point p) {

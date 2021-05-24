@@ -1,9 +1,12 @@
 package se.liu.chess.pieces;
 
 import se.liu.chess.game.Board;
+import se.liu.chess.game.Move;
+import se.liu.chess.game.MoveCharacteristics;
 import se.liu.chess.game.Player;
 
 import java.awt.*;
+import java.util.EnumSet;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -13,26 +16,34 @@ import java.util.Set;
  */
 public abstract class PointMovePiece extends AbstractPiece{
 
-    protected Point[] allMoves = null;
-
-    protected PointMovePiece(final Player owner) {
-	super(owner);
+    /**
+     *
+     * @param owner
+     * @param position
+     */
+    protected PointMovePiece(final Player owner, final Point position) {
+	super(owner, position);
     }
 
-    @Override public Set<Point> getMoves(final Board board, final int x, final int y) {
-	Set<Point> legalMoves = new HashSet<>();
+    protected Set<Move> getPointMoves(final Board board, final int x, final int y, Point[] moveVectors) {
+        Set<Move> legalMoves = new HashSet<>();
 
-	for (Point move: allMoves) {
+	Set<MoveCharacteristics> moveCharacteristics = EnumSet.noneOf(MoveCharacteristics.class);
+
+	for (Point move: moveVectors) {
 	    int combinedX = x + move.x;
 	    int combinedY = y + move.y;
 
 	    if (board.isValidTile(combinedX, combinedY)) {
 		Piece piece = board.getPiece(combinedX, combinedY);
 		if (piece == null || piece.getColor() != this.getColor()) {
-		    legalMoves.add(new Point(combinedX, combinedY));
+		    Move moveToAdd = new Move(new Point(x, y), new Point(combinedX, combinedY),
+					      this, moveCharacteristics);
+		    legalMoves.add(moveToAdd);
 		}
 	    }
 	}
+
 	return legalMoves;
     }
 }

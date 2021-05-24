@@ -1,6 +1,7 @@
 package se.liu.chess.pieces;
 
 import se.liu.chess.game.Board;
+import se.liu.chess.game.Move;
 import se.liu.chess.game.Player;
 import se.liu.chess.game.TeamColor;
 
@@ -14,7 +15,7 @@ import java.util.Set;
  */
 public class Knight extends PointMovePiece
 {
-    private Point[] knightMoves = { new Point(1, 2),
+    private final static Point[] KNIGHT_MOVES = { new Point(1, 2),
 	    			    new Point(2, 1),
 	    			    new Point(1, -2),
 	    			    new Point(2, -1),
@@ -23,13 +24,26 @@ public class Knight extends PointMovePiece
 	    			    new Point(-1, -2),
 	    			    new Point(-2, -1) };
 
-    public Knight(final Player owner) {
-	super(owner);
+    public Knight(final Player owner, final Point position) {
+	super(owner, position);
     }
 
-    @Override public Set<Point> getMoves(final Board board, final int x, final int y) {
-	allMoves = knightMoves;
-	return super.getMoves(board, x, y);
+    public static Point[] getKnightMoves() {
+	return KNIGHT_MOVES;
+    }
+
+    // ----------------------------------------------------- Public Methods ----------------------------------------------------------------
+
+    @Override public Set<Move> getMoves(final Board board, final int x, final int y) {
+	Set<Move> possibleMoves = getPointMoves(board, x, y, KNIGHT_MOVES);
+
+	// Limit moves
+
+	possibleMoves = limitMovesToThreatSquares(board, possibleMoves);
+
+	possibleMoves = limitMovesToPinSquares(board, possibleMoves);
+
+	return possibleMoves;
     }
 
     @Override public PieceType getType() {

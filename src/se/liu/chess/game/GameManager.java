@@ -1,7 +1,6 @@
 package se.liu.chess.game;
 
 import se.liu.chess.gui.GameViewer;
-import se.liu.chess.gui.ChessComponent;
 import se.liu.chess.gui.TimeComponent;
 
 import javax.swing.*;
@@ -17,14 +16,21 @@ public class GameManager
     private TimeComponent timeComponent = null;
     private static final int CLOCK_DELAY = 1000;
 
+    /**
+     * Creates a GameManager.
+     * Also creates a new Board object.
+     */
     public GameManager() {
-        this.board = new Board(8, 8);
+        this.board = new Board();
     }
 
     // ----------------------------------------------------- Public Methods ----------------------------------------------------------------
 
+    /**
+     * Creates a new Board and replaces the old one.
+     */
     public void createNewGame() {
-        this.board = new Board(8, 8);
+        this.board = new Board();
     }
 
 
@@ -34,25 +40,32 @@ public class GameManager
 
         @Override public void actionPerformed(final ActionEvent e) {
             Player activePlayer = board.getActivePlayer();
-            activePlayer.setTimeLeft(activePlayer.getTimeLeft() - 1);
-            timeComponent.repaint();
+
+            if (!board.isGameOver()) {
+                if (activePlayer.isOutOfTime()) {
+                    board.setGameOver(true);
+                    board.displayGameOver(GameOverCauses.TIME);
+                }
+                else {
+                    activePlayer.countDown();
+                    timeComponent.repaint();
+                }
+            }
         }
     };
 
     // ------------------------------------------------------- Main Method -----------------------------------------------------------------
 
     public static void main(String[] args) {
-        // Testing
-
         GameManager gm = new GameManager();
         gm.createNewGame();
 
         gm.board.resetBoard();
-        System.out.println(gm.board.getFenConverter().convertBoardToFEN());
 
         gm.timeComponent = new TimeComponent(gm.board, 180, 512);
-        GameViewer gameViewer = new GameViewer(new ChessComponent(gm.board), gm.timeComponent);
+        GameViewer gameViewer = new GameViewer(gm.board, gm.timeComponent);
         gameViewer.show();
+        gm.board.updateAvailableMoves(gm.board.getActivePlayer());
 
         final Timer clockTimer = new Timer(CLOCK_DELAY, gm.countDown);
         clockTimer.setCoalesce(true);
