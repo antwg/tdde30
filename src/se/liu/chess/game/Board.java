@@ -34,7 +34,7 @@ public class Board
     private Point enPassantTarget = null;
     private final ChessComponent chessComponent;
 
-    private int halfMoveClock = 0, fullMoveNumber = 1; // --- TODO implement 50 move rule and threefold repetition
+    private int halfMoveClock = 0, fullMoveNumber = 1;
 
     private final Point[] vectorThreatDirections = { new Point(1, 1),
 	    					     new Point(1, -1),
@@ -361,18 +361,6 @@ public class Board
 	updateAvailableMoves(getActivePlayer());
 
 	detectGameOver();
-
-	//TODO remove debug prints when done
-	if (!gameOver) {
-	    System.out.println("New turn! Turn number: " + fullMoveNumber + "	Active player: " + getActivePlayer().getColor());
-	    //System.out.println("White threatens: " + getWhitePossibleMoves());
-	    //System.out.println("Black threatens: " + getBlackPossibleMoves());
-	    System.out.println("White in check: " + isInCheck(getPlayer(TeamColor.WHITE)));
-	    System.out.println("Black in check: " + isInCheck(getPlayer(TeamColor.BLACK)));
-	    System.out.println("Direct threats: " + allDirectThreats);
-	    System.out.println("Pins: " + allPins);
-	}
-
     }
 
     private void updateThreats(final Player player) {
