@@ -34,8 +34,7 @@ public class Board
     private Point enPassantTarget = null;
     private final ChessComponent chessComponent;
 
-    private int halfMoveClock = 0; //TODO implement 50 move rule
-    private int fullMoveNumber = 1;
+    private int halfMoveClock = 0, fullMoveNumber = 1; // --- TODO implement 50 move rule
 
     private final Point[] vectorThreatDirections = { new Point(1, 1),
 	    					     new Point(1, -1),
@@ -49,8 +48,7 @@ public class Board
     private final Point[] pawnThreatDirections = { new Point(-1, -1),
 	    					   new Point(1, -1) };
 
-    private List<Set<Point>> allDirectThreats = new ArrayList<>();
-    private List<Set<Point>> allPins = new ArrayList<>();
+    private List<Set<Point>> allDirectThreats = new ArrayList<>(), allPins = new ArrayList<>();
 
 
     public Board() {
@@ -220,28 +218,26 @@ public class Board
 	getActivePlayer().setKingSideCastleAvailable(false);
 	getActivePlayer().setQueenSideCastleAvailable(false);
 
-	final int kingPositionCastlingQueenSide = 2, kingPositionCastlingKingSide = 6;
+	final int kingXCastlingQueenSide = 2, kingXCastlingKingSide = 6;
 
-	if (move.getTargetSquare().x == kingPositionCastlingQueenSide) {
-	    moveCastlingRook(0, 3);
-	}
-	else if (move.getTargetSquare().x == kingPositionCastlingKingSide) {
-	    moveCastlingRook(7, 5);
+	if (move.getTargetSquare().x == kingXCastlingQueenSide) {
+	    final int rookOriginXQueenSide = 0, rookTargetXQueenSide = 3;
 
+	    moveCastlingRook(rookOriginXQueenSide, rookTargetXQueenSide);
 	}
-	else {
-	    System.out.println("CODE SHOULD NOT GET HERE! (method castle() in Board)");
+	else if (move.getTargetSquare().x == kingXCastlingKingSide) {
+	    final int rookOriginXKingSide = 7, rookTargetXKingSide = 5;
+
+	    moveCastlingRook(rookOriginXKingSide, rookTargetXKingSide);
 	}
     }
 
     private void moveCastlingRook(final int originX, final int targetX) {
-	TeamColor activeColor = getActivePlayer().getColor();
-
-	if (activeColor == TeamColor.WHITE) {
-	    movePiece(new Point(originX, 7), new Point(targetX, 7));
-	} else {
-	    movePiece(new Point(originX, 0), new Point(targetX, 0));
+	int rank = 0;
+	if (getActivePlayer().getColor() == TeamColor.WHITE) {
+	    rank = 7;
 	}
+	movePiece(new Point(originX, rank), new Point(targetX, rank));
     }
 
     private boolean isProtectedFromPawns(final Point targetSquare, final Player protectingPlayer) {
@@ -347,7 +343,7 @@ public class Board
 	return message.toString();
     }
 
-    private void passTurn() { // Pass is used as a verb (inspection)
+    private void passTurn() { // --- Pass is used as a verb (inspection)
         getActivePlayer().increaseTimeByIncrement();
 
 	// Update active player
@@ -502,16 +498,14 @@ public class Board
     }
 
     private void detectGameOver() {
-	if (getActivePlayer().getAvailableMoves().isEmpty()) {
+	if (!getActivePlayer().getAvailableMoves().isEmpty()) {
+	    GameOverCauses cause;
 	    if (isInCheck(getActivePlayer())) {
-		// Checkmate detected
-		displayGameOver(GameOverCauses.CHECKMATE);
-		System.out.println("Checkmate detected!");
+		cause = GameOverCauses.CHECKMATE;
 	    } else {
-		// Stalemate detected
-		displayGameOver(GameOverCauses.STALEMATE);
-		System.out.println("Stalemate detected!");
+		cause = GameOverCauses.STALEMATE;
 	    }
+	    displayGameOver(cause);
 	}
     }
 

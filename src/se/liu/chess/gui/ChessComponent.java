@@ -27,8 +27,6 @@ public class ChessComponent extends JComponent {
     private final static int SQUARE_SIZE = 72, IMG_SIZE = 64, OFFSET = (SQUARE_SIZE - IMG_SIZE) / 2;
     private final static Color ODD_TILE_COLOR = Color.DARK_GRAY, EVEN_TILE_COLOR = Color.WHITE,
 	                       HIGHLIGHT_COLOR = new Color(0, 0, 255, 100), TRANSPARENT = new Color(0, 0, 0, 0);
-    // Inspection doesn't like names (ex pieceb), the reason for having a lower case b is that thats how it's written in FEN
-    //TODO replace ex. pieceb with bishopBlack?
     private ImageIcon bishopWhite = loadIMG("BishopWhite"), bishopBlack = loadIMG("BishopBlack"),
 	    	      kingWhite = loadIMG("KingWhite"), kingBlack = loadIMG("KingBlack"),
 	    	      knightWhite = loadIMG("KnightWhite"), knightBlack = loadIMG("KnightBlack"),
@@ -168,7 +166,7 @@ public class ChessComponent extends JComponent {
 
     private ImageIcon getImageForPiece(Piece piece){
 	ImageIcon image = null;
-	switch (piece.toString()){ // Useful to keep as string, both because "/" can't be used in enum and the main purpose is to convert from/to string
+	switch (piece.toString()){ // (Inspection) Useful to keep as string because the main purpose is to convert from/to string
 	    case "B":
 		image = bishopWhite;
 		break;

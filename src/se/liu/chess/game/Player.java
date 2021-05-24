@@ -123,15 +123,6 @@ public class Player
 	this.queenSideCastleAvailable = queenSideCastleAvailable;
     }
 
-    public void setCastleUnavailable(boolean queenSide){
-        if (queenSide){
-	    this.queenSideCastleAvailable = false;
-	}
-        else {
-	    this.kingSideCastleAvailable = false;
-	}
-    }
-
     /**
      * Sets the available moves and updates the attacked squares based on those moves.
      * @param availableMoves
@@ -156,9 +147,6 @@ public class Player
         this.king = king;
     }
 
-
-
-
     // ----------------------------------------------------- Public Methods ----------------------------------------------------------------
 
     public void resetTime(){
@@ -167,6 +155,10 @@ public class Player
 
     public void increaseTimeByIncrement(){
         this.timeLeft += INCREMENT;
+    }
+
+    public void countDown(){
+        this.timeLeft --;
     }
 
     @Override public String toString() {

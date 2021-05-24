@@ -77,7 +77,7 @@ public class FenConverter {
 		builder.append(emptySquaresInARow);
 		emptySquaresInARow = 0;
 	    }
-	    builder.append("/"); // (Inspection) thinks it's used for file path
+	    builder.append("/"); // --- (Inspection) thinks it's used for file path
 	}
 	builder.append(" ");
     }
@@ -93,7 +93,7 @@ public class FenConverter {
     }
 
     private void convertCastlingAbilityToFEN(StringBuilder builder){
-	if (board.getPlayer(TeamColor.WHITE).isKingSideCastleAvailable()) { // (Inspection) Not mutually exclusive
+	if (board.getPlayer(TeamColor.WHITE).isKingSideCastleAvailable()) { // --- (Inspection) Not mutually exclusive
 	    builder.append("K");
 	}
 	if (board.getPlayer(TeamColor.WHITE).isQueenSideCastleAvailable()) {
@@ -118,11 +118,9 @@ public class FenConverter {
     }
 
     private void convertMoveToFEN(StringBuilder builder){
-	// 5. Halfmove clock
 	builder.append(board.getHalfMoveClock());
 	builder.append(" ");
 
-	// 6. Fullmove number
 	builder.append(board.getFullMoveNumber());
 	builder.append(" ");
     }
