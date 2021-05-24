@@ -486,7 +486,7 @@ public class Board
     }
 
     private void detectGameOver() {
-	if (!getActivePlayer().getAvailableMoves().isEmpty()) {
+	if (getActivePlayer().getAvailableMoves().isEmpty()) {
 	    GameOverCauses cause;
 	    if (isInCheck(getActivePlayer())) {
 		cause = GameOverCauses.CHECKMATE;
