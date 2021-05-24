@@ -60,6 +60,7 @@ public class Board
 
 		clearBoard();
     }
+
     // ----------------------------------------------------- Public Methods ----------------------------------------------------------------
 
     /**
@@ -167,6 +168,25 @@ public class Board
 	return false;
     }
 
+    public void updateAvailableMoves(final Player player) {
+	Set<Move> availableMoves = new HashSet<>();
+
+	for (int y = 0; y < HEIGHT; y++) {
+	    for (int x = 0; x < WIDTH; x++) {
+		Piece currentPiece = getPiece(x, y);
+
+		if (currentPiece == null || !currentPiece.getOwner().equals(player)) {
+		    continue;
+		}
+
+		Set<Move> currentPieceMoves = currentPiece.getMoves(this, x, y);
+
+		availableMoves.addAll(currentPieceMoves);
+	    }
+	}
+
+	player.setAvailableMoves(availableMoves);
+    }
 
     // ----------------------------------------------------- Private Methods ---------------------------------------------------------------
 
@@ -461,26 +481,6 @@ public class Board
 		   !threat.isEmpty()) {
 	    allPins.add(threat);
 	}
-    }
-
-    public void updateAvailableMoves(final Player player) {
-        Set<Move> availableMoves = new HashSet<>();
-
-	for (int y = 0; y < HEIGHT; y++) {
-	    for (int x = 0; x < WIDTH; x++) {
-	        Piece currentPiece = getPiece(x, y);
-
-		if (currentPiece == null || !currentPiece.getOwner().equals(player)) {
-		    continue;
-		}
-
-		Set<Move> currentPieceMoves = currentPiece.getMoves(this, x, y);
-
-		availableMoves.addAll(currentPieceMoves);
-	    }
-	}
-
-	player.setAvailableMoves(availableMoves);
     }
 
     private void detectGameOver() {
