@@ -116,7 +116,7 @@ public class King extends PointMovePiece {
 	}
 
 	final int homeRank = owner.getHomeRank();
-	final int fileB = 1, fileC = 2, fileD = 3, fileE = 4;
+	final int fileB = 1, fileC = 2, fileD = 3;
 
 	return (board.getPiece(fileB, homeRank) == null &&
 		board.getPiece(fileC, homeRank) == null &&
@@ -130,7 +130,7 @@ public class King extends PointMovePiece {
 	}
 
 	final int homeRank = owner.getHomeRank();
-	final int fileE = 4, fileF = 5, fileG = 6;
+	final int fileF = 5, fileG = 6;
 
 	return (board.getPiece(fileF, homeRank) == null && board.getPiece(fileG, homeRank) == null &&
 		squaresAreNotThreatened(board, homeRank, fileF, fileG));
