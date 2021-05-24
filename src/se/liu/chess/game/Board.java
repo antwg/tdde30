@@ -193,9 +193,6 @@ public class Board
 	Point targetSquare = move.getTargetSquare();
 
 	switch(choice){
-	    case queen:
-		setPiece(targetSquare, new Queen(getActivePlayer(), targetSquare));
-		break;
 	    case rook:
 		setPiece(targetSquare, new Rook(getActivePlayer(), targetSquare));
 		break;
@@ -205,8 +202,9 @@ public class Board
 	    case knight:
 		setPiece(targetSquare, new Knight(getActivePlayer(), targetSquare));
 		break;
+	    case queen:
 	    default:
-		System.out.println("Error in testForUpgrade");
+		setPiece(targetSquare, new Queen(getActivePlayer(), targetSquare));
 	}
     }
 
