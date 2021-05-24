@@ -34,7 +34,7 @@ public class Board
     private Point enPassantTarget = null;
     private final ChessComponent chessComponent;
 
-    private int halfMoveClock = 0, fullMoveNumber = 1; // --- TODO implement 50 move rule
+    private int halfMoveClock = 0, fullMoveNumber = 1; // --- TODO implement 50 move rule and threefold repetition
 
     private final Point[] vectorThreatDirections = { new Point(1, 1),
 	    					     new Point(1, -1),
@@ -615,10 +615,6 @@ public class Board
 
     public void setFullMoveNumber(final int fullMoveNumber) {
 	this.fullMoveNumber = fullMoveNumber;
-    }
-
-    public FenConverter getFenConverter() {
-	return fenConverter;
     }
 
     public boolean isGameOver() {

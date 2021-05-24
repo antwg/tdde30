@@ -140,7 +140,7 @@ public class Player
 
     public void setTimeLeft(final double timeLeft) {
 	this.timeLeft = timeLeft;
-    }
+    }  // (inspection) metoden används i GameManager
 
     public void setKing(final Piece king) {
         this.king = king;

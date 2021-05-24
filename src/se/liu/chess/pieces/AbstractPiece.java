@@ -41,7 +41,7 @@ public abstract class AbstractPiece implements Piece {
     }
 
     @Override public void performSpecialMove(final Move move, final Point enPassantTarget, final Board board) {
-        // Medvetet lämnad tom då vissa subklasser inte ska göra ingenting när denna metod kallas.
+        // Medvetet lämnad tom då vissa subklasser ska göra ingenting när denna metod kallas.
     }
 
     protected Set<Move> limitMovesToThreatSquares(Board board, Set<Move> initialMoves) {

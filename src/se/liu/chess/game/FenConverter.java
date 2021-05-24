@@ -35,7 +35,7 @@ public class FenConverter {
 
 	convertPiecesToFEN(builder);
 	convertActivePlayerToFEN(builder);
-	convertCastlingAbilityToFEN(builder); //TODO add castling availability
+	convertCastlingAbilityToFEN(builder);
 	convertEnPassantAvailabilityToFEN(builder);
 	convertMoveToFEN(builder);
 
@@ -131,7 +131,6 @@ public class FenConverter {
 	for (int i = 0; i < piecePositions.length(); i++) {
 	    char curr = piecePositions.charAt(i);
 
-	    //TODO replace with piece construction method? Also duplicate code
 	    switch (curr) { // Useful to keep as string, both because "/" can't be used in enum and the main purpose is to convert from/to string
 		case '/':
 		    y++;
@@ -203,7 +202,7 @@ public class FenConverter {
 	}
     }
 
-    private void setCastlingAvailabilityFromFEN(String str){
+    private void setCastlingAvailabilityFromFEN(String str){  // Dessa metoder hör till sparande/laddande av spel, vilket inte är färdigt än
 	//TODO add functionality
     }
 
