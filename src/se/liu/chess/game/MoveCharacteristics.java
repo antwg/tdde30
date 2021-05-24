@@ -6,8 +6,8 @@ package se.liu.chess.game;
 
 public enum MoveCharacteristics
 {
-    HARMLESS,       // Moves that can not capture a piece, for example castling and pawn moves forward.
-    DOUBLE_STEP,     // The double step a pawn can make. This allows an en passant to happen on the next turn.
-    CASTLING,       // Castling. This type of move requires a rook to be moved along with the king.
-    PROMOTING,      // Promotion. This type of move transforms a piece into another piece.
+    HARMLESS,
+    DOUBLE_STEP,
+    CASTLING,
+    PROMOTING,
 }

@@ -56,7 +56,6 @@ public class Player
 
     // ----------------------------------------------------- Getters / Setters -------------------------------------------------------------
 
-    // --- Getters ---
     public TeamColor getColor() {
 	return color;
     }
@@ -113,7 +112,7 @@ public class Player
     return king;
 }
 
-    // --- Setters ---
+
 
     public void setKingSideCastleAvailable(final boolean kingSideCastleAvailable) {
 	this.kingSideCastleAvailable = kingSideCastleAvailable;
@@ -159,6 +158,10 @@ public class Player
 
     public void countDown(){
         this.timeLeft --;
+    }
+
+    public boolean isOutOfTime(){
+        return timeLeft <= 0;
     }
 
     @Override public String toString() {

@@ -56,9 +56,6 @@ public class FenConverter {
 
     // ----------------------------------------------------- Private Methods ---------------------------------------------------------------
 
-    //                                                   --- Convert to FEN ---
-
-
     private void convertPiecesToFEN(StringBuilder builder) {
 	int emptySquaresInARow = 0;
 	for (int y = 0; y < height; y++) {
@@ -124,8 +121,6 @@ public class FenConverter {
 	builder.append(board.getFullMoveNumber());
 	builder.append(" ");
     }
-
-    //                                                   --- Convert from FEN ---
 
     private void placePiecesFromFEN(String piecePositions){
 	int x = 0;

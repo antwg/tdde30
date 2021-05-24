@@ -42,12 +42,12 @@ public class GameManager
             Player activePlayer = board.getActivePlayer();
 
             if (!board.isGameOver()) {
-                if (activePlayer.getTimeLeft() <= 0) {
+                if (activePlayer.isOutOfTime()) {
                     board.setGameOver(true);
                     board.displayGameOver(GameOverCauses.TIME);
                 }
                 else {
-                    activePlayer.setTimeLeft(activePlayer.getTimeLeft() - 1);
+                    activePlayer.countDown();
                     timeComponent.repaint();
                 }
             }
