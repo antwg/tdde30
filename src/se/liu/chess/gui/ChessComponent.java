@@ -24,9 +24,9 @@ public class ChessComponent extends JComponent {
     private Board board;
     private int width, height;
     private Point currentlyPressed = null, lastPressed = null;
-    private final static int SQUARE_SIZE = 72, IMG_SIZE = 64, OFFSET = (SQUARE_SIZE - IMG_SIZE) / 2;
+    private final static int SQUARE_SIZE = 64, IMG_SIZE = 60, OFFSET = (SQUARE_SIZE - IMG_SIZE) / 2;
     private final static Color ODD_TILE_COLOR = Color.DARK_GRAY, EVEN_TILE_COLOR = Color.WHITE,
-	                       HIGHLIGHT_COLOR = new Color(0, 0, 255, 100), TRANSPARENT = new Color(0, 0, 0, 0);
+	                       HIGHLIGHT_COLOR = new Color(180, 190, 90, 100), TRANSPARENT = new Color(0, 0, 0, 0);
     private ImageIcon bishopWhite = loadIMG("BishopWhite"), bishopBlack = loadIMG("BishopBlack"),
 	    	      kingWhite = loadIMG("KingWhite"), kingBlack = loadIMG("KingBlack"),
 	    	      knightWhite = loadIMG("KnightWhite"), knightBlack = loadIMG("KnightBlack"),
