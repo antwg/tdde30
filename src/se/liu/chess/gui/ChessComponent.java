@@ -9,7 +9,10 @@ import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
+
+import static java.util.Map.entry;
 
 
 /**
@@ -27,12 +30,19 @@ public class ChessComponent extends JComponent {
     private final static int SQUARE_SIZE = 64, IMG_SIZE = 60, OFFSET = (SQUARE_SIZE - IMG_SIZE) / 2;
     private final static Color ODD_TILE_COLOR = Color.DARK_GRAY, EVEN_TILE_COLOR = Color.WHITE,
 	                       HIGHLIGHT_COLOR = new Color(180, 190, 90, 100), TRANSPARENT = new Color(0, 0, 0, 0);
-    private ImageIcon bishopWhite = loadIMG("BishopWhite"), bishopBlack = loadIMG("BishopBlack"),
-	    	      kingWhite = loadIMG("KingWhite"), kingBlack = loadIMG("KingBlack"),
-	    	      knightWhite = loadIMG("KnightWhite"), knightBlack = loadIMG("KnightBlack"),
-		      pawnWhite = loadIMG("PawnWhite"), pawnBlack = loadIMG("PawnBlack"),
-	    	      queenWhite = loadIMG("QueenWhite"), queenBlack = loadIMG("QueenBlack"),
-		      rookWhite = loadIMG("RookWhite"), rookBlack = loadIMG("RookBlack");
+
+    private final Map<String, ImageIcon> imageIconMap = Map.ofEntries(entry("B", loadIMG("BishopWhite")),
+								      entry("b", loadIMG("BishopBlack")),
+								      entry("K", loadIMG("KingWhite")),
+								      entry("k", loadIMG("KingBlack")),
+								      entry("N", loadIMG("KnightWhite")),
+								      entry("n", loadIMG("KnightBlack")),
+								      entry("P", loadIMG("PawnWhite")),
+								      entry("p", loadIMG("PawnBlack")),
+								      entry("Q", loadIMG("QueenWhite")),
+								      entry("q", loadIMG("QueenBlack")),
+								      entry("R", loadIMG("RookWhite")),
+								      entry("r", loadIMG("RookBlack")));
 
     /**
      * Creates a chessComponent and a mouseListener.
@@ -109,7 +119,7 @@ public class ChessComponent extends JComponent {
 
 		// Paint pieces
 		if (!board.isEmpty(col, row)) {
-		    ImageIcon pieceImage = getImageForPiece(board.getPiece(col, row));
+		    ImageIcon pieceImage = imageIconMap.get(board.getPiece(col, row).toString());
 		    pieceImage.paintIcon(this, g, col * SQUARE_SIZE + OFFSET, row * SQUARE_SIZE + OFFSET);
 	    }
 	}
@@ -162,48 +172,5 @@ public class ChessComponent extends JComponent {
 	    }
 	}
         return null;
-    }
-
-    private ImageIcon getImageForPiece(Piece piece){
-	ImageIcon image = null;
-	switch (piece.toString()){ // (Inspection) Useful to keep as string because the main purpose is to convert from/to string
-	    case "B":
-		image = bishopWhite;
-		break;
-	    case "b":
-		image = bishopBlack;
-		break;
-	    case "K":
-		image = kingWhite;
-		break;
-	    case "k":
-		image = kingBlack;
-		break;
-	    case "N":
-		image = knightWhite;
-		break;
-	    case "n":
-		image = knightBlack;
-		break;
-	    case "P":
-		image = pawnWhite;
-		break;
-	    case "p":
-		image = pawnBlack;
-		break;
-	    case "Q":
-		image = queenWhite;
-		break;
-	    case "q":
-		image = queenBlack;
-		break;
-	    case "R":
-		image = rookWhite;
-		break;
-	    case "r":
-		image = rookBlack;
-		break;
-	}
-	return image;
     }
 }
