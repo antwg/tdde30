@@ -30,7 +30,7 @@ import static java.util.Map.entry;
  */
 
 public class ChessComponent extends JComponent {
-    private static final Logger LOGGER = Logger.getLogger(ChessComponent.class.getName());
+    private final Logger logger = Logger.getLogger(ChessComponent.class.getName());
     private Board board;
     private int width, height;
     private Point currentlyPressed = null, lastPressed = null;
@@ -81,14 +81,14 @@ public class ChessComponent extends JComponent {
 	try {
 	    fileText = new FileHandler("Logging.txt");
 	} catch (IOException e) {
-	    LOGGER.log(Level.SEVERE, "Could not access Logging.txt", e);
+	    logger.log(Level.SEVERE, "Could not access Logging.txt", e);
 	    System.out.println("Could not access Logging.txt " + e);
 	    return;
 	}
-	LOGGER.setLevel(Level.ALL);
+	logger.setLevel(Level.ALL);
 	SimpleFormatter formatterText = new SimpleFormatter();
 	fileText.setFormatter(formatterText);
-	LOGGER.addHandler(fileText);
+	logger.addHandler(fileText);
     }
 
     // ----------------------------------------------------- Public Methods ----------------------------------------------------------------
@@ -170,7 +170,7 @@ public class ChessComponent extends JComponent {
             icon = new ImageIcon(findURL(name));
 	    }
         catch (FileNotFoundException fileNotFoundException) {
-	    LOGGER.log(Level.SEVERE, "Could not find: " + name, fileNotFoundException);
+	    logger.log(Level.SEVERE, "Could not find: " + name, fileNotFoundException);
 	    System.exit(1);
 	}
 	return icon;
