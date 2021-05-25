@@ -136,7 +136,7 @@ public class ChessComponent extends JComponent {
 
     private Set<Move> getMovesForCoordinate(int x, int y){
         Set<Move> moves = new HashSet<>();
-	for (Move move: board.getActivePlayer().getAvailableMoves()){
+	for (Move move: board.getMoves()){
 	    if (move.getOriginSquare().equals(new Point(x, y))){
 		moves.add(move);
 	    }

@@ -27,10 +27,21 @@ public class GameManager
     // ----------------------------------------------------- Public Methods ----------------------------------------------------------------
 
     /**
-     * Creates a new Board and replaces the old one.
+     * Creates and starts a new game and replaces the old one.
      */
     public void createNewGame() {
         this.board = new Board();
+
+        this.board.resetBoard();
+
+        this.timeComponent = new TimeComponent(this.board, 180, 512);
+        GameViewer gameViewer = new GameViewer(this.board, this.timeComponent);
+        gameViewer.show();
+        this.board.updateAvailableMoves(this.board.getActivePlayer());
+
+        final Timer clockTimer = new Timer(CLOCK_DELAY, this.countDown);
+        clockTimer.setCoalesce(true);
+        clockTimer.start();
     }
 
 
@@ -59,16 +70,5 @@ public class GameManager
     public static void main(String[] args) {
         GameManager gm = new GameManager();
         gm.createNewGame();
-
-        gm.board.resetBoard();
-
-        gm.timeComponent = new TimeComponent(gm.board, 180, 512);
-        GameViewer gameViewer = new GameViewer(gm.board, gm.timeComponent);
-        gameViewer.show();
-        gm.board.updateAvailableMoves(gm.board.getActivePlayer());
-
-        final Timer clockTimer = new Timer(CLOCK_DELAY, gm.countDown);
-        clockTimer.setCoalesce(true);
-        clockTimer.start();
     }
 }

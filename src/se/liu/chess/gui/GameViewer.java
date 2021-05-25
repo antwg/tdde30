@@ -63,7 +63,7 @@ public class GameViewer {
 	restart.addActionListener(new MenuAction());
     }
 
-    // ----------------------------------------------------- Public Classes ----------------------------------------------------------------
+    // ----------------------------------------------------- Private Classes ----------------------------------------------------------------
 
 
     private class MenuAction extends AbstractAction {

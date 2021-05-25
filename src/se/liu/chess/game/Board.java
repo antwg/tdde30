@@ -64,6 +64,14 @@ public class Board
     // ----------------------------------------------------- Public Methods ----------------------------------------------------------------
 
     /**
+     * Returns a set of all legal moves that are possible to make at the current game state.
+     * @return
+     */
+    public Set<Move> getMoves() {
+        return getActivePlayer().getAvailableMoves();
+    }
+
+    /**
      * Moves the piece on the origin square of the move to the target square
      * and performs promotion. (not yet implemented)
      * Updates castling availability and en passant square.
@@ -491,6 +499,7 @@ public class Board
 	    } else {
 		cause = GameOverCauses.STALEMATE;
 	    }
+	    gameOver = true;
 	    displayGameOver(cause);
 	}
     }
