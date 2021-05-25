@@ -162,13 +162,11 @@ public class ChessComponent extends JComponent {
             icon = new ImageIcon(ClassLoader.getSystemResource("images/" + name + ".png"));
 	    LOGGER.log(Level.FINE, "loaded image " + name + " successfully");
 	}
-	catch (NullPointerException e) {
+	catch (Throwable e) {
 	    LOGGER.log(Level.SEVERE, "Could not load file: " + name + ".png", e);
 	}
 	return icon;
     }
-
-
 
     private Set<Move> getMovesForCoordinate(int x, int y){
         Set<Move> moves = new HashSet<>();
