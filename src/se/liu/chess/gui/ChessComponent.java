@@ -2,7 +2,6 @@ package se.liu.chess.gui;
 
 import se.liu.chess.game.Board;
 import se.liu.chess.game.Move;
-import se.liu.chess.pieces.Piece;
 
 import javax.swing.*;
 import java.awt.*;
@@ -11,6 +10,8 @@ import java.awt.event.MouseEvent;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import static java.util.Map.entry;
 
@@ -24,6 +25,7 @@ import static java.util.Map.entry;
  */
 
 public class ChessComponent extends JComponent {
+    private static final Logger LOGGER = Logger.getLogger(ChessComponent.class.getName());
     private Board board;
     private int width, height;
     private Point currentlyPressed = null, lastPressed = null;
@@ -140,9 +142,19 @@ public class ChessComponent extends JComponent {
 	return currentlyPressed != null && getTargetPointsFromMoveSet(currentlyPressed.x, currentlyPressed.y).contains(new Point(col, row));
     }
 
-    private ImageIcon loadIMG(String name){
-	return new ImageIcon(ClassLoader.getSystemResource("images/" + name + ".png"));
+    private ImageIcon loadIMG(String name) {
+	ImageIcon icon = null;
+        try {
+            icon = new ImageIcon(ClassLoader.getSystemResource("images/" + name + ".png"));
+	    LOGGER.log(Level.FINE, "loaded image " + name + " successfully");
+	}
+	catch (NullPointerException e) {
+	    LOGGER.log(Level.SEVERE, "Could not load file: " + name, e);
+	}
+	return icon;
     }
+
+
 
     private Set<Move> getMovesForCoordinate(int x, int y){
         Set<Move> moves = new HashSet<>();

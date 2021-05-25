@@ -10,8 +10,7 @@ import java.awt.event.ActionEvent;
  * Manages a game of Chess. It creates all needed objects and runs the game.
  */
 
-public class GameManager
-{
+public class GameManager {
     private Board board;
     private TimeComponent timeComponent = null;
     private static final int CLOCK_DELAY = 1000;
