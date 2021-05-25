@@ -7,11 +7,14 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.io.IOException;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+import java.util.logging.FileHandler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.logging.SimpleFormatter;
 
 import static java.util.Map.entry;
 
@@ -32,29 +35,40 @@ public class ChessComponent extends JComponent {
     private final static int SQUARE_SIZE = 64, IMG_SIZE = 60, OFFSET = (SQUARE_SIZE - IMG_SIZE) / 2;
     private final static Color ODD_TILE_COLOR = Color.DARK_GRAY, EVEN_TILE_COLOR = Color.WHITE,
 	                       HIGHLIGHT_COLOR = new Color(180, 190, 90, 100), TRANSPARENT = new Color(0, 0, 0, 0);
-
-    private final Map<String, ImageIcon> imageIconMap = Map.ofEntries(entry("B", loadIMG("BishopWhite")),
-								      entry("b", loadIMG("BishopBlack")),
-								      entry("K", loadIMG("KingWhite")),
-								      entry("k", loadIMG("KingBlack")),
-								      entry("N", loadIMG("KnightWhite")),
-								      entry("n", loadIMG("KnightBlack")),
-								      entry("P", loadIMG("PawnWhite")),
-								      entry("p", loadIMG("PawnBlack")),
-								      entry("Q", loadIMG("QueenWhite")),
-								      entry("q", loadIMG("QueenBlack")),
-								      entry("R", loadIMG("RookWhite")),
-								      entry("r", loadIMG("RookBlack")));
+    private final Map<String, ImageIcon> imageIconMap;
 
     /**
      * Creates a chessComponent and a mouseListener.
      *
      * @param board A Board object
      */
-    public ChessComponent(final Board board) {
+    public ChessComponent(final Board board){
 	this.board = board;
 	this.width = SQUARE_SIZE * board.getWidth();
 	this.height = SQUARE_SIZE * board.getHeight();
+	LOGGER.setLevel(Level.ALL);
+	FileHandler fileText = null;
+	try {
+	    fileText = new FileHandler("Logging.txt");
+	} catch (IOException e) {
+	    e.printStackTrace();
+	}
+	SimpleFormatter formatterText = new SimpleFormatter();
+	fileText.setFormatter(formatterText);
+	LOGGER.addHandler(fileText);
+
+	this.imageIconMap = Map.ofEntries(entry("B", loadIMG("BishopWhite")),
+					  entry("b", loadIMG("BishopBlack")),
+					  entry("K", loadIMG("KingWhite")),
+					  entry("k", loadIMG("KingBlack")),
+					  entry("N", loadIMG("KnightWhite")),
+					  entry("n", loadIMG("KnightBlack")),
+					  entry("P", loadIMG("PawnWhite")),
+					  entry("p", loadIMG("PawnBlack")),
+					  entry("Q", loadIMG("QueenWhite")),
+					  entry("q", loadIMG("QueenBlack")),
+					  entry("R", loadIMG("RookWhite")),
+					  entry("r", loadIMG("RookBlack")));
 
 	this.addMouseListener(new MouseAdapter(){
 	    @Override public void mousePressed(final MouseEvent e) {
@@ -149,7 +163,7 @@ public class ChessComponent extends JComponent {
 	    LOGGER.log(Level.FINE, "loaded image " + name + " successfully");
 	}
 	catch (NullPointerException e) {
-	    LOGGER.log(Level.SEVERE, "Could not load file: " + name, e);
+	    LOGGER.log(Level.SEVERE, "Could not load file: " + name + ".png", e);
 	}
 	return icon;
     }
