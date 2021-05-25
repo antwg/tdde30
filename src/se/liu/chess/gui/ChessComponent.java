@@ -46,16 +46,7 @@ public class ChessComponent extends JComponent {
 	this.board = board;
 	this.width = SQUARE_SIZE * board.getWidth();
 	this.height = SQUARE_SIZE * board.getHeight();
-	LOGGER.setLevel(Level.ALL);
-	FileHandler fileText = null;
-	try {
-	    fileText = new FileHandler("Logging.txt");
-	} catch (IOException e) {
-	    e.printStackTrace();
-	}
-	SimpleFormatter formatterText = new SimpleFormatter();
-	fileText.setFormatter(formatterText);
-	LOGGER.addHandler(fileText);
+	setUpLogger();
 
 	this.imageIconMap = Map.ofEntries(entry("B", loadIMG("BishopWhite")),
 					  entry("b", loadIMG("BishopBlack")),
@@ -81,6 +72,20 @@ public class ChessComponent extends JComponent {
 		repaint();
 	    }
 	});
+    }
+
+    private void setUpLogger() {
+	FileHandler fileText = null;
+	try {
+	    fileText = new FileHandler("Logging.txt");
+	} catch (IOException e) {
+	    LOGGER.log(Level.SEVERE, "Could not access Logging.txt", e);
+	    return;
+	}
+	LOGGER.setLevel(Level.ALL);
+	SimpleFormatter formatterText = new SimpleFormatter();
+	fileText.setFormatter(formatterText);
+	LOGGER.addHandler(fileText);
     }
 
     // ----------------------------------------------------- Public Methods ----------------------------------------------------------------
@@ -162,8 +167,9 @@ public class ChessComponent extends JComponent {
             icon = new ImageIcon(ClassLoader.getSystemResource("images/" + name + ".png"));
 	    LOGGER.log(Level.FINE, "loaded image " + name + " successfully");
 	}
-	catch (Throwable e) {
+	catch (NullPointerException e) {
 	    LOGGER.log(Level.SEVERE, "Could not load file: " + name + ".png", e);
+	    System.exit(0);
 	}
 	return icon;
     }
