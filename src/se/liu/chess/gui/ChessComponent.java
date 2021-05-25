@@ -84,6 +84,7 @@ public class ChessComponent extends JComponent {
 	    fileText.setFormatter(formatterText);
 	    logger.addHandler(fileText);
 	} catch (IOException e) {
+	    // (Inspection) Can't log if log failed
 	    String[] options = {"Yes", "No"};
 	    int choice = JOptionPane.showOptionDialog(null, "Could not access Logging.txt, play anyway?", "",
 						      JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, null, options, options[0]);
