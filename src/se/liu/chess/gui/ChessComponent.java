@@ -77,18 +77,21 @@ public class ChessComponent extends JComponent {
     }
 
     private void setUpLogger() {
-	FileHandler fileText = null;
 	try {
-	    fileText = new FileHandler("Logging.txt");
+	    FileHandler fileText = new FileHandler("Logging.txt");
+	    logger.setLevel(Level.ALL);
+	    SimpleFormatter formatterText = new SimpleFormatter();
+	    fileText.setFormatter(formatterText);
+	    logger.addHandler(fileText);
 	} catch (IOException e) {
-	    logger.log(Level.SEVERE, "Could not access Logging.txt", e);
-	    System.out.println("Could not access Logging.txt " + e);
-	    return;
+	    String[] options = {"Yes", "No"};
+	    int choice = JOptionPane.showOptionDialog(null, "Could not access Logging.txt, play anyway?", "",
+						      JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, null, options, options[0]);
+	    if (choice == 1) {
+		System.exit(1);
+	    }
+	    e.printStackTrace();
 	}
-	logger.setLevel(Level.ALL);
-	SimpleFormatter formatterText = new SimpleFormatter();
-	fileText.setFormatter(formatterText);
-	logger.addHandler(fileText);
     }
 
     // ----------------------------------------------------- Public Methods ----------------------------------------------------------------

@@ -26,11 +26,9 @@ public class GameManager {
     // ----------------------------------------------------- Public Methods ----------------------------------------------------------------
 
     /**
-     * Creates and starts a new game and replaces the old one.
+     * Creates and starts a new game.
      */
     public void createNewGame() {
-        this.board = new Board();
-
         this.board.resetBoard();
 
         this.timeComponent = new TimeComponent(this.board, 180, 512);
