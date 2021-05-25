@@ -7,7 +7,9 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.net.URL;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
@@ -80,6 +82,7 @@ public class ChessComponent extends JComponent {
 	    fileText = new FileHandler("Logging.txt");
 	} catch (IOException e) {
 	    LOGGER.log(Level.SEVERE, "Could not access Logging.txt", e);
+	    System.out.println("Could not access Logging.txt " + e);
 	    return;
 	}
 	LOGGER.setLevel(Level.ALL);
@@ -164,14 +167,23 @@ public class ChessComponent extends JComponent {
     private ImageIcon loadIMG(String name) {
 	ImageIcon icon = null;
         try {
-            icon = new ImageIcon(ClassLoader.getSystemResource("images/" + name + ".png"));
-	    LOGGER.log(Level.FINE, "loaded image " + name + " successfully");
-	}
-	catch (NullPointerException e) {
-	    LOGGER.log(Level.SEVERE, "Could not load file: " + name + ".png", e);
-	    System.exit(0);
+            icon = new ImageIcon(findURL(name));
+	    }
+        catch (FileNotFoundException fileNotFoundException) {
+	    LOGGER.log(Level.SEVERE, "Could not find: " + name, fileNotFoundException);
+	    System.exit(1);
 	}
 	return icon;
+    }
+
+    private URL findURL(String name) throws FileNotFoundException {
+        URL url = ClassLoader.getSystemResource("images/" + name + ".png");
+	if (url == null) {
+	    throw new FileNotFoundException("Could not load file: " + name + ".png");
+	}
+	else {
+	    return url;
+	}
     }
 
     private Set<Move> getMovesForCoordinate(int x, int y){
