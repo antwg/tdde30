@@ -7,7 +7,8 @@ import javax.swing.*;
 import java.awt.event.ActionEvent;
 
 /**
- * Manages a game of Chess. It creates all needed objects and runs the game.
+ * Manages a game of Chess. It creates a Board, TimeComponent, gameViewer and a Timer.
+ * Is responsible for creating a complete game of Chess and keeps track of the players time.
  */
 
 public class GameManager {

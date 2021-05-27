@@ -17,7 +17,8 @@ import se.liu.chess.pieces.Queen;
 import javax.swing.*;
 
 /**
- * Creates a board which handles all game logic and saves the position of pieces. Has methods for moving pieces.
+ * Creates a board which handles all game logic and saves the position of pieces. Has methods for moving pieces and checking for checkmate.
+ * Creates FenCOnverter, Players and Chesscomponent.
  */
 public class Board
 {

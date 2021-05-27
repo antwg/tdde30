@@ -9,6 +9,7 @@ import java.awt.event.ActionEvent;
 /**
  * BoardViewer creates a JFrame and adds a given ChessComponent to said JFrame.
  * It also handles all needed settings for the JFrame.
+ * Takes a chessComponent from a Board object and a timeComponent as an argument, also creates a new JMenuBar
  */
 
 public class GameViewer {

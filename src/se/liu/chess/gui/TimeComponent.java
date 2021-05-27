@@ -8,6 +8,7 @@ import java.awt.*;
 
 /**
  * A TimeComponent object extends JComponent. It is used to paint a timer that shows the time both players have left.
+ * Gets the time from the player objects in Board.
  */
 public class TimeComponent extends JComponent {
     private int width;
