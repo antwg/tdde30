@@ -20,6 +20,15 @@ public abstract class VectorMovePiece extends AbstractPiece{
 	super(owner, position);
     }
 
+    /**
+     * Returns all possible moves along all given movement vectors.
+     * This includes moves that would put the moving player's own king in check.
+     * @param board
+     * @param x
+     * @param y
+     * @param moveVectors
+     * @return
+     */
     protected Set<Move> getVectorMoves(final Board board, final int x, final int y, Point[] moveVectors) {
 	Set<Move> legalMoves = new HashSet<>();
 

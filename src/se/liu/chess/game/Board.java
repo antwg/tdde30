@@ -621,10 +621,6 @@ public class Board
 	this.gameOver = gameOver;
     }
 
-    /**
-     * Returns a list of threats.
-     * @return
-     */
     public List<Set<Point>> getAllDirectThreats() {
 	return allDirectThreats;
     }

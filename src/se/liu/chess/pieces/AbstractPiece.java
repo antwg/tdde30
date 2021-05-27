@@ -44,6 +44,14 @@ public abstract class AbstractPiece implements Piece {
         // Medvetet lämnad tom då vissa subklasser ska göra ingenting när denna metod kallas.
     }
 
+
+    /**
+     * Takes a set of moves and, if the king is threatened, returns a new set where
+     * all moves that don't break all threat have been removed.
+     * @param board
+     * @param initialMoves
+     * @return
+     */
     protected Set<Move> limitMovesToThreatSquares(Board board, Set<Move> initialMoves) {
         List<Set<Point>> threats = board.getAllDirectThreats();
         if (threats.isEmpty()) {
@@ -72,6 +80,13 @@ public abstract class AbstractPiece implements Piece {
         return restrictedMoves;
     }
 
+    /**
+     * Takes a set of moves and, if the moving piece is pinned, returns a new set where
+     * all moves that would place the moving player's own king in check have been removed.
+     * @param board
+     * @param initialMoves
+     * @return
+     */
     protected Set<Move> limitMovesToPinSquares(Board board, Set<Move> initialMoves) {
         Set<Point> pinRestrictedSquares = null;
 

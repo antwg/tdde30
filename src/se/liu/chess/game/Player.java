@@ -9,7 +9,7 @@ import java.util.Set;
 /**
  * A player object contains all the information specific to said player as
  * well as methods to access that information.
- * A player object keeps track of its color, timeLeft, score, increment and
+ * A player object keeps track of its color, time left on the clock, time increment and
  * castling ability as well as some player specific board coordinates.
  */
 
@@ -137,10 +137,6 @@ public class Player
 	    }
 	}
     }
-
-    public void setTimeLeft(final double timeLeft) {
-	this.timeLeft = timeLeft;
-    }  // (inspection) metoden används i GameManager
 
     public void setKing(final Piece king) {
         this.king = king;

@@ -16,21 +16,26 @@ import java.util.Set;
  */
 public abstract class PointMovePiece extends AbstractPiece{
 
-    /**
-     *
-     * @param owner
-     * @param position
-     */
     protected PointMovePiece(final Player owner, final Point position) {
 	super(owner, position);
     }
 
-    protected Set<Move> getPointMoves(final Board board, final int x, final int y, Point[] moveVectors) {
+
+    /**
+     * Returns all possible moves to all given movement points.
+     * This includes moves that would put the moving player's own king in check.
+     * @param board
+     * @param x
+     * @param y
+     * @param movePoints
+     * @return
+     */
+    protected Set<Move> getPointMoves(final Board board, final int x, final int y, Point[] movePoints) {
         Set<Move> legalMoves = new HashSet<>();
 
 	Set<MoveCharacteristics> moveCharacteristics = EnumSet.noneOf(MoveCharacteristics.class);
 
-	for (Point move: moveVectors) {
+	for (Point move: movePoints) {
 	    int combinedX = x + move.x;
 	    int combinedY = y + move.y;
 

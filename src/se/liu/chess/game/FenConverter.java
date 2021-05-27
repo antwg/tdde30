@@ -11,7 +11,7 @@ import se.liu.chess.pieces.Rook;
 import java.awt.*;
 
 /**
- * Object that converts a given Board object to and from FEN
+ * Object that converts a given Board object to and from FEN.
  */
 public class FenConverter {
     private Board board;
@@ -26,11 +26,12 @@ public class FenConverter {
     // ----------------------------------------------------- Public Methods ----------------------------------------------------------------
 
     /**
-     * https://en.wikipedia.org/wiki/Forsyth%E2%80%93Edwards_Notation
+     * Returns a string of the board state in FEN notation.
+     * For more about FEN, see this article: https://en.wikipedia.org/wiki/Forsyth%E2%80%93Edwards_Notation
      *
-     * @return
+     * @return A string of the board state in FEN notation.
      */
-    public String convertBoardToFEN() {
+    public String convertBoardToFEN() {  // (Inspection) metoden används inte än, men den skulle användas till milestone 24: "Kan spara ett spel", som inte är fullt implementerad än.
 	final StringBuilder builder = new StringBuilder();
 
 	convertPiecesToFEN(builder);
@@ -42,6 +43,12 @@ public class FenConverter {
 	return builder.toString();
     }
 
+
+    /**
+     * Changes the board of this FenConverter to match the state in the given string.
+     *
+     * @param fen The board state in FEN notation.
+     */
     public void createBoardFromFEN(final String fen) {
 	// Split fen string
 	String[] arrOfString = fen.split(" ");
