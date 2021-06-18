@@ -9,7 +9,7 @@ examinationen där du visar att du förstår varför kompletteringen behövdes.
 
 ---------------------------------------------------------------------------------------------------
 
-All fixes have been marked with a comment starting with "(komplettering)".
+All fixes have been marked with a comment starting with "(komplettering) (kommentar x)".
 
 ---------------------------------------------------------------------------------------------------
 
@@ -45,9 +45,15 @@ from the board.
 
 ---------------------------------------------------------------------------------------------------
 
-Kommentar 4:
+Kommentar 4 (löst?):
 A lot of point objects are recreated, these could be made static instead. In Board:
 E.g. isProtectedFromKnights, isOrthogonallyProtected, isDiagonallyProtected
+
+Lösning 4:
+Made non-changing lists of points static:
+- KNIGHT_ATTACKS moved out from Board.isProtectedFromKnights() to a field in Board.
+- ORTHOGONAL_VECTORS moved out from Board.isOrthogonallyProtected() to a field in Board.
+- DIAGONAL_VECTORS moved out from Board.isDiagonallyProtected() to a field in Board.
 
 ---------------------------------------------------------------------------------------------------
 
