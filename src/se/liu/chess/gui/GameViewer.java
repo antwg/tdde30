@@ -69,9 +69,17 @@ public class GameViewer {
 
     private class MenuAction extends AbstractAction {
 
-	@Override public void actionPerformed(final ActionEvent e) {
-	    chessComponent.getBoard().resetBoard();
-	    chessComponent.repaint();
+	@Override public void actionPerformed(final ActionEvent e) {	// (komplettering) (kommentar 1) frågar nu om bekräftelse innan omstart.
+	    String message = "Confirm restart?";
+	    String[] options = {"Restart", "Cancel"};
+
+	    int choice = JOptionPane.showOptionDialog(null, message, "", JOptionPane.DEFAULT_OPTION,
+						      JOptionPane.INFORMATION_MESSAGE, null, options, options[0]);
+
+	    if (choice == 0) {
+		chessComponent.getBoard().resetBoard();
+		chessComponent.repaint();
+	    }
 	}
     }
 }

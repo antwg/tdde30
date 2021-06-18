@@ -13,8 +13,11 @@ All fixes have been marked with a comment starting with "(komplettering) (kommen
 
 ---------------------------------------------------------------------------------------------------
 
-Kommentar 1:
+Kommentar 1 (löst):
 When using "restart" it might be good to ask for confirmation.
+
+Lösning 1:
+Added a pop-up asking for confirmation before restarting in MenuAction.actionPerformed() method in GameViewer.
 
 ---------------------------------------------------------------------------------------------------
 
