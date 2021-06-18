@@ -260,10 +260,8 @@ public class Board
     }
 
     private void moveCastlingRook(final int originX, final int targetX) {
-	int rank = 0;
-	if (getActivePlayer().getColor() == TeamColor.WHITE) {
-	    rank = 7;
-	}
+	int rank = getActivePlayer().getHomeRank();	// (komplettering)
+
 	movePiece(new Point(originX, rank), new Point(targetX, rank));
     }
 
