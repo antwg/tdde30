@@ -54,8 +54,8 @@ public class GameManager {
             if (!board.isGameOver()) {
                 if (activePlayer.isOutOfTime()) {
                     board.setGameOver(true);
-                    // (komplettering) (kommentar 3) kallar nu på metoden i chessComponent istället för direkt i board
-                    board.getChessComponent().displayGameOver(GameOverCauses.TIME);
+                    // (komplettering) (kommentar 3) kallar nu på metoden executeGameOver istället för displayGameOver
+                    board.executeGameOver(GameOverCauses.TIME);
                 }
                 else {
                     activePlayer.countDown();

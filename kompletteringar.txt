@@ -38,10 +38,11 @@ its own JOptionPane.
 Created the method ChessComponent.selectPromotion() which asks the player for a piece
 type to promote to and returns it.
 
-Board.displayGameOver() and Board.getGameOverMessage() was moved to ChessComponent instead.
+Board.displayGameOver() and Board.getGameOverMessage() was moved to ChessComponent.
 
-GameManager.countDown() now calls displayGameOver() from the ChessComponent instead of directly
-from the board.
+A new method (Board.executeGameOver()) was added to replace the old Board.displayGameOver().
+
+GameManager.countDown() now calls Board.executeGameOver() instead of Board.displayGameOver().
 
 ---------------------------------------------------------------------------------------------------
 
