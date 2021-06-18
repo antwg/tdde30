@@ -21,7 +21,7 @@ Added a pop-up asking for confirmation before restarting in MenuAction.actionPer
 
 ---------------------------------------------------------------------------------------------------
 
-Kommentar 2:
+Kommentar 2 (väntar på svar från Jonas):
 when dealing with cases like whitePlayer, blackPlayer - it's often better to
 have list of players and get the needed one based on a variable. For example, you often do:
 if (color == TeamColor.WHITE) {return whitePlayer;} else {return blackPlayer;} .
@@ -49,7 +49,7 @@ GameManager.countDown() now calls Board.executeGameOver() instead of Board.displ
 
 ---------------------------------------------------------------------------------------------------
 
-Kommentar 4 (löst?):
+Kommentar 4 (löst):
 A lot of point objects are recreated, these could be made static instead. In Board:
 E.g. isProtectedFromKnights, isOrthogonallyProtected, isDiagonallyProtected
 
@@ -75,7 +75,7 @@ fails to load the image.
 
 ---------------------------------------------------------------------------------------------------
 
-Kommentar 7:
+Kommentar 7 (löst):
 A separate class that takes care of calculating valid moves (in the visual side)
 
 Lösning 7: A separate class has been created, MoveFinderGUI, that handles everything related to
