@@ -50,7 +50,7 @@ public class Board
     private List<Set<Point>> allDirectThreats = new ArrayList<>(), allPins = new ArrayList<>();
 
     // (komplettering) (kommentar 4) gjorde KNIGHT_ATTACKS statisk.
-    public final static Point[] KNIGHT_ATTACKS = { new Point(1, 2),
+    private final static Point[] KNIGHT_ATTACKS = { new Point(1, 2),
 	    new Point( 2, 1),
 	    new Point(1, -2),
 	    new Point(2, -1),
@@ -60,13 +60,13 @@ public class Board
 	    new Point(-2, -1) };
 
     // (komplettering) (kommentar 4) gjorde ORTHOGONAL_VECTORS statisk.
-    public final static Point[] ORTHOGONAL_VECTORS = { new Point(1, 0),
+    private final static Point[] ORTHOGONAL_VECTORS = { new Point(1, 0),
 	    new Point(0, 1),
 	    new Point(-1, 0),
 	    new Point(0, -1) };
 
     // (komplettering) (kommentar 4) gjorde DIAGONAL_VECTORS statisk.
-    public final static Point[] DIAGONAL_VECTORS = { new Point(1, 1),
+    private final static Point[] DIAGONAL_VECTORS = { new Point(1, 1),
 						    new Point(1, -1),
 						    new Point(-1, 1),
 						    new Point(-1, -1)};
