@@ -5,7 +5,6 @@ import se.liu.chess.gui.TimeComponent;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
-import java.util.logging.Logger;
 
 /**
  * Manages a game of Chess. It creates a Board, TimeComponent, gameViewer and a Timer.

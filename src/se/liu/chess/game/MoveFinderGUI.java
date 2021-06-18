@@ -10,7 +10,7 @@ import java.util.Set;
  */
 
 public class MoveFinderGUI {
-	Board board;
+	private Board board;
 
     public MoveFinderGUI(Board board) {
         this.board = board;
