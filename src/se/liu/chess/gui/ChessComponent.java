@@ -199,6 +199,13 @@ public class ChessComponent extends JComponent {
 	    }
         catch (FileNotFoundException fileNotFoundException) {
 	    LOGGER.log(Level.SEVERE, "Could not find: " + name, fileNotFoundException);
+
+	    String message = "Could not load image(s), terminating program.";
+	    String[] options = {"OK"};
+
+	    JOptionPane.showOptionDialog(null, message, "", JOptionPane.DEFAULT_OPTION,
+						      JOptionPane.INFORMATION_MESSAGE, null, options, options[0]);
+
 	    System.exit(1);
 	}
 	return icon;
