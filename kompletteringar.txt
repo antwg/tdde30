@@ -73,7 +73,13 @@ A separate class that takes care of calculating valid moves (in the visual side)
 Kommentar 8:
 A separate class for logging, right now ChessComponent is handling the logger.
 
+Lösning 8: Logging now has it's own class, GameLogger.
+
 ---------------------------------------------------------------------------------------------------
 
 Kommentar 9:
-Right now ChessComponent will repaint each time you attempt to move a chess piece. It would be better if board communicates to the ChessComponent if the move was successful (and update accordingly)
+Right now ChessComponent will repaint each time you attempt to move a chess piece. It would be better if
+board communicates to the ChessComponent if the move was successful (and update accordingly)
+
+Lösning 9: Repainting only when successfully performing a move would not work since other things such
+as available moves and selected piece need to update every click so ChessComponent needs to repaint every click.

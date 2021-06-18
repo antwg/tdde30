@@ -9,7 +9,6 @@ import java.util.logging.SimpleFormatter;
 
 public class GameLogger
 {
-
     public static void setUpLogger() {
         Logger logger = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
 	try {
