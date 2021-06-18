@@ -74,6 +74,9 @@ fails to load the image.
 Kommentar 7:
 A separate class that takes care of calculating valid moves (in the visual side)
 
+Lösning 7: A separate class has been created, MoveFinderGUI, that handles everything related to
+finding available moves based on pressed square.
+
 ---------------------------------------------------------------------------------------------------
 
 Kommentar 8:

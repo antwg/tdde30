@@ -3,6 +3,7 @@ package se.liu.chess.gui;
 import se.liu.chess.game.Board;
 import se.liu.chess.game.GameOverCauses;
 import se.liu.chess.game.Move;
+import se.liu.chess.game.MoveFinderGUI;
 
 import javax.swing.*;
 import java.awt.*;
@@ -10,9 +11,7 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.FileNotFoundException;
 import java.net.URL;
-import java.util.HashSet;
 import java.util.Map;
-import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -31,6 +30,7 @@ public class ChessComponent extends JComponent {
     private static final Logger LOGGER = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
     private Board board;
     private int width, height;
+    private MoveFinderGUI moveFinderGUI;
     private Point currentlyPressed = null, lastPressed = null;
     private final static int SQUARE_SIZE = 64, IMG_SIZE = 60, OFFSET = (SQUARE_SIZE - IMG_SIZE) / 2;
     private final static Color ODD_TILE_COLOR = Color.DARK_GRAY, EVEN_TILE_COLOR = Color.WHITE,
@@ -46,6 +46,7 @@ public class ChessComponent extends JComponent {
 	this.board = board;
 	this.width = SQUARE_SIZE * board.getWidth();
 	this.height = SQUARE_SIZE * board.getHeight();
+	this.moveFinderGUI = new MoveFinderGUI(board);
 
 	this.imageIconMap = Map.ofEntries(entry("B", loadIMG("BishopWhite")),
 					  entry("b", loadIMG("BishopBlack")),
@@ -64,11 +65,11 @@ public class ChessComponent extends JComponent {
 	    @Override public void mousePressed(final MouseEvent e) {
 	        lastPressed = currentlyPressed;
 		currentlyPressed = new Point(Math.floorDiv(e.getX(), SQUARE_SIZE), Math.floorDiv(e.getY(), SQUARE_SIZE)); // Finds what point on board
-		Move move = getMadeMove();
+		Move move = moveFinderGUI.getMadeMove(currentlyPressed, lastPressed);
 		if (move != null) {
 		    board.performMove(move);
 		}
-		repaint(); // (Komplettering) Needs to be updated every click to show available moves
+		repaint(); // (Komplettering) Needs to be updated every click to show available moves (Kommentar 9)
 	    }
 	});
     }
@@ -143,7 +144,8 @@ public class ChessComponent extends JComponent {
 
 		if (isSelectedPiece(col, row)) highlightColor = HIGHLIGHT_COLOR;
 
-		if (isValidMove(col, row)) highlightColor = HIGHLIGHT_COLOR;
+		// (Komplettering) moveFinderGUI is now its own class (Kommentar 7)
+		if (moveFinderGUI.isValidMove(col, row, currentlyPressed)) highlightColor = HIGHLIGHT_COLOR;
 
 		g2d.setColor(tileColor);
 		g2d.fillRect(col * SQUARE_SIZE, row * SQUARE_SIZE, SQUARE_SIZE, SQUARE_SIZE);
@@ -190,9 +192,6 @@ public class ChessComponent extends JComponent {
         return currentlyPressed != null && currentlyPressed.equals(new Point(col, row));
     }
 
-    private boolean isValidMove(final int col, final int row){
-	return currentlyPressed != null && getTargetPointsFromMoveSet(currentlyPressed.x, currentlyPressed.y).contains(new Point(col, row));
-    }
 
     private ImageIcon loadIMG(String name) {
 	ImageIcon icon = null;
@@ -214,35 +213,5 @@ public class ChessComponent extends JComponent {
 	else {
 	    return url;
 	}
-    }
-
-    private Set<Move> getMovesForCoordinate(int x, int y){
-        Set<Move> moves = new HashSet<>();
-	for (Move move: board.getMoves()){
-	    if (move.getOriginSquare().equals(new Point(x, y))){
-		moves.add(move);
-	    }
-	}
-	return moves;
-    }
-
-    private Set<Point> getTargetPointsFromMoveSet(int x, int y){
-	Set<Point> points = new HashSet<>();
-	for (Move move: getMovesForCoordinate(x, y)){
-		points.add(move.getTargetSquare());
-	}
-	return points;
-    }
-
-    private Move getMadeMove(){
-        if (lastPressed != null){
-            for (Move move : getMovesForCoordinate(lastPressed.x, lastPressed.y)){
-                Point targetSquare = move.getTargetSquare();
-                if (targetSquare.x == currentlyPressed.x && targetSquare.y == currentlyPressed.y){
-		    return move;
-		}
-	    }
-	}
-        return null;
     }
 }

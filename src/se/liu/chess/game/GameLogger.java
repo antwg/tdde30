@@ -7,6 +7,9 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.logging.SimpleFormatter;
 
+/**
+ * A logger class. Defines where loggs are to be stored.
+ */
 public class GameLogger
 {
     public static void setUpLogger() {
