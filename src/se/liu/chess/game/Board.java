@@ -193,6 +193,25 @@ public class Board
 	player.setAvailableMoves(availableMoves);
     }
 
+    // (komplettering) (kommentar 3) ny metod som låter GUI:n visa game over-meddelandet istället.
+    /**
+     * Displays a game over message and asks the player if they want to restart.
+     *
+     * @param cause The cause for game over to be displayed in the message.
+     */
+    public void executeGameOver(GameOverCauses cause) {
+	final int restart = 0, quit = 1;
+	int choice = chessComponent.displayGameOverMessage(cause);
+
+	switch (choice){
+	    case restart:
+		resetBoard();
+		break;
+	    case quit:
+		System.exit(0);
+	}
+    }
+
     // ----------------------------------------------------- Private Methods ---------------------------------------------------------------
 
     /**
@@ -462,18 +481,8 @@ public class Board
 	    }
 	    gameOver = true;
 
-
-	    // (komplettering) (kommentar 3) ber chessComponent att visa gameOverCause istället för att göra det direkt i denna metod.
-	    final int restart = 1, quit = 2;
-	    int choice = chessComponent.displayGameOver(cause);
-
-	    switch (choice){
-		case restart:
-		    resetBoard();
-		    break;
-		case quit:
-		    System.exit(0);
-	    }
+	    // (komplettering) (kommentar 3) kallar på executeGameOver() istället för displayGameOver().
+	    executeGameOver(cause);
 	}
     }
 

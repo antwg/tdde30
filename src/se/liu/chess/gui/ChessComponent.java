@@ -111,11 +111,10 @@ public class ChessComponent extends JComponent {
     }
 
     // (komplettering) (kommentar 3) metoden har flyttats hit från Board
-    public int displayGameOver(GameOverCauses cause) {
-	repaint();
+    public int displayGameOverMessage(GameOverCauses cause) {
 	String message = getGameOverMessage(cause);
 	String[] options = {"Restart", "Quit"};
-	final int restart = 0, quit = 1;
+
 	int choice = JOptionPane.showOptionDialog(null, message, "", JOptionPane.DEFAULT_OPTION,
 						  JOptionPane.INFORMATION_MESSAGE, null, options, options[0]);
 
