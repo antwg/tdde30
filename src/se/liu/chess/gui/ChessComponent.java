@@ -9,15 +9,12 @@ import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.net.URL;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
-import java.util.logging.FileHandler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import java.util.logging.SimpleFormatter;
 
 import static java.util.Map.entry;
 
@@ -31,7 +28,7 @@ import static java.util.Map.entry;
  */
 
 public class ChessComponent extends JComponent {
-    private final Logger logger = Logger.getLogger(ChessComponent.class.getName());
+    private static final Logger LOGGER = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
     private Board board;
     private int width, height;
     private Point currentlyPressed = null, lastPressed = null;
@@ -49,7 +46,6 @@ public class ChessComponent extends JComponent {
 	this.board = board;
 	this.width = SQUARE_SIZE * board.getWidth();
 	this.height = SQUARE_SIZE * board.getHeight();
-	setUpLogger();
 
 	this.imageIconMap = Map.ofEntries(entry("B", loadIMG("BishopWhite")),
 					  entry("b", loadIMG("BishopBlack")),
@@ -72,28 +68,9 @@ public class ChessComponent extends JComponent {
 		if (move != null) {
 		    board.performMove(move);
 		}
-		repaint();
+		repaint(); // (Komplettering) Needs to be updated every click to show available moves
 	    }
 	});
-    }
-
-    private void setUpLogger() {
-	try {
-	    FileHandler fileText = new FileHandler("Logging.txt");
-	    logger.setLevel(Level.ALL);
-	    SimpleFormatter formatterText = new SimpleFormatter();
-	    fileText.setFormatter(formatterText);
-	    logger.addHandler(fileText);
-	} catch (IOException e) {
-	    // (Inspection) Can't log if log failed
-	    String[] options = {"Yes", "No"};
-	    int choice = JOptionPane.showOptionDialog(null, "Could not access Logging.txt, play anyway?", "",
-						      JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, null, options, options[0]);
-	    if (choice == 1) {
-		System.exit(1);
-	    }
-	    e.printStackTrace();
-	}
     }
 
     // ----------------------------------------------------- Public Methods ----------------------------------------------------------------
@@ -223,7 +200,7 @@ public class ChessComponent extends JComponent {
             icon = new ImageIcon(findURL(name));
 	    }
         catch (FileNotFoundException fileNotFoundException) {
-	    logger.log(Level.SEVERE, "Could not find: " + name, fileNotFoundException);
+	    LOGGER.log(Level.SEVERE, "Could not find: " + name, fileNotFoundException);
 	    System.exit(1);
 	}
 	return icon;

@@ -94,7 +94,6 @@ public class Board
 	if (move.isPromoting()) {
 	    promote(move);
 	}
-
 	passTurn();
     }
 
