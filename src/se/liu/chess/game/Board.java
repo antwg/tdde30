@@ -49,6 +49,27 @@ public class Board
 
     private List<Set<Point>> allDirectThreats = new ArrayList<>(), allPins = new ArrayList<>();
 
+    // (komplettering) (kommentar 4) gjorde KNIGHT_ATTACKS statisk.
+    public final static Point[] KNIGHT_ATTACKS = { new Point(1, 2),
+	    new Point( 2, 1),
+	    new Point(1, -2),
+	    new Point(2, -1),
+	    new Point(-1, 2),
+	    new Point(-2, 1),
+	    new Point(-1, -2),
+	    new Point(-2, -1) };
+
+    // (komplettering) (kommentar 4) gjorde ORTHOGONAL_VECTORS statisk.
+    public final static Point[] ORTHOGONAL_VECTORS = { new Point(1, 0),
+	    new Point(0, 1),
+	    new Point(-1, 0),
+	    new Point(0, -1) };
+
+    // (komplettering) (kommentar 4) gjorde DIAGONAL_VECTORS statisk.
+    public final static Point[] DIAGONAL_VECTORS = { new Point(1, 1),
+						    new Point(1, -1),
+						    new Point(-1, 1),
+						    new Point(-1, -1)};
 
     public Board() {
 		this.pieces = new Piece[WIDTH][HEIGHT];
@@ -233,7 +254,7 @@ public class Board
     }
 
     private void moveCastlingRook(final int originX, final int targetX) {
-	int rank = getActivePlayer().getHomeRank();	// (komplettering)
+	int rank = getActivePlayer().getHomeRank();	// (komplettering) (kommentar 2)
 
 	movePiece(new Point(originX, rank), new Point(targetX, rank));
     }
@@ -246,34 +267,21 @@ public class Board
     }
 
     private boolean isProtectedFromKnights(final Point targetSquare, final Player protectingPlayer) {
-	final Point[] knightAttacks = { new Point(1, 2),
-					new Point( 2, 1),
-					new Point(1, -2),
-					new Point(2, -1),
-					new Point(-1, 2),
-					new Point(-2, 1),
-					new Point(-1, -2),
-					new Point(-2, -1) };
+	// (komplettering) (kommentar 4) gjorde KNIGHT_ATTACKS statisk.
 
-	return isProtectedFromPoints(targetSquare, protectingPlayer, knightAttacks, PieceType.KNIGHT);
+	return isProtectedFromPoints(targetSquare, protectingPlayer, KNIGHT_ATTACKS, PieceType.KNIGHT);
     }
 
     private boolean isOrthogonallyProtected(final Point targetSquare, final Player protectingPlayer) {
-	final Point[] orthogonalVectors = { new Point(1, 0),
-					    new Point(0, 1),
-					    new Point(-1, 0),
-					    new Point(0, -1) };
+	// (komplettering) (kommentar 4) gjorde ORTHOGONAL_VECTORS statisk.
 
-	return isProtectedFromVectors(targetSquare, protectingPlayer, orthogonalVectors, PieceType.ROOK);
+	return isProtectedFromVectors(targetSquare, protectingPlayer, ORTHOGONAL_VECTORS, PieceType.ROOK);
     }
 
     private boolean isDiagonallyProtected(final Point targetSquare, final Player protectingPlayer) {
-	final Point[] diagonalVectors = { new Point(1, 1),
-					  new Point(1, -1),
-					  new Point(-1, 1),
-					  new Point(-1, -1)};
+	// (komplettering) (kommentar 4) gjorde DIAGONAL_VECTORS statisk.
 
-	return isProtectedFromVectors(targetSquare, protectingPlayer, diagonalVectors, PieceType.BISHOP);
+	return isProtectedFromVectors(targetSquare, protectingPlayer, DIAGONAL_VECTORS, PieceType.BISHOP);
     }
 
     private boolean isProtectedFromPoints(final Point targetSquare, final Player protectingPlayer, final Point[] attacks, final PieceType pieceType) {

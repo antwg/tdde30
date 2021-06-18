@@ -94,7 +94,7 @@ public class ChessComponent extends JComponent {
     }
 
 
-    // (komplettering) metoden har lagts till
+    // (komplettering) (kommentar 3) metoden har lagts till
     /**
      * Asks the player to select a piece type to promote to and returns an
      * integer based on which piece the player selected to promote.
@@ -109,7 +109,7 @@ public class ChessComponent extends JComponent {
 	return choice;
     }
 
-    // (komplettering) metoden har flyttats hit från Board
+    // (komplettering) (kommentar 3) metoden har flyttats hit från Board
     public int displayGameOver(GameOverCauses cause) {
 	repaint();
 	String message = getGameOverMessage(cause);
@@ -162,7 +162,7 @@ public class ChessComponent extends JComponent {
 
     // ------------------------------------------------ Private Methods --------------------------------------------------------------------
 
-    // (komplettering) metoden har flyttats hit från board
+    // (komplettering) (kommentar 3) metoden har flyttats hit från board
     private String getGameOverMessage(final GameOverCauses cause) {
 	StringBuilder message = new StringBuilder();
 	message.append("Game Over: ");
