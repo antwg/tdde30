@@ -7,9 +7,11 @@ Gör du flera kompletteringar ska gamla kommentarer vara kvar och tydligt skilda
 kommentarer (markera med kompletteringsdatum). Detta underlättar för oss och är en del av
 examinationen där du visar att du förstår varför kompletteringen behövdes.
 
+TODO: Lägg till javadoc för nya klasser och publika metoder!
+
 ---------------------------------------------------------------------------------------------------
 
-All fixes have been marked with a comment starting with "(komplettering) (kommentar x)".
+All fixes have been marked in the code with a comment starting with "(komplettering) (kommentar x)".
 
 ---------------------------------------------------------------------------------------------------
 
@@ -61,10 +63,14 @@ Made non-changing lists of points static:
 
 ---------------------------------------------------------------------------------------------------
 
-Kommentar 5:
+Kommentar 5 (delvis löst):
 It would be nice to separate resource management from ChessComponent and create a class for loading
 the images. Also that instead of using "hardcoded" images, a more generalized way. By e.g. loading
 all images in a specific folder and map it to pieces by some sort of identifier.
+
+Lösning 5:
+Added an ImageLoader class that takes care of resource management. Moved the loadIMG()
+and findURL() methods from ChessComponent to the new ImageLoader class.
 
 ---------------------------------------------------------------------------------------------------
 

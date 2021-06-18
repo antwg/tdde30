@@ -27,10 +27,10 @@ import static java.util.Map.entry;
  */
 
 public class ChessComponent extends JComponent {
-    private static final Logger LOGGER = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
     private Board board;
     private int width, height;
     private MoveFinderGUI moveFinderGUI;
+    private ImageLoader imageLoader;
     private Point currentlyPressed = null, lastPressed = null;
     private final static int SQUARE_SIZE = 64, IMG_SIZE = 60, OFFSET = (SQUARE_SIZE - IMG_SIZE) / 2;
     private final static Color ODD_TILE_COLOR = Color.DARK_GRAY, EVEN_TILE_COLOR = Color.WHITE,
@@ -47,19 +47,20 @@ public class ChessComponent extends JComponent {
 	this.width = SQUARE_SIZE * board.getWidth();
 	this.height = SQUARE_SIZE * board.getHeight();
 	this.moveFinderGUI = new MoveFinderGUI(board);
+	this.imageLoader = new ImageLoader();
 
-	this.imageIconMap = Map.ofEntries(entry("B", loadIMG("BishopWhite")),
-					  entry("b", loadIMG("BishopBlack")),
-					  entry("K", loadIMG("KingWhite")),
-					  entry("k", loadIMG("KingBlack")),
-					  entry("N", loadIMG("KnightWhite")),
-					  entry("n", loadIMG("KnightBlack")),
-					  entry("P", loadIMG("PawnWhite")),
-					  entry("p", loadIMG("PawnBlack")),
-					  entry("Q", loadIMG("QueenWhite")),
-					  entry("q", loadIMG("QueenBlack")),
-					  entry("R", loadIMG("RookWhite")),
-					  entry("r", loadIMG("RookBlack")));
+	this.imageIconMap = Map.ofEntries(entry("B", imageLoader.loadIMG("BishopWhite")),
+					  entry("b", imageLoader.loadIMG("BishopBlack")),
+					  entry("K", imageLoader.loadIMG("KingWhite")),
+					  entry("k", imageLoader.loadIMG("KingBlack")),
+					  entry("N", imageLoader.loadIMG("KnightWhite")),
+					  entry("n", imageLoader.loadIMG("KnightBlack")),
+					  entry("P", imageLoader.loadIMG("PawnWhite")),
+					  entry("p", imageLoader.loadIMG("PawnBlack")),
+					  entry("Q", imageLoader.loadIMG("QueenWhite")),
+					  entry("q", imageLoader.loadIMG("QueenBlack")),
+					  entry("R", imageLoader.loadIMG("RookWhite")),
+					  entry("r", imageLoader.loadIMG("RookBlack")));
 
 	this.addMouseListener(new MouseAdapter(){
 	    @Override public void mousePressed(final MouseEvent e) {
@@ -189,26 +190,6 @@ public class ChessComponent extends JComponent {
 
     private boolean isSelectedPiece(final int col, final int row){
         return currentlyPressed != null && currentlyPressed.equals(new Point(col, row));
-    }
-
-
-    private ImageIcon loadIMG(String name) {
-	ImageIcon icon = null;
-        try {
-            icon = new ImageIcon(findURL(name));
-	    }
-        catch (FileNotFoundException fileNotFoundException) {
-	    LOGGER.log(Level.SEVERE, "Could not find: " + name, fileNotFoundException);
-
-	    String message = "Could not load image(s), terminating program.";
-	    String[] options = {"OK"};
-
-	    JOptionPane.showOptionDialog(null, message, "", JOptionPane.DEFAULT_OPTION,
-						      JOptionPane.INFORMATION_MESSAGE, null, options, options[0]);
-
-	    System.exit(1);
-	}
-	return icon;
     }
 
     private URL findURL(String name) throws FileNotFoundException {
