@@ -1,6 +1,7 @@
 package se.liu.chess.gui;
 
 import se.liu.chess.game.Board;
+import se.liu.chess.game.GameOverCauses;
 import se.liu.chess.game.Move;
 
 import javax.swing.*;
@@ -115,6 +116,34 @@ public class ChessComponent extends JComponent {
 	return new Dimension(width, height);
     }
 
+
+    // (komplettering) metoden har lagts till
+    /**
+     * Asks the player to select a piece type to promote to and returns an
+     * integer based on which piece the player selected to promote.
+     *
+     * @return 1 = Queen, 2 = Rook, 3 = Bishop, 4 = Knight
+     */
+    public int selectPromotion() {
+	String[] options = {"Queen", "Rook", "Bishop", "Knight"};
+	int choice = JOptionPane.showOptionDialog(null, "Choose upgrade", "", JOptionPane.DEFAULT_OPTION,
+						  JOptionPane.INFORMATION_MESSAGE, null, options, options[0]);
+
+	return choice;
+    }
+
+    // (komplettering) metoden har flyttats hit från Board
+    public int displayGameOver(GameOverCauses cause) {
+	repaint();
+	String message = getGameOverMessage(cause);
+	String[] options = {"Restart", "Quit"};
+	final int restart = 0, quit = 1;
+	int choice = JOptionPane.showOptionDialog(null, message, "", JOptionPane.DEFAULT_OPTION,
+						  JOptionPane.INFORMATION_MESSAGE, null, options, options[0]);
+
+	return choice;
+    }
+
     // ----------------------------------------------------- Protected Methods -------------------------------------------------------------
 
     /**
@@ -155,6 +184,26 @@ public class ChessComponent extends JComponent {
 }
 
     // ------------------------------------------------ Private Methods --------------------------------------------------------------------
+
+    // (komplettering) metoden har flyttats hit från board
+    private String getGameOverMessage(final GameOverCauses cause) {
+	StringBuilder message = new StringBuilder();
+	message.append("Game Over: ");
+	String activePlayer = board.getActivePlayer().toString();
+
+	switch (cause){
+	    case TIME:
+		message.append(activePlayer).append(" ran out of time");
+		break;
+	    case CHECKMATE:
+		message.append(activePlayer).append(" is Checkmated");
+		break;
+	    case STALEMATE:
+		message.append(" Stalemate");
+		break;
+	}
+	return message.toString();
+    }
 
     private boolean isEvenTile(final int col, final int row){
         return (col + row) % 2 == 0;

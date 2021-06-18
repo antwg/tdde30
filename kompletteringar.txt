@@ -9,8 +9,14 @@ examinationen där du visar att du förstår varför kompletteringen behövdes.
 
 ---------------------------------------------------------------------------------------------------
 
+All fixes have been marked with a comment starting with "(komplettering)".
+
+---------------------------------------------------------------------------------------------------
+
 Kommentar 1:
 When using "restart" it might be good to ask for confirmation.
+
+---------------------------------------------------------------------------------------------------
 
 Kommentar 2:
 when dealing with cases like whitePlayer, blackPlayer - it's often better to
@@ -21,29 +27,53 @@ You could directly get the proper one based on the color or something similar.
 Lösning 2:
 Board.moveCastlingRook() använder nu spelarens homeRank istället för att jämföra färg.
 
+---------------------------------------------------------------------------------------------------
 
-Kommentar 3:
+Kommentar 3 (löst):
 Board creates JOptionPane in e.g. promote, displayGameOver, this should be done at the visual layer.
+
+Lösning 3:
+Board.promote() now calls the method ChessComponent.selectPromotion() instead of creating
+its own JOptionPane.
+Created the method ChessComponent.selectPromotion() which asks the player for a piece
+type to promote to and returns it.
+
+Board.displayGameOver() and Board.getGameOverMessage() was moved to ChessComponent instead.
+
+GameManager.countDown() now calls displayGameOver() from the ChessComponent instead of directly
+from the board.
+
+---------------------------------------------------------------------------------------------------
 
 Kommentar 4:
 A lot of point objects are recreated, these could be made static instead. In Board:
 E.g. isProtectedFromKnights, isOrthogonallyProtected, isDiagonallyProtected
+
+---------------------------------------------------------------------------------------------------
 
 Kommentar 5:
 It would be nice to separate resource management from ChessComponent and create a class for loading
 the images. Also that instead of using "hardcoded" images, a more generalized way. By e.g. loading
 all images in a specific folder and map it to pieces by some sort of identifier.
 
+---------------------------------------------------------------------------------------------------
+
 Kommentar 6:
 loadIMG logs and turns off the game if it fails to load an icon, however, the user has no idea
 what is going on. It would be nice to notify the user and also, could use a dummy picture if it
 fails to load the image.
 
+---------------------------------------------------------------------------------------------------
+
 Kommentar 7:
 A separate class that takes care of calculating valid moves (in the visual side)
 
+---------------------------------------------------------------------------------------------------
+
 Kommentar 8:
 A separate class for logging, right now ChessComponent is handling the logger.
+
+---------------------------------------------------------------------------------------------------
 
 Kommentar 9:
 Right now ChessComponent will repaint each time you attempt to move a chess piece. It would be better if board communicates to the ChessComponent if the move was successful (and update accordingly)

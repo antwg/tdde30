@@ -14,8 +14,6 @@ import se.liu.chess.pieces.Knight;
 import se.liu.chess.pieces.Bishop;
 import se.liu.chess.pieces.Queen;
 
-import javax.swing.*;
-
 /**
  * Creates a board which handles all game logic and saves the position of pieces. Has methods for moving pieces and checking for checkmate.
  * Creates FenCOnverter, Players and Chesscomponent.
@@ -98,28 +96,6 @@ public class Board
 	}
 
 	passTurn();
-    }
-
-    /**
-     * Shows an OptionDialog saying who won and why.
-     * Also allows to restart or quit.
-     *
-     * @param cause The GameOverCause that caused the game to end.
-     */
-    public void displayGameOver(GameOverCauses cause){
-	chessComponent.repaint();
-	String message = getGameOverMessage(cause);
-	String[] options = {"Restart", "Quit"};
-        final int restart = 0, quit = 1;
-	int choice = JOptionPane.showOptionDialog(null, message, "", JOptionPane.DEFAULT_OPTION,
-						  JOptionPane.INFORMATION_MESSAGE, null, options, options[0]);
-	switch (choice){
-	    case restart:
-	        resetBoard();
-	        break;
-	    case quit:
-	        System.exit(0);
-	}
     }
 
     /**
@@ -214,12 +190,10 @@ public class Board
     }
 
     private void promote(final Move move) {
-	String[] options = {"Queen", "Rook", "Bishop", "Knight"};
-	int choice = JOptionPane.showOptionDialog(null, "Choose upgrade", "", JOptionPane.DEFAULT_OPTION,
-						  JOptionPane.INFORMATION_MESSAGE, null, options, options[0]);
-
 	final int queen = 0, rook = 1, bishop = 2, knight = 3;
 	Point targetSquare = move.getTargetSquare();
+
+	int choice = chessComponent.selectPromotion();	// (komplettering) (kommentar 3) chessComponent visar nu JOptionPane istället för Board.
 
 	switch(choice){
 	    case rook:
@@ -347,25 +321,6 @@ public class Board
 	    }
 	}
 	return false;
-    }
-
-    private String getGameOverMessage(final GameOverCauses cause) {
-	StringBuilder message = new StringBuilder();
-	message.append("Game Over: ");
-	String activePlayer = getActivePlayer().toString();
-
-	switch (cause){
-	    case TIME:
-		message.append(activePlayer).append(" ran out of time");
-		break;
-	    case CHECKMATE:
-		message.append(activePlayer).append(" is Checkmated");
-		break;
-	    case STALEMATE:
-		message.append(" Stalemate");
-		break;
-	}
-	return message.toString();
     }
 
     private void passTurn() { // --- Pass is used as a verb (inspection)
@@ -499,7 +454,19 @@ public class Board
 		cause = GameOverCauses.STALEMATE;
 	    }
 	    gameOver = true;
-	    displayGameOver(cause);
+
+
+	    // (komplettering) (kommentar 3) ber chessComponent att visa gameOverCause istället för att göra det direkt i denna metod.
+	    final int restart = 1, quit = 2;
+	    int choice = chessComponent.displayGameOver(cause);
+
+	    switch (choice){
+		case restart:
+		    resetBoard();
+		    break;
+		case quit:
+		    System.exit(0);
+	    }
 	}
     }
 
