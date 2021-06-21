@@ -156,7 +156,12 @@ public class ChessComponent extends JComponent {
 		// Paint pieces
 		if (!board.isEmpty(col, row)) {
 		    ImageIcon pieceImage = imageIconMap.get(board.getPiece(col, row).toString());
-		    pieceImage.paintIcon(this, g, col * SQUARE_SIZE + OFFSET, row * SQUARE_SIZE + OFFSET);
+		    if (pieceImage != null) {
+			pieceImage.paintIcon(this, g, col * SQUARE_SIZE + OFFSET, row * SQUARE_SIZE + OFFSET);
+		    }
+		    else {
+		        g2d.drawString(board.getPiece(col, row).toString(), col * SQUARE_SIZE + OFFSET, row * SQUARE_SIZE + OFFSET);
+		    }
 	    }
 	}
     }
@@ -190,15 +195,5 @@ public class ChessComponent extends JComponent {
 
     private boolean isSelectedPiece(final int col, final int row){
         return currentlyPressed != null && currentlyPressed.equals(new Point(col, row));
-    }
-
-    private URL findURL(String name) throws FileNotFoundException {
-        URL url = ClassLoader.getSystemResource("images/" + name + ".png");
-	if (url == null) {
-	    throw new FileNotFoundException("Could not load file: " + name + ".png");
-	}
-	else {
-	    return url;
-	}
     }
 }

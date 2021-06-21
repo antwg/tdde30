@@ -12,7 +12,7 @@ public class ImageLoader
 {
     private static final Logger LOGGER = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
 
-    public ImageIcon loadIMG(final String name) {
+    public ImageIcon loadIMG(String name) {
 	ImageIcon icon = null;
 	try {
 	    icon = new ImageIcon(findURL(name));
@@ -20,13 +20,18 @@ public class ImageLoader
 	catch (FileNotFoundException fileNotFoundException) {
 	    LOGGER.log(Level.SEVERE, "Could not find: " + name, fileNotFoundException);
 
-	    String message = "Could not load image(s), terminating program.";
-	    String[] options = {"OK"};
+	    String message = "Could not load image(s)";
+	    String[] options = {"Play without images", "Quit"};
 
-	    JOptionPane.showOptionDialog(null, message, "", JOptionPane.DEFAULT_OPTION,
-					 JOptionPane.INFORMATION_MESSAGE, null, options, options[0]);
+	    int option = JOptionPane.showOptionDialog(null, message, "", JOptionPane.DEFAULT_OPTION,
+						      JOptionPane.INFORMATION_MESSAGE, null, options, options[0]);
 
-	    System.exit(1);
+	    if (option == 0){
+		return new ImageIcon();
+	    }
+	    else{
+		System.exit(1);
+	    }
 	}
 	return icon;
     }
