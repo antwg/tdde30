@@ -1,4 +1,4 @@
-juni 21, 2021 1:10:42 EM se.liu.chess.gui.ImageLoader loadIMG
+juni 21, 2021 1:23:48 EM se.liu.chess.gui.ImageLoader loadIMG
 SEVERE: Could not find: BishopWhite
 java.io.FileNotFoundException: Could not load file: BishopWhite.png
 	at se.liu.chess.gui.ImageLoader.findURL(ImageLoader.java:42)

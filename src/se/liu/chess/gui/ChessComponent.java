@@ -158,9 +158,9 @@ public class ChessComponent extends JComponent {
 		    ImageIcon pieceImage = imageIconMap.get(board.getPiece(col, row).toString());
 		    if (pieceImage != null) {
 			pieceImage.paintIcon(this, g, col * SQUARE_SIZE + OFFSET, row * SQUARE_SIZE + OFFSET);
-		    }
-		    else {
-		        g2d.drawString(board.getPiece(col, row).toString(), col * SQUARE_SIZE + OFFSET, row * SQUARE_SIZE + OFFSET);
+			if (pieceImage.getDescription().equals("failed")) {
+			    g2d.drawString(board.getPiece(col, row).toString(), col * SQUARE_SIZE + OFFSET, row * SQUARE_SIZE + OFFSET);
+			}
 		    }
 	    }
 	}

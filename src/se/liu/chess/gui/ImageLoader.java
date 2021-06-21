@@ -27,7 +27,7 @@ public class ImageLoader
 						      JOptionPane.INFORMATION_MESSAGE, null, options, options[0]);
 
 	    if (option == 0){
-		return new ImageIcon();
+		return new ImageIcon("failed", "failed");
 	    }
 	    else{
 		System.exit(1);
