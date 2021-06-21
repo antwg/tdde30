@@ -8,10 +8,13 @@ import java.util.logging.Logger;
 import java.util.logging.SimpleFormatter;
 
 /**
- * A logger class. Defines where loggs are to be stored.
+ * A logger class. Defines where logs are to be stored.
  */
 public class GameLogger
 {
+    /**
+     * Sets up the logger.
+     */
     public static void setUpLogger() {
         Logger logger = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
 	try {
