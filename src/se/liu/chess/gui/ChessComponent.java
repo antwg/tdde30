@@ -26,7 +26,6 @@ public class ChessComponent extends JComponent {
     private Board board;
     private int width, height;
     private MoveFinderGUI moveFinderGUI;
-    private ImageLoader imageLoader;
     private Point currentlyPressed = null, lastPressed = null;
     private final static int SQUARE_SIZE = 64, IMG_SIZE = 60, OFFSET = (SQUARE_SIZE - IMG_SIZE) / 2;
     private final static Color ODD_TILE_COLOR = Color.DARK_GRAY, EVEN_TILE_COLOR = Color.WHITE,
@@ -43,7 +42,7 @@ public class ChessComponent extends JComponent {
 	this.width = SQUARE_SIZE * board.getWidth();
 	this.height = SQUARE_SIZE * board.getHeight();
 	this.moveFinderGUI = new MoveFinderGUI(board);
-	this.imageLoader = new ImageLoader();
+	ImageLoader imageLoader = new ImageLoader();
 
 	this.imageIconMap = Map.ofEntries(entry("B", imageLoader.loadIMG("BishopWhite")),
 					  entry("b", imageLoader.loadIMG("BishopBlack")),

@@ -13,6 +13,7 @@ import java.util.logging.Logger;
 public class ImageLoader
 {
     private static final Logger LOGGER = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
+    private boolean hasFailed = false;
 
     /**
      * Loads an image from resources and returns it as an ImageIcon and logs
@@ -26,6 +27,13 @@ public class ImageLoader
 	    icon = new ImageIcon(findURL(name));
 	}
 	catch (FileNotFoundException fileNotFoundException) {
+	    ImageIcon failedIcon = new ImageIcon("failed", "failed");
+
+	    if (hasFailed) {
+		return failedIcon;
+	    }
+
+	    hasFailed = true;
 	    LOGGER.log(Level.SEVERE, "Could not find: " + name, fileNotFoundException);
 
 	    String message = "Could not load image(s)";
@@ -35,7 +43,7 @@ public class ImageLoader
 						      JOptionPane.INFORMATION_MESSAGE, null, options, options[0]);
 
 	    if (option == 0){
-		return new ImageIcon("failed", "failed");
+		return failedIcon;
 	    }
 	    else{
 		System.exit(1);
