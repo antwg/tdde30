@@ -7,12 +7,20 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 
-
+/**
+ * This class handles the loading of images from resources.
+ */
 public class ImageLoader
 {
     private static final Logger LOGGER = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
 
-    public ImageIcon loadIMG(String name) {
+    /**
+     * Loads an image from resources and returns it as an ImageIcon and logs
+     * potential problems with loading the file.
+     * @param name The file name of the image to load.
+     * @return The loaded image.
+     */
+    public ImageIcon loadIMG(final String name) {
 	ImageIcon icon = null;
 	try {
 	    icon = new ImageIcon(findURL(name));

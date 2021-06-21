@@ -8,7 +8,6 @@ import java.util.Set;
  * A class containing methods to convert clicks on ChessComponent to information regarding what the clicks mean. ex if a move
  * was made and if so what move was made.
  */
-
 public class MoveFinderGUI {
 	private Board board;
 
@@ -18,11 +17,24 @@ public class MoveFinderGUI {
 
     // ----------------------------------------------------- Public Methods ----------------------------------------------------------------
 
-
+    /**
+     * Checks whether the pressed square can be moved to with the currently selected piece.
+     * @param col
+     * @param row
+     * @param currentlyPressed
+     * @return
+     */
     public boolean isValidMove(final int col, final int row, Point currentlyPressed){
 	return currentlyPressed != null && getTargetPointsFromMoveSet(currentlyPressed.x, currentlyPressed.y).contains(new Point(col, row));
     }
 
+    /**
+     * Returns a move to be made if the most recently clicked square can be moved to by
+     * the piece on the previously selected square.
+     * @param currentlyPressed
+     * @param lastPressed
+     * @return
+     */
     public Move getMadeMove(Point currentlyPressed, Point lastPressed){
 	if (lastPressed != null){
 	    for (Move move : getMovesForCoordinate(lastPressed.x, lastPressed.y)){
