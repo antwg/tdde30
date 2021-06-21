@@ -9,11 +9,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.io.FileNotFoundException;
-import java.net.URL;
 import java.util.Map;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import static java.util.Map.entry;
 
@@ -159,7 +155,10 @@ public class ChessComponent extends JComponent {
 		    if (pieceImage != null) {
 			pieceImage.paintIcon(this, g, col * SQUARE_SIZE + OFFSET, row * SQUARE_SIZE + OFFSET);
 			if (pieceImage.getDescription().equals("failed")) {
-			    g2d.drawString(board.getPiece(col, row).toString(), col * SQUARE_SIZE + OFFSET, row * SQUARE_SIZE + OFFSET);
+			    g2d.setColor(Color.RED);
+			    g2d.setFont(new Font("TimesRoman", Font.PLAIN, 32));
+			    int horizontalOffset = 20, verticalOffset = 45;
+			    g2d.drawString(board.getPiece(col, row).toString(), col * SQUARE_SIZE + horizontalOffset, row * SQUARE_SIZE + verticalOffset);
 			}
 		    }
 	    }
