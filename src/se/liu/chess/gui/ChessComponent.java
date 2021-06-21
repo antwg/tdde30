@@ -154,6 +154,7 @@ public class ChessComponent extends JComponent {
 		    ImageIcon pieceImage = imageIconMap.get(board.getPiece(col, row).toString());
 		    if (pieceImage != null) {
 			pieceImage.paintIcon(this, g, col * SQUARE_SIZE + OFFSET, row * SQUARE_SIZE + OFFSET);
+			// (Komplettering) Now shows a letter to represent piece if failed to load image
 			if (pieceImage.getDescription().equals("failed")) {
 			    g2d.setColor(Color.RED);
 			    g2d.setFont(new Font("TimesRoman", Font.PLAIN, 32));

@@ -7,8 +7,6 @@ Gör du flera kompletteringar ska gamla kommentarer vara kvar och tydligt skilda
 kommentarer (markera med kompletteringsdatum). Detta underlättar för oss och är en del av
 examinationen där du visar att du förstår varför kompletteringen behövdes.
 
-TODO: Lägg till javadoc för nya klasser och publika metoder!
-
 ---------------------------------------------------------------------------------------------------
 
 All fixes have been marked in the code with a comment starting with "(komplettering) (kommentar x)".
@@ -74,10 +72,14 @@ and findURL() methods from ChessComponent to the new ImageLoader class.
 
 ---------------------------------------------------------------------------------------------------
 
-Kommentar 6:
+Kommentar 6 (löst):
 loadIMG logs and turns off the game if it fails to load an icon, however, the user has no idea
 what is going on. It would be nice to notify the user and also, could use a dummy picture if it
 fails to load the image.
+
+Lösning 6:
+Now shows a pop-up asking whether to terminate the program or play without the missing image, if an
+image could not be found, a letter representing that piece will be drawn instead.
 
 ---------------------------------------------------------------------------------------------------
 
