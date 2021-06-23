@@ -2,6 +2,7 @@ package se.liu.chess.game;
 
 import java.awt.Point;
 import java.util.ArrayList;
+import java.util.EnumMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -23,8 +24,6 @@ public class Board
     private Piece[][] pieces;
     private static final int WIDTH = 8, HEIGHT = 8;
 
-    private Player whitePlayer, blackPlayer;
-
     private int activePlayerIndex = 0;
     private boolean gameOver;
 
@@ -34,6 +33,9 @@ public class Board
     private final ChessComponent chessComponent;
 
     private int halfMoveClock = 0, fullMoveNumber = 1;
+
+    // (Komplettering) Now storing players in EnumMap, kommentar 2
+    private EnumMap<TeamColor, Player> playerMap = new EnumMap<>(TeamColor.class);
 
     private final Point[] vectorThreatDirections = { new Point(1, 1),
 	    					     new Point(1, -1),
@@ -75,8 +77,9 @@ public class Board
 		this.pieces = new Piece[WIDTH][HEIGHT];
 		this.fenConverter = new FenConverter(this);
 		this.chessComponent = new ChessComponent(this);
-		this.whitePlayer = new Player(TeamColor.WHITE);
-		this.blackPlayer = new Player(TeamColor.BLACK);
+
+		playerMap.put(TeamColor.WHITE, new Player(TeamColor.WHITE));
+		playerMap.put(TeamColor.BLACK, new Player(TeamColor.BLACK));
 
 		clearBoard();
     }
@@ -143,12 +146,12 @@ public class Board
      */
     public void resetBoard() {
 	clearBoard();
-	blackPlayer = new Player(TeamColor.BLACK);
-	whitePlayer = new Player(TeamColor.WHITE);
+	for (TeamColor teamColor : TeamColor.values()) {
+	    playerMap.put(teamColor, new Player(teamColor));
+	    playerMap.get(teamColor).resetTime();
+	}
 	enPassantTarget = null;
 	fenConverter.createBoardFromFEN("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1");
-	blackPlayer.resetTime();
-	whitePlayer.resetTime();
 	gameOver = false;
 	enPassantTarget = null;
 
@@ -522,25 +525,25 @@ public class Board
 
     public Player getActivePlayer() {
 	if (activePlayerIndex == 0) {
-	    return whitePlayer;
+	    return playerMap.get(TeamColor.WHITE);
 	} else {
-	    return blackPlayer;
+	    return playerMap.get(TeamColor.BLACK);
 	}
     }
 
     public Player getInactivePlayer() {
 	if (activePlayerIndex == 0) {
-	    return blackPlayer;
+	    return playerMap.get(TeamColor.BLACK);
 	} else {
-	    return whitePlayer;
+	    return playerMap.get(TeamColor.WHITE);
 	}
     }
 
     public Player getOpponentPlayer(final Player friendlyPlayer) {
-	if (friendlyPlayer.equals(whitePlayer)) {
-	    return blackPlayer;
+	if (friendlyPlayer.equals(playerMap.get(TeamColor.WHITE))) {
+	    return playerMap.get(TeamColor.BLACK);
 	} else {
-	    return whitePlayer;
+	    return playerMap.get(TeamColor.WHITE);
 	}
     }
 
@@ -562,12 +565,7 @@ public class Board
     }
 
     public Player getPlayer(final TeamColor color) {
-	if (color == TeamColor.WHITE){
-	    return whitePlayer;
-	}
-	else{
-	    return blackPlayer;
-	}
+	return playerMap.get(color);
     }
 
     public ChessComponent getChessComponent() {
