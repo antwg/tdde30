@@ -157,7 +157,7 @@ public class ChessComponent extends JComponent {
 			if (pieceImage.getDescription().equals("failed")) {
 			    g2d.setColor(Color.RED);
 			    g2d.setFont(new Font("TimesRoman", Font.PLAIN, 32));
-			    int horizontalOffset = 20, verticalOffset = 45;
+			    final int horizontalOffset = 20, verticalOffset = 45;
 			    g2d.drawString(board.getPiece(col, row).toString(), col * SQUARE_SIZE + horizontalOffset, row * SQUARE_SIZE + verticalOffset);
 			}
 		    }
