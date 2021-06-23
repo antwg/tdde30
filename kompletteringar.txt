@@ -21,7 +21,7 @@ Added a pop-up asking for confirmation before restarting in MenuAction.actionPer
 
 ---------------------------------------------------------------------------------------------------
 
-Kommentar 2 (väntar på svar från Jonas):
+Kommentar 2 (löst):
 when dealing with cases like whitePlayer, blackPlayer - it's often better to
 have list of players and get the needed one based on a variable. For example, you often do:
 if (color == TeamColor.WHITE) {return whitePlayer;} else {return blackPlayer;} .
@@ -29,7 +29,7 @@ You could directly get the proper one based on the color or something similar.
 
 Lösning 2:
 Board.moveCastlingRook() använder nu spelarens homeRank istället för att jämföra färg.
-Players now stored in EnumMap (Board)
+Players now stored in EnumMap (Board).
 
 ---------------------------------------------------------------------------------------------------
 
